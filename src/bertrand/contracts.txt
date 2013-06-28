@@ -1,0 +1,920 @@
+This is my scratchpad with ideas on the contract checker
+
+/*
+problems
+    I want to write my code as seperate reusable modules
+    I want to run tests as quick as possible
+    I want to be able to perform some sanity checks (lint/message-contract) as quick as possible
+
+Features
+    test message-contract as soon as you hit save
+    test for undefined variables as soon as you hit save
+
+    generate a file that can be tested
+    run tests on multiple browser, node.js or other javscript command line
+
+    run tests as soon as you hit save
+
+    take screenshots of testruns
+
+    allow user to validate tests
+
+    syntax highlighting for jsModule
+    generate other formats
+        module.AMD.js (wrap it in a require function)
+        module.common.js (prefix with require() calls)
+
+architecture
+    a builder: "Bob"
+    a contract checker: "Bertrand"
+    a linter: "Douglas"
+    a directory watcher that loads all modules and reloads a module and reruns all checks when it changes "Igor"
+    a test runner framework "Tess"
+        for unittests
+        for interaction tests
+    a unit-test framework "richard"
+*/
+
+The goal is to check if all values messages that _might actually be sent_ are verified
+ * More than all messages that will be sent. Otherwise simple testing would help
+ * less than all messages that could be sent in all possible software that is using this module. Only the dependencies
+   that are actually registered right now are checked 
+
+So, I don't care about if statements, I do care about whether a message call isn't written anywhere
+
+The user can specify which messages can be sent to the module
+
+    contract:
+        ".message":
+        ".othermessage()"
+
+This provides no value in itself, but the user can specify what messages the arguments to those message should be able 
+to receive
+
+    contract:
+        ".message" arg:
+            arg <- ".foo()"
+
+And what the result of those messages should be able to handle
+
+    contract:
+        ".message" arg arg2:
+            arg <- ".foo()" <- ".bar" arg2
+
+A basic form of custom variables is available (must always be the last element)
+
+    contract:
+        ".message" arg arg2:
+            arg <- ".foo()" <- ".bar" arg2 as result
+
+You can continue based on indentation
+
+        ".message" arg arg2:
+            arg <- ".foo()" <- ".bar" arg2 as result
+                                           <- ".then()" as result
+
+result means the result of the message and is a keyword
+
+Sometimes the construction of a module has side effects (no quotes, no arguments)
+
+    contract:
+        side-effects:
+            bla <- foo
+
+you must be able to specify a contract of a dependency
+
+    contract:
+        someDependency as result
+
+you must be able to create new instances of a contract that has state
+
+    contract:
+        "new ()":
+            //contents of the constructor function
+            new(subContract) as result
+            subContract:
+                STATE: vals
+                "add()" val:
+                    val into vals
+                "retreive()":
+                    vals as result
+
+messages that depend on state will share their results between all calls
+a (new) puts a hard boundary up
+a contract with state cannot stored in a variable without being (new)ed first
+
+An example that combines all this
+
+--- (loader.js)
+contract:
+    ".load()" fileName:
+        fileName <- "<string>"
+        result:
+            "for(i)":
+                string as result
+
+--- (filter.js)
+contract:
+    "()" iterable func:
+        iterable <- "for(i)" as filteredLine
+        func <- "()" filteredLine number <- "<boolean>"
+        new resultSet(filteredLine) as result
+        resultSet(_item):
+            "for(i)":
+                _item as result
+
+--- (head.js)
+contract:
+    side-effects:
+        string as filename
+        undefined as filename
+        string as count
+        undefined as count
+
+        loader <- ".load()" filename as lines
+        filter <- "()" lines new mapper(count)
+
+        mapper(_count):
+            "()" line index:
+                index <- "<" _count as result
+
+so this last example will be converted to the following JS code:
+contractLines = {};
+afterAllVariablesAreDeclared = [];
+contractLines["string(contract)"] = {
+    "<string>": {valueTests: [], potentialValues:[]}
+}
+//contract:
+    contractLines["loader(contract)"] = {};
+    //    ".load()" fileName:
+    contractLines["loader(contract)"][".load()"] = {arguments: ["loader::.load()::filename"], result: "loader::.load()::result"};
+    contractLines["loader::.load()::result"] = {valueTests: [], potentialValues: []};
+    contractLines["loader::.load()::filename"] = {valueTests: [], potentialValues: []};
+    //        fileName <- "<string>"
+    contractLines["loader::.load():: var1"] = {valueTests: [], potentialValues: []};
+    afterAllVariablesAreDeclared.push(function () {
+        contractLines["loader::.load()::filename"].valueTests.push({message: "<string>", arguments: [], sendResultTo: ".load():: var1"});
+    });
+    //        result:
+    contractLines["loader::.load()::result(contract)"] = {};
+    if (contractLines["loader::.load()::result"] === undefined) {
+        contractLines["loader::.load()::result"] = {valueTests: [], potentialValues: []};
+    }
+    afterAllVariablesAreDeclared.push(function () {
+        contractLines["loader::.load()::result"].potentialValues.push(contractLines["loader::.load()::result(contract)"]);
+    });
+    //            "for(i)":
+    contractLines["loader(contract)"][".load()"] = ["loader::.load()::filename"];
+    contractLines["loader::.load()::result(contract)::for(i)::result"] = {valueTests: [], potentialValues: []};
+    //                string as result
+    if (contractLines["loader::.load()::result(contract)::for(i)::result"] === undefined) {
+        contractLines["loader::.load()::result(contract)::for(i)::result"] = {valueTests: [], potentialValues: []};
+    }
+    afterAllVariablesAreDeclared.push(function () {
+        contractLines["loader::.load()::result(contract)::for(i)::result"].potentialValues.push(contractLines["string(contract)"]);
+    });
+
+//contract:
+    //    "()" iterable func:
+    contractLines["filter::()::result"] = {valueTests: [], potentialValues: []};
+    contractLines["filter::()::iterable"] = {valueTests: [], potentialValues: []};
+    contractLines["filter::()::func"] = {valueTests: [], potentialValues: []};
+    //        iterable <- "for(i)" as filteredLine
+    if (contractLines["filter::()::filteredLine"] === undefined) {
+        contractLines["filter::()::filteredLine"] = {valueTests: [], potentialValues: []};
+    }
+    afterAllVariablesAreDeclared.push(function () {
+        contractLines["filter::()::iterable"].valueTests.push({message: ".for(i)", arguments: [], sendResultTo: "()::filteredLine"});
+    });
+    //        func <- "()" item number <- "<boolean>"
+    contractLines["filter::():: var1"] = {valueTests: [], potentialValues: []};
+    afterAllVariablesAreDeclared.push(function () {
+        contractLines["filter::()::func"].valueTests.push({message: "()", arguments: [contractLines["filter::()::filteredLine"], contractLines["number"]], sendResultTo: "():: var1"});
+    });
+    contractLines["filter::():: var2"] = {valueTests: [], potentialValues: []};
+    afterAllVariablesAreDeclared.push(function () {
+        contractLines["filter::():: var1"].valueTests.push({message: "<boolean>", arguments: [], sendResultTo: "():: var2"});
+    });
+    //        new(resultSet with filteredLine) as result
+    if (contractLines["filter::()::result"] === undefined) {
+        contractLines["filter::()::result"] = {valueTests: [], potentialValues: []};
+    }
+    afterAllVariablesAreDeclared.push(function () {
+        contractLines["filter::()::result"].potentialValues.push(contractLines["filter::()::resultSet(contract)"](contractLines["filter::()::filteredLine"]));
+    });
+    //        resultSet(_item):
+    contractLines["filter::()::resultSet(contract)"] = function (_item) {
+        var contract = {};
+
+    //            "for(i)":
+        contract["for(i)::result"] = {valueTests: [], potentialValues: []};
+    //                _item as result
+        if (contract["for(i)::result"] === undefined) {
+            contract["for(i)::result"] = {valueTests: [], potentialValues: []};
+        }
+        contract["for(i)::result"].potentialValues.push(_item);
+
+        return contract;
+    };
+
+function handle(unit, delayedActions) {
+    var errors;
+    delayedActions.map(function (f) { f(); });
+    for (var x in unit) {
+        var variable = unit[x];
+        var maxTest = variable.valueTests.length - 1;
+        var untestedValues = getAllPotentialValues(variable).filter(function (val) { return val.maxTest !== maxTest });
+        untestedValues.map(function (val) {
+            variable.valueTests.filter(function (_, i){ return i > val.maxTest}).map(function (test) {
+                if (val.hasOwnProperty(test.message)) {
+                    if (val[test.message].arguments.length === test.arguments.length) {
+                        val[test.message].arguments.map(function(argName, i) {
+                            unit[argName].potentialValues.push(test.arguments[i]);
+                        });
+                        unit[test.sendResultTo].potentialValues.push(unit[val[test.message].result]);
+                    } else {
+                        errors.push(["incorrect number of arguments", val, test.message]);
+                    }
+                } else {
+                    errors.push(["missing property", val, test.message]);
+                }
+            })
+        })
+    }
+}
+
+
+    loader_load_lines = {
+        "for(i)::result" {
+            potentialValues: [ string ]
+        }
+    }
+    loader = {
+        ".load()::filename": {
+            valueTests: [
+                
+            ]
+        }
+        ".load()::result": {
+            potentialValues: [loader_load_lines]
+        }
+    };
+    filter = {
+
+    };
+    head_mapper = function(_count) {
+        _count = _count || new Bucket();
+        return {
+            "STATE:_count": _count,
+            "()::line": {},
+            "()::index": {
+                valueTests: [
+                    {message: "<", arguments: [_count]}
+                ]
+            }
+        };
+    }
+    head = {
+        "filename": {
+            valueTests: [
+            ],
+            potentialValues: [string, undefined]
+        },
+        "count": {
+            valueTests: [],
+            potentialValues: [string, undefined]
+        },
+        "lines": {
+            potentialValues: [loader[".load()::result"]]
+        },
+        "result": {
+            potentialValues: [filter["()::result"]]
+        }
+    };
+    loader[".load()::filename"].potentialValues.push(head.filename)
+    filter["()::iterable"].potentialValues.push(head.lines)
+    filter["()::func"].potentialValues.push(head_mapper)
+
+
+//there's message-contract and buckets.
+//a messageHandler gets buckets for its parameters.
+//each message sent to a contract adds another value to the buckets of the handler. You can also send buckets in the message
+//a messageHandler returns a new bucket each time it handles a message
+
+//the as statement creates a bucket if it doesn't exist and adds the contract or bucket to it
+//the with/without statements call with/without on the contract or bucket. This returns a new bucket that conditionally receives variables
+
+//voor normale messageHandlers moet ik zorgen dat hun returnvalues niet wijzigen op basis van aanroepen of van aanroepen naar andere messageHandlers
+
+---
+contract:
+    "()" dirPath, filepath:
+        dirPath <- "<is string>"
+                <- "<absolute path>"
+                <- "<ends with pathsep>"
+
+        filepath <- "<is string>"
+                 <- "<absolute path>"
+
+        string as returnvalue
+
+---
+contract:
+    "()" module, AmdModules:
+        module <- "<is string>" /*it will be used as the key in an object*/
+        orderModules <- "()" module, AmdModules <- "for(i)" <- ".inclusionReason" <- "for(in)"
+                                                            <- ".moduleCode()" <- "<valid js>"
+
+        AmdModules <- "[]" without "<undefined>" <- ".callExecuteCode()" <- "<valid js>"
+
+        limitScope <- "()" AStringWithValidJavascript as returnvalue
+
+        AStringWithValidJavascript: 
+            string +
+            "<valid js>":
+
+---
+".execute()":
+    loadconfig <- "()" exceptionHandler <- ".output" <- "<absolute path>"
+                                                     <- "<ends with pathsep>"
+                                        <- ".source" as source
+                                        <- ".includes" as includes
+                                        <- ".entrypoints" as entrypoints
+                                        <- ".testrunner" as testrunner
+    watchAmdModules <- "()" source, includes, callback
+
+    stringArray <- ".sort()" f(a, b){ a <- "-" b }
+
+    callback:
+        "()" snapshot, moduleThatMayBeUndefined:
+            moduleThatMayBeUndefined without "<undefined>" as module
+
+            [entrypoints, [testrunner], [module <- ".AMDid"]] as modulesToInclude
+
+            orderModules <- "()" modulesToInclude, snapshot as orderedModules
+            
+            assembleTestModule <- "()" orderedModules, module <- "<valid js>"
+                                                              <- "<scope safe>" /*we might load this file into a browser*/
+                                                              <- "<is string>" /*it needs to be written to a file*/
+    exceptionHandler:
+        "Error: invalid config":
+
+---Queue
+Queue<blocks>:
+    STATEFULL: blocks
+    
+    ".add()" block:
+        block into blocks
+
+    ".execute()" resultAdder:
+        blocks <- ".execute()" resultAdder as returnvalue <- ".then()" function(success, error) { blocks <- ".execute()" as returnvalue } as returnvalue
+        rsvp <- ".Promise" <- "new()" as returnvalue
+
+---
+array<state>:
+    STATEFULL: state
+    "<insert>" item:
+        item into state
+    "for(i)":
+        state as returnvalue
+    "[]" key:
+        key <- "<number>"
+        undefined as returnvalue
+        state as returnvalue
+
+
+---
+hashMap<state>:
+    STATEFULL: state
+    
+    "<insert>" key, item:
+        key <- "<string>"
+        item into state
+    "delete" key:
+        key <- "<string>"
+    "for(in)":
+        state as returnvalue
+    "[]" key:
+        key <- "<string>"
+        undefined as returnvalue
+        state as returnvalue
+
+
+
+
+
+function parse(filename, dependencyContracts) {
+    //open filename
+    var lines = readContractLines(text);
+    var contract = new contract(filename);
+    //contract.addVariables() based on the 
+    var parseBodyResult
+    //FIXME: return parseContractBody(lines);
+}
+
+//returns an array of lines normalized. blank lines removed. each line having a property ".indent"
+function readContractLines(text) {
+    var indent,
+        startOfLine = true,
+        curLine = {
+            indent: 0,
+            lineNo: lineNo,
+            content: "",
+            isEmpty: true
+        },
+        lines = [curLine];
+
+    for (i = 0; i < text.length; i += 1){
+        if (startOfLine) {
+            while (text[i] === " " || text[i] === "\t") {
+                curLine.indent += (text[i] === " " ? 1 : 8);
+                i += 1;
+            }
+            startOfLine = false;
+        }
+        if (text[i] === "\r" || text[i] === "\n") {
+            while (text[i + 1] === "\r" || text[i + 1] === "\n") {
+                i += 1;
+            }
+            startOfLine = true;
+            if (curLine.isEmpty) {
+                lines.length -= 1;
+            }
+            lineNo += 1;
+            curLine = {
+                indent: 0,
+                lineNo: lineNo,
+                content: "",
+                isEmpty: true
+            };
+            lines.push(curLine);
+        } else {
+            delete curLine.isEmpty;
+            curLine.content += text[i];
+        }
+    }
+    return lines;
+}
+
+function parseContract(lines) {
+    var parseHeadResult,
+        parseBodyResult;
+    parseHeadResult = parseContractHead(lines);
+    if (parseHeadResult === undefined) {
+        return undefined;
+    } else {
+        parseBodyResult = parseContractBody(parseHeadResult.contract, lines.slice(parseHeadResult.linesGobbled));
+        return {
+            linesGobbled: parseHeadResult.linesGobbled + parseBodyResult.linesGobbled,
+            contract: parseHeadResult.contract
+        }
+    }
+}
+
+function parseContractHead(lines) {
+    var name,
+        line;
+
+    assert(lines.length > 0);
+    line = lines[0];
+    if (line.substr(-1) === ':') {
+        name = line.substr(0, line.length-1);
+        return {
+            contract: new Contract(name),
+            linesGobbled: 1
+        };
+    } else {
+        return undefined;
+    }
+}
+
+function parseContractBody(contract, lines) {
+    var i,
+        linesGobbled = 0,
+        messageHandler,
+        indent;
+    if (lines.length > 0) {
+        i = 0;
+        indent = lines[0].indent;
+        for (i = 0; i < lines.length && lines[i].indent === indent; i += 1) {
+            messageHandler = parseMessageHandler(lines.slice(i));
+            assert(messageHandler !== undefined);
+            contract.addMessageHandler(messageHandler);
+            i += messageHandler.linesGobbled;
+            linesGobbled = i;
+        }
+    }
+    return {
+        linesGobbled: linesGobbled
+    }
+}
+
+function parseMessageHandler(lines) {
+    var parseHeadResult,
+        parseBodyResult;
+    parseHeadResult = parseMessageHandlerHead(lines);
+    if (parseHeadResult === undefined) {
+        return undefined;
+    } else {
+        parseBodyResult = parseMessageHandlerBody(lines.slice(parseHeadResult.linesGobbled), messageHandler.head);
+        return {
+            linesGobbled: parseBodyResult.linesGobbled + parseHeadResult.linesGobbled;
+            messageHandler: {
+                arguments: parseHeadResult.arguments,
+                name: parseHeadResult.name,
+                assertions: parseBodyResult.assertions,
+                variables: parseBodyResult.variables
+            }
+        };
+    }
+}
+
+function parseMessageHandlerHead (lines) {
+    var parts,
+        head;
+
+    parts = lines[0].match(/"([^"]+)" (.*):/);
+    head = {
+        linesGobbled: 1,
+        arguments: parts[2].split(", "),
+        name: parts[1]
+    };
+    return head;
+}
+
+function parseMessageHandlerBody(lines, messageHead) {
+    var i,
+        statement,
+        indent,
+        message = {
+            linesGobbled = 0,
+            variables = messageHead.arguments,
+            assertions = []
+        };
+    if (lines.length > 0) {
+        indent = lines[0].indent;
+        i = 0;
+        while (i < lines.length && lines[i].indent === indent) {
+            //FIXME: handle constructor messages
+            // if (i === 0 && lines[i] === '<constructor>') {
+            //     i += 1;
+            //     if (lines[i].substr(0, 7) === "state: ") {
+            //         contract.setStateKeys(lines[i].substr(7).split(", "));
+            //         i += 1;
+            //     }
+            // }
+            statement = parseContract(lines.slice(i));
+            if (statement !== undefined) {
+                message.variables[statement.name] = statement;
+            } else {
+                statement = parseAssertion(lines.slice(i));
+                message.assertions = message.assertions.concat(statement.assertions);
+                message.variables = message.variables.concat(statement.variables);
+            }
+            i += statement.linesGobbled;
+            message.linesGobbled = i;
+            i += 1;
+        }
+    }
+    return message
+}
+
+function splitLine(str) {
+    var chunk,
+        splitRegex = /"[^"]*"| +/g,
+        splitLine = [];
+    while ((chunk = splitRegex.exec(str)) != null){
+        splitLine.push({
+            text: chunk + "", //convert to string
+            offset: splitRegex.lastIndex - chunk.length
+        });
+    }
+    return splitLine;
+}
+
+function unwrapQuotes(str) {
+    assert.equals(str.substr(0), '"');
+    assert.equals(str.substr(-1), '"');
+    return str.substr(1, str.length - 2);
+}
+
+function parseLine(line, varNameCounter, startOffset, startVarName) {
+    // an assertion is divided into three types of assertionblocks
+    //     v <- "m" and, args
+    //     v with "m"
+    //     v without "m"
+    // each assertionblock can be terminated by a variable specifier
+    //     [assertionblock] as variableName
+    var assertions = [],
+        assertion = {},
+        n;
+    line = splitLine(line);
+    n = 0;
+    if (startVarName !== undefined) {
+        assertion.target = startVarName;
+    } else {
+        assertion.target = line[0].text;
+        n += 1;
+    }
+    if (line[n].text === 'as') {
+        assertion.resultName = line[n + 1].text;
+        n += 2;
+        assertion.offset = startOffset + 0;
+        assertions.push(assertion);
+        assertion = {
+            target: assertion.resultName
+        }
+    }
+    for (; n < line.length; n += 1) {
+        assertion.offset = startOffset + line[n].offset;
+        if (text === '<-') {
+            assertion.type = "send";
+            assertion.arguments = [];
+            n += 1;
+            assertion.message = unwrapQuotes(line[n].text)
+            n += 1;
+            if (n < line.length && line[n].text === ":") {
+                n += 1;
+                while (n < line.length && line[n].text.substr(-1) === ",") {
+                    assertion.arguments.push(line[n].text.substr(0, line[n].text.length - 1));
+                    n += 1;
+                }
+                assertion.arguments.push(line[n].text);
+            }
+        } else if (line[n].text === 'with') {
+            assertion.type = "with";
+            n += 1;
+            assertion.message = unwrapQuotes(line[n].text)
+        } else if (line[n].text === 'without') {
+            assertion.type = "without";
+            n += 1;
+            assertion.message = unwrapQuotes(line[n].text)
+        }
+
+        if (n + 1 < line.length && line[n + 1].text === 'as') {
+            assertion.resultName = line[n + 2].text;
+            n += 2
+        } else {
+            assertion.resultName = " var" + (varNameCounter.count += 1); //a space in the varname makes sure that this varname can never be used by a user
+        }
+        assertions.push(assertion);
+        assertion = {
+            target: assertion.resultName
+        }
+    }
+    return assertions;
+}
+
+function parseAssertion(lines) {
+    var startVarName,
+        line,
+        varNameCounter = {count: 0},
+        assertions = [];
+    for (i = 0; i < lines.length && lines[i].indent >= indent; i += 1) {
+        if (line !== undefined) {
+            startVarName = line.filter(function (assertion) { return assertion.offset === lines[i].indent; })[0];
+        }
+        line = parseLine(lines[i].content, varNameCounter, startVarName);
+        assertions = assertions.concat(line);
+    }
+}
+
+function Bucket(description, initialValue) {
+    this._results = {};
+    this.description = description;
+    this._values = [];
+    this._storedMessages = [];
+    this._listeners = [];
+    this.addPotentialValues(initialValue);
+    this.isContract = true;
+    this.isBucket = true;
+    this._ifMessages = [];
+}
+Bucket.prototype.send = function (msg) {
+    var parameters, storedMessage, self;
+    self = this;
+    parameters = arguments;
+    if (!self._results[msg]) {
+        self._results[msg] = new Bucket("(result of the message '" + msg + "' sent to " + self.description + ")");
+    }
+    storedMessage = function (contract) {
+        self._results[msg].addPotentialValues(contract.send.apply(contract, parameters));
+    };
+    self._storedMessages.push(storedMessage);
+    self._values.map(storedMessage);
+    return self._results[msg];
+};
+Bucket.prototype._addPotentialValue = function (contract) {
+    assert(contract === undefined || contract.isContract);
+    if (!contract || contract === this) {
+        return;
+    } else if (contract.isBucket) {
+        contract.addListener(this);
+    } else if (this._values.indexOf(contract) === -1) {
+        this._values.push(contract);
+        this._listeners.map(function (listener) { 
+            listener.addPotentialValues(contract); 
+        });
+        this._storedMessages.map(function (storedMessage) {
+            storedMessage(contract);
+        });
+        this._ifMessages.map(function (ifMessage) {
+            ifMessage(contract);
+        });
+    }
+};
+Bucket.prototype.addPotentialValues = function (values) {
+    var i;
+    if (values instanceof Array) {
+        for (i = 0; i < values.length; i += 1) {
+            this._addPotentialValue(values[i]);
+        }
+    } else {
+        this._addPotentialValue(values);
+    }
+};
+Bucket.prototype.withOrWithout = function (msg, shouldContain) {
+    var result = new Bucket("messages with " + msg);
+    function ifMessage(contract) {
+        if (contract.acceptsMessage(msg) === shouldContain) {
+            result.addPotentialValues(contract);
+        }
+    }
+    this._ifMessages.push(ifMessage);
+    this._values.map(ifMessage);
+    return result;
+};
+Bucket.prototype.addListener = function (placeholder) {
+    if (this._listeners.indexOf(placeholder) === -1) {
+        this._listeners.push(placeholder);
+        placeholder.addPotentialValues(this._values);
+    }
+};
+Bucket.prototype.toString = function () {
+    return this.description || this.__proto__.toString();
+};
+// Bucket.prototype.finish = function () {
+//     var result = [];
+//     if (this._storedMessages.length > 0 && this._values.length === 0) {
+//         result.push(this.description + ": messages where received, but this placeholder received no message-contract. (nullpointerexception or not kickstarted) ");
+//     } else if (this._storedMessages.length === 0 && this._values.length === 0) {
+//         result.push(this.description + ": this placeholder never received no messages and no message-contract (not kickstarted, superfluous parameter)");
+//     }
+//     return result;
+// };
+
+function contract(description) {
+    var self, msg, state, i;
+    self = this;
+
+    self.isContract = true;
+    self.description = description;
+    self._state = {
+        self: self
+    };
+    self._results = {};
+    self._wasCalled = {};
+    self._errors = [];
+
+    self._messages = messages;
+    self._stateKeys = stateKeys;
+}
+contract.prototype.setStateKeys = function (keys) {
+    var i;
+    for (i = 0; i < keys.length; i += 1) {
+        this._state[keys[i]] = new Bucket("(state: " + self.description + "[" + keys[i] + "])");
+    }
+}
+contract.prototype.addMessageHandler = function (msg, parameters, handlerBody) {
+    var self = this;
+    var retVal, funcResult;
+    retVal = {
+        parameters: parameters.map(function (pname) {
+            return new Bucket("(arg: " + pname + " for " + self.description + "->" + msg + ")");
+        }),
+        send: function (providedParameters) {
+            var i;
+            if (parameters.length !== providedParameters.length) {
+                self._errors.push(msg + " was called with " + providedParameters.length + " arguments, but it expected " + parameters.length + " arguments")
+            }
+            for (i = 0; i < parameters.length; i += 1) {
+                parameters[i].addPotentialValues(providedParameters[i]);
+            }
+            return this._placeHolder;
+        },
+        description: "(result of [" + self.description + "->" + msg + "])",
+    }
+    retVal._placeHolder = new Bucket("(return value for " + self.description + "->" + msg + ")");
+    retVal._placeHolder.addPotentialValues(handlerBody.variables["returnvalue"]);
+    this._results[msg] = retVal; 
+}
+contract.prototype.acceptsMessage = function (message) {
+    return this._results.hasOwnProperty(message);
+}
+contract.prototype.send = function (msg) {
+    var parameters, i;
+    this._wasCalled[msg] = true;
+    if (this._results.hasOwnProperty(msg)) {
+        parameters = Array.prototype.slice.call(arguments, 1);
+        return this._results[msg].send(parameters);
+    } else {
+        this._errors.push("message " + msg + " received, but not defined");
+        return new Bucket("(return value for missing message at contract:" + this.description + " -> " + msg + ")");
+    }
+};
+contract.prototype.toString = function () {
+    return "<"+this.description+"{"+Object.keys(this._results).join(", ")+"}>";
+};
+contract.prototype.test = function () {
+    //check if there's any variables that you don't have and fail on those
+    //loop over the assertions find any assertions that you can fulfill and do those. add the results the variable list
+    //if the variable list hasn't changed and there are still unsolved assertions throw an error
+
+}
+
+// contract.prototype.extend = function (extensionDescription, extensionState, extensionMessages) {
+//     var newId = this.description + " (" + extensionDescription + ")",
+//         newState = this._stateKeys.concat(extensionState),
+//         newMessages = {},
+//         self = this;
+//     objLoop(this._messages, function (key) {
+//         newMessages[key] = self._messages[key];
+//     });
+//     objLoop(extensionMessages, function (key) {
+//         newMessages[key] = extensionMessages[key];
+//     });
+
+//     return new contract(newId, newState, newMessages);
+// };
+// 
+// function flatten(array) {
+//     return array.reduce(function (a, b) { return a.concat(b); }, []);
+// }
+// 
+// contract.prototype.finish = function () {
+//     var self = this;
+//     var result = {};
+//     result.unreceivedMessages = Object.keys(self._results).filter(function (m) { return !self._wasCalled[m] && m.substr(-1) !== "?"});
+//     result.errors = 
+//         self._errors
+//         .concat(flatten(objLoop(self._state, function (id, state) { if (id !== "self") { return state.finish(); } else { return []; } }, true)) )
+//         .concat(flatten(objLoop(self._results, function (_, msg) { 
+//                 var result = [];
+//                 if (msg.parameters) {
+//                     result = flatten(msg.parameters.map(function(p) { return p.finish(); }));
+//                 }
+//                 if(msg._placeHolder instanceof Bucket) {
+//                     result = result.concat(msg._placeHolder.finish()); 
+//                 }
+//                 return result;
+//             }, true)) );
+//     return result;
+// };
+
+//some default message-contract
+undefinedContract = new contract("undefined", [], {"<undefined>": function () { return this.self; }});
+stringContract = new contract("string", [], { "<is string>?": contract.undef, "+string?": function () { return this.self } });
+booleanContract = new contract("boolean", [], {});
+numberContract = new contract("number", [], {"+number?": function () { return this.self }, '  +""?': contract.str});
+
+//some frequently used contract constructors
+functionContract = function (parentContract, assertion) {
+    var contents = Array.prototype.slice.call(arguments);
+    return new contract(description, [], {
+        "()": assertion
+    });
+}
+
+
+
+
+
+
+
+/*
+The problem's with message handlers that return a different contract depending on the input contract.
+ * A function may return wildly different values each time it's called (like Math.random()) as long as the
+   contract of those values is the same.
+ * A function may return a different contract depending on the input value, but then its really a case of
+   specifying your message as '.get("foo")' and '.get("bar")' instead of '.getFoo()' and '.getBar()' different
+   implementations but no difference for our contract checker.
+No the problem is with objects that accept a message like '.push()' or '.then()'. The contract that emerges from 
+.pop() or .then() is different depending on the flow of the application. 
+
+Our contract checker does not take flow into account (this is an explicit simplification that allows the checker
+to work). The assumption with this system is: You write a function that can return a range of values. If you use
+the return value you should be prepared to handle all possible return values. 
+
+While you can write valid code that does not satisfy these constraints, writing code that does will be easier to debug
+and understand.
+
+What happens with push & then is that the message handler itself makes no assumptions about the passed argument,
+that's left to the calling code. So a programmer using it must perform the input output checking and
+guaranteeing. The contract checker is unable to determine what the result of a .then() call will be. We need to
+help it.
+
+So we write a drive-test that satisfies that the function that returns the result of a then will actually return
+a then that will call the function with a certain result and then we can make that contract explicit.
+
+Functionality-test, Edge-case-test and Contract-test
+*/

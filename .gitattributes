@@ -1,0 +1,7 @@
+* -text
+
+*.cmd eol=CRLF
+*.ps1 eol=CRLF
+
+*.js eol=LF
+*.sh eol=LF
