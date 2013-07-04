@@ -2,6 +2,7 @@
 description: build the testfile and tell the runners to run it
 dependencies:
     map: tools/map
+    objLoop: tools/objLoop
     rsvp: tools/rsvp
     debugRequested: ./debugRequested
     hasTestCode: ./hasTestCode
@@ -17,7 +18,7 @@ test(__module.AMDid, function (it) {
             hasTestCode: createSpy("hasTestCode", true),
             buildTessTestfile: createSpy("buildTessTestfile", ""),
             createModule: function () {
-                return __module.constructor(map, rsvp, this.debugRequested, this.hasTestCode, this.buildTessTestfile);
+                return __module.constructor(map, objLoop, rsvp, this.debugRequested, this.hasTestCode, this.buildTessTestfile);
             }
         };
     }
@@ -58,17 +59,22 @@ function runTest(AMDid, snapshot, testSystem, writeLog) {
         var runnerRequirements = module.expectations;
 
         testSystem.runTest(testCode, runnerRequirements, debugWasRequested, function handleResults(result) {
-            if (result.runners.length === 0) {
+            if (Object.keys(result.runners).length === 0) {
                 writeLog(0, "No tests were run, because no capable runners are registered.");
                 promise.fulfill();
             } else {
+                objLoop(result.runners, function (runnerName, result) {
+                    if (result.passed) {
+                        writeLog(0, "unit tests succeeded on " + runnerName + "!");
+                    } else {
+                        writeLog(0, "unit tests failed on" + runnerName + ".");
+                        writeLog(1, result.details);
+                    }
+                });
                 if (result.passed) {
-                    writeLog(0, "unit tests succeeded on " + result.runner + "!");
-                    promise.fulfill();
+                    promise.fulfill("unit tests succeeded!");
                 } else {
-                    writeLog(0, "unit tests failed on" + result.runner + ".");
-                    writeLog(1, result.details);
-                    promise.reject();
+                    promise.fulfill("unit tests failed!");
                 }
             }
         });

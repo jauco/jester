@@ -67,7 +67,7 @@ var NodeRunnerProvides = [
     "http://nodejs.org/api/zlib.html"
 ];
 
-function NodeRunner(parameters, tmpDir) {
+function NodeRunner(parameters, tmpDir, node_exe) {
     var self = this;
     self.runId = 0;
     self.tmpDir = tmpDir;
@@ -76,6 +76,7 @@ function NodeRunner(parameters, tmpDir) {
     NodeRunnerProvides.map(function (namespace) { 
         self.provides(namespace); 
     });
+    this._node_exe = node_exe;
 }
 NodeRunner.prototype = new Runner();
 
@@ -108,7 +109,7 @@ NodeRunner.prototype.run = function(code, useDebugger) {
             code;
         fs.unlink(resultFile, function () {
             fs.writeFile(moduleFile, code, "utf-8", function () {
-                var nodecmd = "node.exe" + (useDebugger ? " --debug-brk " : " ");
+                var nodecmd = self._node_exe + (useDebugger ? " --debug-brk " : " ");
                 if (useDebugger) {
                     console.log("Running with --debug-brk");
                 }

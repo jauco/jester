@@ -3,11 +3,6 @@ description: The map function for platforms that do not have a native implementa
 dependencies:
     test: richard/non-recursetest
 ---
-test("test", function (it) {
-    it("works", function (expect) {
-
-    });
-});
 ---
 ---
 //code from: https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Array/map

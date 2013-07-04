@@ -28,6 +28,7 @@ dependencies:
 ---
 ---
 var webserver, seleniumServer, moduleWatcherDisposer;
+console.log("Starting jester");
 process.on('exit', function() {
     try {
         webserver.dispose();
@@ -42,6 +43,11 @@ process.on('exit', function() {
 process.on('SIGINT', function() {//catch ctrl-c and turn it into a clean exit.
     process.exit();
 });
+var config_location = "./jester_config.json";
+if (process.argv[2]) {
+    console.log("Using " + process.argv[2] + " as config location.");
+    config_location = process.argv[2];
+}
 //relative to current location of the user
 var config = loadconfig(path.resolve("./jester_config.json"), __dirname);
 
@@ -67,7 +73,8 @@ loadTestRunners(
     config.saucelabs.url,
     config.saucelabs.username,
     config.saucelabs.key,
-    config.output
+    config.output,
+    process.argv[0]
 );
 
 moduleWatcherDisposer = getModules(
@@ -82,14 +89,14 @@ moduleWatcherDisposer = getModules(
             .then(function () {
                 return runTest(AMDid, snapshot, testSystem, indentedWriter);
             })
-            // .then(function () {
+            // .always(function () {
             //     return runContracts(snapshot, indentedWriter);
             // })
-            .then(function () {
+            .always(function () {
                 return updateArtifacts(AMDid, snapshot, config.output, indentedWriter);
             })
             .then(undefined, function (errors) {
-                writeLog(0, errors ? errors.toString() : "An unknown error occurred.");
+                writeLog(0, errors ? errors.toString() : "");
             });
         } else {
             writeLog(0, "Couldn't load '" + snapshot[AMDid].path + "'. ");

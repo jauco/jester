@@ -36,12 +36,14 @@ TestSystem.prototype.runTest = function (code, expectations, useDebugger, callba
                     results, 
                     function (result, runnerResult, i) {
                         runnerResult = runnerResult.valueOf();
-                        result.runner = validRunnerNames[i];
                         result.passed = result.passed && runnerResult.passed;
-                        result.details = result.details.concat(runnerResult.details);
+                        result.runners[validRunnerNames[i]] = {
+                            passed: runnerResult.passed,
+                            details: runnerResult.details
+                        };
                         return result;
                     },
-                    { passed: true, details: [], runners: validRunnerNames }
+                    { passed: true, details: [], runners: {} }
                 ));
             },
             function (err) {

@@ -15,7 +15,7 @@ dependencies:
 ---
 ---
 ---
-function loadTestRunners(writeLog, testSystem, webserver, seleniumServer, runners, saucelabsUrl, saucelabsUser, saucelabsKey, outputDirectory) {
+function loadTestRunners(writeLog, testSystem, webserver, seleniumServer, runners, saucelabsUrl, saucelabsUser, saucelabsKey, outputDirectory, node_exe) {
     var seleniumRunners = {};
     webserver.addMatch(["requestData", "sendResults"], "/runner/{*}/...", function gets(runnerId, restMatch, query, requestData, sendResults) {
         seleniumRunners[runnerId].handle(this.request, this.response, {sendResults: sendResults, requestData: requestData}, restMatch);
@@ -24,40 +24,59 @@ function loadTestRunners(writeLog, testSystem, webserver, seleniumServer, runner
         seleniumRunners[runnerId].handle(this.request, this.response, {sendResults: sendResults, requestData: requestData}, restMatch);
     });
 
-    function launchSeleniumRunner(index, sessionMaker) {
+    function launchSeleniumRunner(runner, index, sessionMaker) {
         var prefix = "/runner/" + index;
-        seleniumRunners[index] = new SeleniumRunner(sessionMaker(), "http://" + webserver.hostname + ":" + webserver.port + prefix);
+        seleniumRunners[index] = new SeleniumRunner(sessionMaker(), "http://" + webserver.hostname + ":" + webserver.port + prefix, runner.parameters.scripturls);
         testSystem.addRunner(seleniumRunners[index]);
     }
+
     map(runners, function (runner, index) {
-        switch (runner.type) {
-        case 'phantomjs':
-            //not implemented yet
-            break;
-        case 'sauce':
-            launchSeleniumRunner(index, function () { return new Saucesession(saucelabsUrl, saucelabsUser, saucelabsKey, runner.parameters.browserType, runner.parameters.keepAlive); });
-            break;
-        case 'selenium':
-            seleniumServer.then(function (server) {
-                launchSeleniumRunner(index, function () { return new LocalSeleniumsession(server.serverUrl, runner.parameters.browserType); });
-            });
-            break;
-        case 'node':
-            var tmpDir = path.join(outputDirectory, "runnerTmp", index + "");
-            mkdirP(tmpDir, function (err) {
-                if (!err) {
-                    testSystem.addRunner(new NodeRunner(runner.parameters, tmpDir));
-                } else {
-                    writeLog(0, "Couldn't launch node runner, because the directory that will hold the node scripts couldn't be created");
-                    writeLog(1, err+"");
-                }
-            });
-            break;
-        case 'rhino':
-            //not implemented yet
-            break;
-        default:
-            writeLog(0, "Could not launch runner of type: '" + runner.type + "'");
+        var selenium_started = false;
+        try {
+            switch (runner.type) {
+            case 'phantomjs':
+                //not implemented yet
+                break;
+            case 'sauce':
+                writeLog(0, "launching sauce runner: " + runner.parameters.browserType);
+                launchSeleniumRunner(runner, index, function () { return new Saucesession(saucelabsUrl, saucelabsUser, saucelabsKey, runner.parameters.browserType, runner.parameters.keepAlive); });
+                break;
+            case 'selenium':
+                seleniumServer.then(function (server) {
+                    selenium_started = true;
+                    writeLog(0, "launching selenium runner: " + runner.parameters.browserType);
+                    launchSeleniumRunner(runner, index, function () { return new LocalSeleniumsession(server.serverUrl, runner.parameters.browserType); });
+                }).fail(function (e) { 
+                    if (!selenium_started) {
+                        writeLog(0, "selenium server failed to start");
+                        writeLog(0, e && e.toString());
+                    } else {
+                        writeLog(0, "Runner failed to start");
+                        writeLog(0, e && e.toString());
+                    }
+                });
+                break;
+            case 'node':
+                writeLog(0, "launching node runner");
+                var tmpDir = path.join(outputDirectory, "runnerTmp", index + "");
+                mkdirP(tmpDir, function (err) {
+                    if (!err) {
+                        testSystem.addRunner(new NodeRunner(runner.parameters, tmpDir, node_exe));
+                    } else {
+                        writeLog(0, "Couldn't launch node runner, because the directory that will hold the node scripts couldn't be created");
+                        writeLog(1, err+"");
+                    }
+                });
+                break;
+            case 'rhino':
+                //not implemented yet
+                break;
+            default:
+                writeLog(0, "Could not launch runner of type: '" + runner.type + "'");
+            }
+        } catch (e) {
+            writeLog(0, "asd"); 
+            writeLog(0, e.toString());
         }
     });
 }

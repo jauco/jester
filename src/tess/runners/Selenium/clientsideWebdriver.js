@@ -5,6 +5,7 @@ expects:
 dependencies:
     createXMLHTTPObject: tools/createXMLHTTPObject
     global: tools/global
+    JSON: tools/json
 ---
 ---
 ---
@@ -101,7 +102,7 @@ Webdriver.prototype._getSeleniumHandle = function (domElement, callback) {
     window.Webdriver.data.domElement = domElement;
     this._xhr(
         "POST", 
-        "execute", 
+        "/execute", 
         { 
             script: "var top = window; while(!top.hasOwnProperty('Webdriver') && top !== window.parent) { top = window.parent } return top.Webdriver.data.domElement;", 
             args: [] 
@@ -122,7 +123,7 @@ Webdriver.prototype.sendKeys = function (domElement, text, callback) {
         }
         self._xhr(
             "POST", 
-            "element/" + handle + "/value", 
+            "/element/" + handle + "/value", 
             {value: data}, 
             callback
         );
@@ -134,7 +135,7 @@ Webdriver.prototype.click = function (domElement, callback) {
     var element = this._getSeleniumHandle(domElement, function(handle){
         self._xhr(
             "POST", 
-            "element/" + handle + "/click", 
+            "/element/" + handle + "/click", 
             undefined,
             callback
         );
@@ -144,7 +145,7 @@ Webdriver.prototype.click = function (domElement, callback) {
 Webdriver.prototype.switchTo = function (frameId, callback) {
     this._xhr(
         "POST", 
-        "frame/", 
+        "/frame/", 
         { id: frameId }, 
         callback
     );

@@ -2,6 +2,7 @@
 description: the resultCallback implementation for the selenium runner
 dependencies:
     createXMLHTTPObject: tools/createXMLHTTPObject
+    JSON: tools/json
 expects:
     window: //window
 ---
@@ -21,4 +22,4 @@ window.onerror = function(errorMsg, url, lineNumber) {
     finishRun({"run error": [url, lineNumber, errorMsg]});
 };
 
-window.resulCallback = finishRun;
+window.resultCallback = finishRun;
