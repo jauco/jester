@@ -59,7 +59,7 @@ Basesession.prototype.sendSessionCommand = function (verb, path, data) {
     }
     return self._messageQueue.push(function () { 
         var url = self._serverUrl + "/session/" + self._sessionId + path;
-        self._sendRequest(verb, url, data); 
+        return self._sendRequest(verb, url, data);
     });
 };
 
@@ -95,29 +95,30 @@ Basesession.prototype._sendRequest = function (verb, url, data) {
     }
     request(requestData, function (error, res, body) {
         if (error) {
-            result.reject({
+            result.fulfill({
+                statusCode: res ? res.statusCode : undefined,
+                body: body,
+                headers: res ? res.headers : undefined
+            });
+        } else  {
+            if (body) {
+                body = body.split("\u0000").join(""); //remove null characters
+                try {
+                    body = JSON.parse(body);
+                } catch(e) {
+                    result.fulfill({
+                        statusCode: 599,
+                        body: e.stack,
+                        headers: {}
+                    });
+                }
+            }
+            result.fulfill({
                 statusCode: res.statusCode,
                 body: body,
                 headers: res.headers
             });
         }
-        if (body) {
-            body = body.split("\u0000").join(""); //remove null characters
-            try {
-                body = JSON.parse(body);
-            } catch(e) {
-                result.reject({
-                    statusCode: 599,
-                    body: e.stack,
-                    headers: {}
-                });
-            }
-        }
-        result.fulfill({
-            statusCode: res.statusCode,
-            body: body,
-            headers: res.headers
-        });
     });
     return result;
 };

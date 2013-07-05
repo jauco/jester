@@ -1,25 +1,42 @@
 ---
 description: Client side webdriver that expects a specially configured server
 expects:
-    window: http://dom/window
+    window: https://developer.mozilla.org/en-US/docs/Web/API/window
+    console: https://developer.mozilla.org/en-US/docs/Web/API/window.console
 dependencies:
     createXMLHTTPObject: tools/createXMLHTTPObject
     global: tools/global
     JSON: tools/json
+    test: richard/test
 ---
+test(__module.AMDid, function (it) {
+    it("can do a sendKeys", function (expect) {
+        window.onload = function () {
+            window.document.body.innerHTML = "<input>";
+            __module.constructor(createXMLHTTPObject, global, JSON);
+            var w = new (window.Webdriver)();
+            window.document.body.childNodes[0].addEventListener("change", function (e) {
+                console.log(e);
+            });
+            w.sendKeysToElement(window.document.body.childNodes[0], "foo", function () {
+                window.document.body.childNodes[0].blur();
+            });
+        };
+
+    });
+});
 ---
 ---
 var seleniumProxyUrl = "";
 function Webdriver() {
-    this._procyUrl = seleniumProxyUrl;
+    this._proxyUrl = seleniumProxyUrl;
 }
 
 Webdriver.data = {};
 
 Webdriver.prototype._xhr = function (verb, url, body, callback) {
     var req = createXMLHTTPObject();
-    
-    req.open("POST", this._procyUrl, true);
+    req.open("POST", this._proxyUrl, true);
     req.setRequestHeader("Content-type","application/json");
 
     req.send(JSON.stringify({method: verb, path: url, data: body}));
@@ -113,9 +130,9 @@ Webdriver.prototype._getSeleniumHandle = function (domElement, callback) {
     );
 };
 
-Webdriver.prototype.sendKeys = function (domElement, text, callback) {
+Webdriver.prototype.sendKeysToElement = function (domElement, text, callback) {
     var self = this;
-    this._getSeleniumHandle(domElement, function(handle){
+    this._getSeleniumHandle(domElement, function(err, handle){
         var data = [], 
             i;
         for (i = 0; i < text.length; i += 1){ //turn strings into an array
@@ -130,9 +147,9 @@ Webdriver.prototype.sendKeys = function (domElement, text, callback) {
     });
 };
 
-Webdriver.prototype.click = function (domElement, callback) {
+Webdriver.prototype.clickOnElement = function (domElement, callback) {
     var self = this;
-    var element = this._getSeleniumHandle(domElement, function(handle){
+    var element = this._getSeleniumHandle(domElement, function(err, handle){
         self._xhr(
             "POST", 
             "/element/" + handle + "/click", 
@@ -141,6 +158,94 @@ Webdriver.prototype.click = function (domElement, callback) {
         );
     });
 };
+
+Webdriver.prototype.moveMouseToElement = function (domElement, xOffset, yOffset, callback) {
+    var self = this;
+    var element = this._getSeleniumHandle(domElement, function(err, handle){
+        self._xhr(
+            "POST", 
+            "/moveto", 
+            {
+                element: handle,
+                xoffset: xOffset,
+                yoffset: yOffset
+            },
+            callback
+        );
+    });
+};
+
+Webdriver.prototype.acceptAlert = function (callback) {
+    this._xhr("POST", "/accept_alert", undefined, callback);
+};
+Webdriver.prototype.dismissAlert = function (callback) {
+    this._xhr("POST", "/dismiss_alert", undefined, callback);
+};
+
+Webdriver.prototype.moveMouse = function (xOffset, yOffset, callback) {
+    this._xhr(
+        "POST", 
+        "/moveto", 
+        {
+            xoffset: xOffset,
+            yoffset: yOffset
+        },
+        callback
+    );
+};
+
+Webdriver.prototype.clickMouse = function (button, doubleclick, callback) {
+    var buttons = {
+        "left": 0,
+        "middle": 1,
+        "right": 2
+    };
+    var clicktype = doubleclick ? "doubleclick" : "click";
+    this._xhr(
+        "POST", 
+        "/" + clicktype, 
+        {
+            button: buttons[button]
+        },
+        callback
+    );
+};
+
+Webdriver.prototype.buttonDown = function (button, callback) {
+    var self = this;
+    var buttons = {
+        "left": 0,
+        "middle": 1,
+        "right": 2
+    };
+    self._xhr(
+        "POST", 
+        "/buttondown", 
+        {
+            button: buttons[button]
+        },
+        function () {
+            function releaser(callback) {
+                this._xhr("POST", "/buttonup", {button: buttons[button]}, callback);
+            }
+            callback(releaser);
+        }
+    );
+};
+
+/*
+To implement when I have access to a proper testing session
+/touch/click
+/touch/down
+/touch/up
+/touch/move
+/touch/scroll
+/touch/scroll
+/touch/doubleclick
+/touch/longclick
+/touch/flick
+/touch/flick
+*/
 
 Webdriver.prototype.switchTo = function (frameId, callback) {
     this._xhr(

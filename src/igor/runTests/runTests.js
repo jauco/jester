@@ -67,7 +67,7 @@ function runTest(AMDid, snapshot, testSystem, writeLog) {
                     if (result.passed) {
                         writeLog(0, "unit tests succeeded on " + runnerName + "!");
                     } else {
-                        writeLog(0, "unit tests failed on" + runnerName + ".");
+                        writeLog(0, "unit tests failed on " + runnerName + ".");
                         writeLog(1, result.details);
                     }
                 });
