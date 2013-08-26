@@ -30,6 +30,7 @@ var NodeRunnerProvides = [
     "https://npmjs.org/package/js-yaml",
     "https://npmjs.org/package/jshint",
     "https://npmjs.org/package/node-inspector",
+    "https://npmjs.org/package/react-tools",
     "https://github.com/mishoo/UglifyJS",
 
     "http://nodejs.org/api/assert.html",
