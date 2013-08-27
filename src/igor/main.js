@@ -99,7 +99,7 @@ moduleWatcherDisposer = getModules(
                 writeLog(0, errors ? errors.toString() : "");
             });
         } else {
-            writeLog(0, "Couldn't load '" + snapshot[AMDid].path + "'. ");
+            writeLog(0, "Couldn't load '" + AMDid + "'. ");
             writeLog(0, errors.stack);
         }
     },

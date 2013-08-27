@@ -225,7 +225,7 @@ function fileUpdate(cache, path, exists, namespace, sourcedir, addedOrChangedCal
     if (exists) {
         loadModule(sourcedir, path, namespace, function (errors, module) {
             if (errors) {
-                addedOrChangedCallback(errors);
+                addedOrChangedCallback(errors, path);
             } else {
                 if (module) {
                     doUpdate(module);
