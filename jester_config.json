@@ -12,6 +12,8 @@
     },
     "output": "./artifacts",
     "runners": [
+        ["node", {}],
+        ["selenium", {"browserType": "Cr"}],
         ["selenium", {"browserType": "IE"}]
     ],
     "saucelabs": {
