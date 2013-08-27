@@ -43,35 +43,38 @@ function reportResult(result, Module, writeLog) {
 
 function runLint(AMDid, snapshot, lintpreferences, writeLog) {
     var promise = rsvp.promise();
-    var module = snapshot[AMDid];
-    
-    writeLog(0, "Running linter...");
-    //module expectations are in scope
-    var predefinedVariables = objLoop(module.expectations, function (key, value) {
-        return false; //false indicates to jsHint that you may not assign to the variable;
-    });
-    //dependencies are in scope
-    map(module.dependencyVariables, function (variableName) {
-        predefinedVariables[variableName] = false;
-    });
-    
-    //when evaluating the test code, __module is in scope as well
-    predefinedVariables["__module"] = false;
-    
-    var testCodeResult = linter(module.testFunctionBody, lintpreferences, predefinedVariables);
-    reportResult(testCodeResult, "ModuleTests", writeLog);
+    try {
+        var module = snapshot[AMDid];
 
-    delete predefinedVariables["__module"];
+        writeLog(0, "Running linter...");
+        //module expectations are in scope
+        var predefinedVariables = objLoop(module.expectations, function (key, value) {
+            return false; //false indicates to jsHint that you may not assign to the variable;
+        });
+        //dependencies are in scope
+        map(module.dependencyVariables, function (variableName) {
+            predefinedVariables[variableName] = false;
+        });
 
-    var moduleCodeResult = linter(module.defineFunctionBody, lintpreferences, predefinedVariables);
-    reportResult(moduleCodeResult, "Module", writeLog);
+        //when evaluating the test code, __module is in scope as well
+        predefinedVariables["__module"] = false;
 
-    if (testCodeResult.passed && moduleCodeResult.passed) {
-        promise.fulfill();
-    } else {
-        promise.reject();
+        var testCodeResult = linter(module.testFunctionBody, lintpreferences, predefinedVariables);
+        reportResult(testCodeResult, "ModuleTests", writeLog);
+
+        delete predefinedVariables["__module"];
+
+        var moduleCodeResult = linter(module.defineFunctionBody, lintpreferences, predefinedVariables);
+        reportResult(moduleCodeResult, "Module", writeLog);
+
+        if (testCodeResult.passed && moduleCodeResult.passed) {
+            promise.fulfill();
+        } else {
+            promise.reject();
+        }
+    } catch(e) {
+        promise.reject(e);
     }
-
     return promise;
 }
 return runLint;
