@@ -153,11 +153,16 @@ SeleniumRunner.prototype.run = function (code, useDebugger) {
 };
 
 SeleniumRunner.prototype.testPageGenerator = function testPageGenerator(runId, resultCallerUrl, webdriverUrl, codeUrl) {
-    return "<html>\n" +
+    return "<!doctype html>\n" + 
+        "<html>\n" +
+        "<head>\n" +
         (this._scripturls ? map(this._scripturls, function(url) { return "<script src='" + url + "'></script>"; }).join("\n") : "" ) +
         "<script src='" + resultCallerUrl + "'></script>\n" +
         "<script src='" + webdriverUrl + "'></script>\n" + 
         "<script src='" + codeUrl + "'></script>\n" +
+        "</head>\n" +
+        "<body>\n" +
+        "</body>\n" +
         "</html>";
 };
 
