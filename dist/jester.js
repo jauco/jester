@@ -3742,7 +3742,40 @@ var $tools$47node$45wrappers$47fs = (function () {
 
 return require("fs");
 }());
-var $larry$47moduleLoaders$47delegatingLoader = (function (contractFileLoader,AMDFileLoader,fs,NotMyType) {
+var $tools$47node$45wrappers$47compileJsx = (function (test) {
+
+var visitors = require("react-tools/vendor/fbtransform/visitors").transformVisitors;
+var transform = require('react-tools/vendor/fbtransform/lib/transform').transform;
+
+return function compileJsx(source) {
+    return transform(visitors.react, source).code;
+};
+}($richard$47test));
+var $larry$47moduleLoaders$47compileJsx = (function (compileJsx,test) {
+
+return function compile(jsCode) {
+    var compiledCode;
+    //we're going to wrap the code. So add two markers to unwrap it later on:
+    //the plusses are to prevent this code from being split in the wrong place
+    //try removing them and see what happens :)
+    jsCode = "/*__jester" + "__split__*/" + jsCode + "/*__jester" + "__split__*/";
+
+    //esprima requires a full function and throws a syntax error when it 
+    //encounters a "return" statement outside of a function
+    jsCode = "function temp_wrapper(){" + jsCode + "}";
+
+    //react requires that the module starts with ...@jsx...
+    jsCode = "/** @jsx React.DOM */\n" + jsCode;
+
+    compiledCode = compileJsx(jsCode);
+
+    //unwrap it again
+    compiledCode = compiledCode.split("/*__jester" + "__split__*/")[1];
+
+    return compiledCode;
+};
+}($tools$47node$45wrappers$47compileJsx,$richard$47test));
+var $larry$47moduleLoaders$47delegatingLoader = (function (contractFileLoader,AMDFileLoader,fs,NotMyType,compileJsx,test,createSpy,EmptyModule) {
 
 var handlers = [
     contractFileLoader,
@@ -3752,6 +3785,19 @@ var handlers = [
 function handleOrDelegate(handlerId, baseDir, filePath, namespace, contents, callback) {
     if (handlers[handlerId]) {
         handlers[handlerId](baseDir, filePath, namespace, contents, function (error, module) {
+            var bodyWithFunction, compiledBodyWithFunction;
+            if (!error) {
+                try {
+                    if (module && module.hasOwnProperty("testFunctionBody")) {
+                        module.testFunctionBody = compileJsx(module.testFunctionBody);
+                    }
+                    if (module && module.hasOwnProperty("defineFunctionBody")) {
+                        module.defineFunctionBody = compileJsx(module.defineFunctionBody);
+                    }
+                } catch (e) {
+                    error = e;
+                }
+            }
             if (error instanceof NotMyType) {
                 handleOrDelegate(handlerId + 1, baseDir, filePath, namespace, contents, callback);
             } else {
@@ -3781,7 +3827,7 @@ function loadModule(baseDir, filePath, namespace, callback) {
 }
 
 return loadModule;
-}($larry$47moduleLoaders$47JesterDashSeperated$47contractFileLoader,$larry$47moduleLoaders$47AMD$47AMDFileLoader,$tools$47node$45wrappers$47fs,$larry$47moduleLoaders$47NotMyTypeError));
+}($larry$47moduleLoaders$47JesterDashSeperated$47contractFileLoader,$larry$47moduleLoaders$47AMD$47AMDFileLoader,$tools$47node$45wrappers$47fs,$larry$47moduleLoaders$47NotMyTypeError,$larry$47moduleLoaders$47compileJsx,$richard$47test,$richard$47createSpy,$larry$47moduleLoaders$47EmptyModule));
 var $larry$47dirWatcher = (function (fs,path,test,createSpy) {
 
 // "()" dir, callback:
@@ -3935,7 +3981,7 @@ function fileUpdate(cache, path, exists, namespace, sourcedir, addedOrChangedCal
     if (exists) {
         loadModule(sourcedir, path, namespace, function (errors, module) {
             if (errors) {
-                addedOrChangedCallback(errors);
+                addedOrChangedCallback(errors, path);
             } else {
                 if (module) {
                     doUpdate(module);
@@ -4374,6 +4420,7 @@ function Basesession() {
     //  - _sessionId (should be available when the first .then of the _messageQueue fires)
     //  - requestStart implementation
     //  - requestStop implementation
+    //  - validateParameters implementation
     this._messageQueue = new promiseQueue();
 }
 
@@ -4600,7 +4647,7 @@ Runner.prototype.findMissingMatches = function (expectations) {
 };
 return Runner;
 }($tools$47objLoop));
-var $tess$47runners$47Selenium$47SeleniumRunner = (function (Runner,RequestHandler,objLoop,rsvp,test,map,console) {
+var $tess$47runners$47Selenium$47SeleniumRunner = (function (Runner,RequestHandler,objLoop,rsvp,test,map) {
 
 function resultCallerCode(postUrl) {
     return "(function() {\n\"use strict\";\nvar $tools$47createXMLHTTPObject = (function () {\n\nfunction createXMLHTTPObject() {\n    var XMLHttpFactories = [\n        function () {return new XMLHttpRequest();},\n        function () {return new ActiveXObject(\"MSXML2.XMLHTTP.3.0\");},\n    ];\n    var xmlhttp, \n        i,\n        e;\n    for (i = 0; i < XMLHttpFactories.length; i += 1) {\n        try {\n            xmlhttp = XMLHttpFactories[i]();\n        } catch (e) {\n            continue;\n        }\n        break;\n    }\n    return xmlhttp;\n}\nreturn createXMLHTTPObject;\n}());\nvar $tools$47global = (function () {\n\n/*jshint evil:true*/\n\n// To be cross compatible across different js platforms you need a way to access the global object (i.e. the window\n// object in the browser). This can usually be achieved by returning \"this\" from a function that is not called as a \n// method. \n\n// Strict mode, however, throws an error when you do this. Calling the Function constructor with eval-able code gets \n// around this because that code is then automatically somewhat outside \"use strict\".\n\n// yes this is obscure and hackish, hence the long explanation and the jshint pragma.\nreturn new Function(\"return this\")();\n}());\nvar $tools$47json = (function (global) {\n\n/*\n    json2.js\n    2013-05-26\n\n    Public Domain.\n\n    NO WARRANTY EXPRESSED OR IMPLIED. USE AT YOUR OWN RISK.\n\n    See http://www.JSON.org/js.html\n\n\n    This code should be minified before deployment.\n    See http://javascript.crockford.com/jsmin.html\n\n    USE YOUR OWN COPY. IT IS EXTREMELY UNWISE TO LOAD CODE FROM SERVERS YOU DO\n    NOT CONTROL.\n\n\n    This file creates a global JSON object containing two methods: stringify\n    and parse.\n\n        JSON.stringify(value, replacer, space)\n            value       any JavaScript value, usually an object or array.\n\n            replacer    an optional parameter that determines how object\n                        values are stringified for objects. It can be a\n                        function or an array of strings.\n\n            space       an optional parameter that specifies the indentation\n                        of nested structures. If it is omitted, the text will\n                        be packed without extra whitespace. If it is a number,\n                        it will specify the number of spaces to indent at each\n                        level. If it is a string (such as '\\t' or '&nbsp;'),\n                        it contains the characters used to indent at each level.\n\n            This method produces a JSON text from a JavaScript value.\n\n            When an object value is found, if the object contains a toJSON\n            method, its toJSON method will be called and the result will be\n            stringified. A toJSON method does not serialize: it returns the\n            value represented by the name/value pair that should be serialized,\n            or undefined if nothing should be serialized. The toJSON method\n            will be passed the key associated with the value, and this will be\n            bound to the value\n\n            For example, this would serialize Dates as ISO strings.\n\n                Date.prototype.toJSON = function (key) {\n                    function f(n) {\n                        // Format integers to have at least two digits.\n                        return n < 10 ? '0' + n : n;\n                    }\n\n                    return this.getUTCFullYear()   + '-' +\n                         f(this.getUTCMonth() + 1) + '-' +\n                         f(this.getUTCDate())      + 'T' +\n                         f(this.getUTCHours())     + ':' +\n                         f(this.getUTCMinutes())   + ':' +\n                         f(this.getUTCSeconds())   + 'Z';\n                };\n\n            You can provide an optional replacer method. It will be passed the\n            key and value of each member, with this bound to the containing\n            object. The value that is returned from your method will be\n            serialized. If your method returns undefined, then the member will\n            be excluded from the serialization.\n\n            If the replacer parameter is an array of strings, then it will be\n            used to select the members to be serialized. It filters the results\n            such that only members with keys listed in the replacer array are\n            stringified.\n\n            Values that do not have JSON representations, such as undefined or\n            functions, will not be serialized. Such values in objects will be\n            dropped; in arrays they will be replaced with null. You can use\n            a replacer function to replace those with JSON values.\n            JSON.stringify(undefined) returns undefined.\n\n            The optional space parameter produces a stringification of the\n            value that is filled with line breaks and indentation to make it\n            easier to read.\n\n            If the space parameter is a non-empty string, then that string will\n            be used for indentation. If the space parameter is a number, then\n            the indentation will be that many spaces.\n\n            Example:\n\n            text = JSON.stringify(['e', {pluribus: 'unum'}]);\n            // text is '[\"e\",{\"pluribus\":\"unum\"}]'\n\n\n            text = JSON.stringify(['e', {pluribus: 'unum'}], null, '\\t');\n            // text is '[\\n\\t\"e\",\\n\\t{\\n\\t\\t\"pluribus\": \"unum\"\\n\\t}\\n]'\n\n            text = JSON.stringify([new Date()], function (key, value) {\n                return this[key] instanceof Date ?\n                    'Date(' + this[key] + ')' : value;\n            });\n            // text is '[\"Date(---current time---)\"]'\n\n\n        JSON.parse(text, reviver)\n            This method parses a JSON text to produce an object or array.\n            It can throw a SyntaxError exception.\n\n            The optional reviver parameter is a function that can filter and\n            transform the results. It receives each of the keys and values,\n            and its return value is used instead of the original value.\n            If it returns what it received, then the structure is not modified.\n            If it returns undefined then the member is deleted.\n\n            Example:\n\n            // Parse the text. Values that look like ISO date strings will\n            // be converted to Date objects.\n\n            myData = JSON.parse(text, function (key, value) {\n                var a;\n                if (typeof value === 'string') {\n                    a =\n/^(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2}):(\\d{2}):(\\d{2}(?:\\.\\d*)?)Z$/.exec(value);\n                    if (a) {\n                        return new Date(Date.UTC(+a[1], +a[2] - 1, +a[3], +a[4],\n                            +a[5], +a[6]));\n                    }\n                }\n                return value;\n            });\n\n            myData = JSON.parse('[\"Date(09/09/2001)\"]', function (key, value) {\n                var d;\n                if (typeof value === 'string' &&\n                        value.slice(0, 5) === 'Date(' &&\n                        value.slice(-1) === ')') {\n                    d = new Date(value.slice(5, -1));\n                    if (d) {\n                        return d;\n                    }\n                }\n                return value;\n            });\n\n\n    This is a reference implementation. You are free to copy, modify, or\n    redistribute.\n*/\n\n/*jslint evil: true, regexp: true */\n\n/*members \"\", \"\\b\", \"\\t\", \"\\n\", \"\\f\", \"\\r\", \"\\\"\", JSON, \"\\\\\", apply,\n    call, charCodeAt, getUTCDate, getUTCFullYear, getUTCHours,\n    getUTCMinutes, getUTCMonth, getUTCSeconds, hasOwnProperty, join,\n    lastIndex, length, parse, prototype, push, replace, slice, stringify,\n    test, toJSON, toString, valueOf\n*/\n\n\n// Create a JSON object only if one does not already exist. We create the\n// methods in a closure to avoid creating global variables.\nfunction buildJson() {\n    var JSON = {};\n    function f(n) {\n        // Format integers to have at least two digits.\n        return n < 10 ? '0' + n : n;\n    }\n\n    if (typeof Date.prototype.toJSON !== 'function') {\n\n        Date.prototype.toJSON = function () {\n\n            return isFinite(this.valueOf())\n                ? this.getUTCFullYear()     + '-' +\n                    f(this.getUTCMonth() + 1) + '-' +\n                    f(this.getUTCDate())      + 'T' +\n                    f(this.getUTCHours())     + ':' +\n                    f(this.getUTCMinutes())   + ':' +\n                    f(this.getUTCSeconds())   + 'Z'\n                : null;\n        };\n\n        String.prototype.toJSON      =\n            Number.prototype.toJSON  =\n            Boolean.prototype.toJSON = function () {\n                return this.valueOf();\n            };\n    }\n\n    var cx = /[\\u0000\\u00ad\\u0600-\\u0604\\u070f\\u17b4\\u17b5\\u200c-\\u200f\\u2028-\\u202f\\u2060-\\u206f\\ufeff\\ufff0-\\uffff]/g,\n        escapable = /[\\\\\\\"\\x00-\\x1f\\x7f-\\x9f\\u00ad\\u0600-\\u0604\\u070f\\u17b4\\u17b5\\u200c-\\u200f\\u2028-\\u202f\\u2060-\\u206f\\ufeff\\ufff0-\\uffff]/g,\n        gap,\n        indent,\n        meta = {    // table of character substitutions\n            '\\b': '\\\\b',\n            '\\t': '\\\\t',\n            '\\n': '\\\\n',\n            '\\f': '\\\\f',\n            '\\r': '\\\\r',\n            '\"' : '\\\\\"',\n            '\\\\': '\\\\\\\\'\n        },\n        rep;\n\n\n    function quote(string) {\n\n    // If the string contains no control characters, no quote characters, and no\n    // backslash characters, then we can safely slap some quotes around it.\n    // Otherwise we must also replace the offending characters with safe escape\n    // sequences.\n\n        escapable.lastIndex = 0;\n        return escapable.test(string) ? '\"' + string.replace(escapable, function (a) {\n            var c = meta[a];\n            return typeof c === 'string'\n                ? c\n                : '\\\\u' + ('0000' + a.charCodeAt(0).toString(16)).slice(-4);\n        }) + '\"' : '\"' + string + '\"';\n    }\n\n\n    function str(key, holder) {\n\n    // Produce a string from holder[key].\n\n        var i,          // The loop counter.\n            k,          // The member key.\n            v,          // The member value.\n            length,\n            mind = gap,\n            partial,\n            value = holder[key];\n\n    // If the value has a toJSON method, call it to obtain a replacement value.\n\n        if (value && typeof value === 'object' &&\n                typeof value.toJSON === 'function') {\n            value = value.toJSON(key);\n        }\n\n    // If we were called with a replacer function, then call the replacer to\n    // obtain a replacement value.\n\n        if (typeof rep === 'function') {\n            value = rep.call(holder, key, value);\n        }\n\n    // What happens next depends on the value's type.\n\n        switch (typeof value) {\n        case 'string':\n            return quote(value);\n\n        case 'number':\n\n    // JSON numbers must be finite. Encode non-finite numbers as null.\n\n            return isFinite(value) ? String(value) : 'null';\n\n        case 'boolean':\n        case 'null':\n\n    // If the value is a boolean or null, convert it to a string. Note:\n    // typeof null does not produce 'null'. The case is included here in\n    // the remote chance that this gets fixed someday.\n\n            return String(value);\n\n    // If the type is 'object', we might be dealing with an object or an array or\n    // null.\n\n        case 'object':\n\n    // Due to a specification blunder in ECMAScript, typeof null is 'object',\n    // so watch out for that case.\n\n            if (!value) {\n                return 'null';\n            }\n\n    // Make an array to hold the partial results of stringifying this object value.\n\n            gap += indent;\n            partial = [];\n\n    // Is the value an array?\n\n            if (Object.prototype.toString.apply(value) === '[object Array]') {\n\n    // The value is an array. Stringify every element. Use null as a placeholder\n    // for non-JSON values.\n\n                length = value.length;\n                for (i = 0; i < length; i += 1) {\n                    partial[i] = str(i, value) || 'null';\n                }\n\n    // Join all of the elements together, separated with commas, and wrap them in\n    // brackets.\n\n                v = partial.length === 0\n                    ? '[]'\n                    : gap\n                    ? '[\\n' + gap + partial.join(',\\n' + gap) + '\\n' + mind + ']'\n                    : '[' + partial.join(',') + ']';\n                gap = mind;\n                return v;\n            }\n\n    // If the replacer is an array, use it to select the members to be stringified.\n\n            if (rep && typeof rep === 'object') {\n                length = rep.length;\n                for (i = 0; i < length; i += 1) {\n                    if (typeof rep[i] === 'string') {\n                        k = rep[i];\n                        v = str(k, value);\n                        if (v) {\n                            partial.push(quote(k) + (gap ? ': ' : ':') + v);\n                        }\n                    }\n                }\n            } else {\n\n    // Otherwise, iterate through all of the keys in the object.\n\n                for (k in value) {\n                    if (Object.prototype.hasOwnProperty.call(value, k)) {\n                        v = str(k, value);\n                        if (v) {\n                            partial.push(quote(k) + (gap ? ': ' : ':') + v);\n                        }\n                    }\n                }\n            }\n\n    // Join all of the member texts together, separated with commas,\n    // and wrap them in braces.\n\n            v = partial.length === 0\n                ? '{}'\n                : gap\n                ? '{\\n' + gap + partial.join(',\\n' + gap) + '\\n' + mind + '}'\n                : '{' + partial.join(',') + '}';\n            gap = mind;\n            return v;\n        }\n    }\n\n    // If the JSON object does not yet have a stringify method, give it one.\n\n    if (typeof JSON.stringify !== 'function') {\n        JSON.stringify = function (value, replacer, space) {\n\n    // The stringify method takes a value and an optional replacer, and an optional\n    // space parameter, and returns a JSON text. The replacer can be a function\n    // that can replace values, or an array of strings that will select the keys.\n    // A default replacer method can be provided. Use of the space parameter can\n    // produce text that is more easily readable.\n\n            var i;\n            gap = '';\n            indent = '';\n\n    // If the space parameter is a number, make an indent string containing that\n    // many spaces.\n\n            if (typeof space === 'number') {\n                for (i = 0; i < space; i += 1) {\n                    indent += ' ';\n                }\n\n    // If the space parameter is a string, it will be used as the indent string.\n\n            } else if (typeof space === 'string') {\n                indent = space;\n            }\n\n    // If there is a replacer, it must be a function or an array.\n    // Otherwise, throw an error.\n\n            rep = replacer;\n            if (replacer && typeof replacer !== 'function' &&\n                    (typeof replacer !== 'object' ||\n                    typeof replacer.length !== 'number')) {\n                throw new Error('JSON.stringify');\n            }\n\n    // Make a fake root object containing our value under the key of ''.\n    // Return the result of stringifying the value.\n\n            return str('', {'': value});\n        };\n    }\n\n\n    // If the JSON object does not yet have a parse method, give it one.\n\n    if (typeof JSON.parse !== 'function') {\n        JSON.parse = function (text, reviver) {\n\n    // The parse method takes a text and an optional reviver function, and returns\n    // a JavaScript value if the text is a valid JSON text.\n\n            var j;\n\n            function walk(holder, key) {\n\n    // The walk method is used to recursively walk the resulting structure so\n    // that modifications can be made.\n\n                var k, v, value = holder[key];\n                if (value && typeof value === 'object') {\n                    for (k in value) {\n                        if (Object.prototype.hasOwnProperty.call(value, k)) {\n                            v = walk(value, k);\n                            if (v !== undefined) {\n                                value[k] = v;\n                            } else {\n                                delete value[k];\n                            }\n                        }\n                    }\n                }\n                return reviver.call(holder, key, value);\n            }\n\n\n    // Parsing happens in four stages. In the first stage, we replace certain\n    // Unicode characters with escape sequences. JavaScript handles many characters\n    // incorrectly, either silently deleting them, or treating them as line endings.\n\n            text = String(text);\n            cx.lastIndex = 0;\n            if (cx.test(text)) {\n                text = text.replace(cx, function (a) {\n                    return '\\\\u' +\n                        ('0000' + a.charCodeAt(0).toString(16)).slice(-4);\n                });\n            }\n\n    // In the second stage, we run the text against regular expressions that look\n    // for non-JSON patterns. We are especially concerned with '()' and 'new'\n    // because they can cause invocation, and '=' because it can cause mutation.\n    // But just to be safe, we want to reject all unexpected forms.\n\n    // We split the second stage into 4 regexp operations in order to work around\n    // crippling inefficiencies in IE's and Safari's regexp engines. First we\n    // replace the JSON backslash pairs with '@' (a non-JSON character). Second, we\n    // replace all simple value tokens with ']' characters. Third, we delete all\n    // open brackets that follow a colon or comma or that begin the text. Finally,\n    // we look to see that the remaining characters are only whitespace or ']' or\n    // ',' or ':' or '{' or '}'. If that is so, then the text is safe for eval.\n\n            if (/^[\\],:{}\\s]*$/\n                    .test(text.replace(/\\\\(?:[\"\\\\\\/bfnrt]|u[0-9a-fA-F]{4})/g, '@')\n                        .replace(/\"[^\"\\\\\\n\\r]*\"|true|false|null|-?\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d+)?/g, ']')\n                        .replace(/(?:^|:|,)(?:\\s*\\[)+/g, ''))) {\n\n    // In the third stage we use the eval function to compile the text into a\n    // JavaScript structure. The '{' operator is subject to a syntactic ambiguity\n    // in JavaScript: it can begin a block or an object literal. We wrap the text\n    // in parens to eliminate the ambiguity.\n\n                j = eval('(' + text + ')');\n\n    // In the optional fourth stage, we recursively walk the new structure, passing\n    // each name/value pair to a reviver function for possible transformation.\n\n                return typeof reviver === 'function'\n                    ? walk({'': j}, '')\n                    : j;\n            }\n\n    // If the text is not JSON parseable, then a SyntaxError is thrown.\n\n            throw new SyntaxError('JSON.parse');\n        };\n    }\n    return JSON;\n}\nif (global.JSON === undefined) {\n    return buildJson();\n} else {\n    return global.JSON;\n}\n}($tools$47global));\nvar $tess$47runners$47Selenium$47seleniumResultcallback = (function (createXMLHTTPObject,JSON) {\n\nvar postUrl = " + JSON.stringify(postUrl) + ";\n\nfunction finishRun(passed, details) {\n    var req = createXMLHTTPObject();\n    req.open(\"POST\", postUrl, true);\n    req.setRequestHeader(\"Content-type\",\"application/json\");\n    req.send(JSON.stringify({passed: passed, details: details}));\n}\n\nwindow.onerror = function(errorMsg, url, lineNumber) {\n    url = url.substr((window.location.protocol+\"//\"+window.location.host+\"/runtest\").length);\n    finishRun({\"run error\": [url, lineNumber, errorMsg]});\n};\n\nwindow.resultCallback = finishRun;\n\n}($tools$47createXMLHTTPObject,$tools$47json));\n\n}());";
@@ -4740,11 +4787,16 @@ SeleniumRunner.prototype.run = function (code, useDebugger) {
 };
 
 SeleniumRunner.prototype.testPageGenerator = function testPageGenerator(runId, resultCallerUrl, webdriverUrl, codeUrl) {
-    return "<html>\n" +
+    return "<!doctype html>\n" + 
+        "<html>\n" +
+        "<head>\n" +
         (this._scripturls ? map(this._scripturls, function(url) { return "<script src='" + url + "'></script>"; }).join("\n") : "" ) +
         "<script src='" + resultCallerUrl + "'></script>\n" +
         "<script src='" + webdriverUrl + "'></script>\n" + 
         "<script src='" + codeUrl + "'></script>\n" +
+        "</head>\n" +
+        "<body>\n" +
+        "</body>\n" +
         "</html>";
 };
 
@@ -4753,7 +4805,7 @@ SeleniumRunner.prototype.toString = function () {
 };
 
 return SeleniumRunner;
-}($tess$47runners$47Runner,$tools$47requestHandler,$tools$47objLoop,$tools$47rsvp,$richard$47test,$tools$47map,$tools$47node$45wrappers$47console));
+}($tess$47runners$47Runner,$tools$47requestHandler,$tools$47objLoop,$tools$47rsvp,$richard$47test,$tools$47map));
 var $tools$47node$45wrappers$47child_process = (function () {
 
 return require('child_process');
@@ -4773,6 +4825,7 @@ var NodeRunnerProvides = [
     "https://npmjs.org/package/js-yaml",
     "https://npmjs.org/package/jshint",
     "https://npmjs.org/package/node-inspector",
+    "https://npmjs.org/package/react-tools",
     "https://github.com/mishoo/UglifyJS",
 
     "http://nodejs.org/api/assert.html",
@@ -4943,13 +4996,24 @@ function loadTestRunners(writeLog, testSystem, webserver, seleniumServer, runner
                 break;
             case 'sauce':
                 writeLog(0, "launching sauce runner: " + runner.parameters.browserType);
-                launchSeleniumRunner(runner, index, function () { return new Saucesession(saucelabsUrl, saucelabsUser, saucelabsKey, runner.parameters.browserType, runner.parameters.keepAlive); });
+                if (!runner.parameters.hasOwnProperty("keepAlive")) {
+                    writeLog(1, "You should provide a parameter called keepAlive to the sauce configuration to indicate how long to wait before closing the session.");
+                }
+                else if (!Saucesession.type.hasOwnProperty(runner.parameters.browserType)) {
+                    writeLog(1, "You should provide a parameter called browserType to the sauce configuration to indicate what browser to launch. Valid values are: " + Object.keys(Saucesession.type));
+                } else {
+                    launchSeleniumRunner(runner, index, function () {return new Saucesession(saucelabsUrl, saucelabsUser, saucelabsKey, runner.parameters.browserType, runner.parameters.keepAlive); });
+                }
                 break;
             case 'selenium':
                 seleniumServer.then(function (server) {
                     selenium_started = true;
                     writeLog(0, "launching selenium runner: " + runner.parameters.browserType);
-                    launchSeleniumRunner(runner, index, function () { return new LocalSeleniumsession(server.serverUrl, runner.parameters.browserType); });
+                    if (!LocalSeleniumsession.type.hasOwnProperty(runner.parameters.browserType)) {
+                        writeLog(1, "You should provide a parameter called browserType to the sauce configuration to indicate what browser to launch. Valid values are: " + Object.keys(Saucesession.type));
+                    } else {
+                        launchSeleniumRunner(runner, index, function () { return new LocalSeleniumsession(server.serverUrl, runner.parameters.browserType); });
+                    }
                 }).fail(function (e) { 
                     if (!selenium_started) {
                         writeLog(0, "selenium server failed to start");
@@ -5087,7 +5151,10 @@ function LaunchSeleniumServer(port, jarLocation, chromedriverLocation, iedriverL
 }
 return LaunchSeleniumServer;
 }($tools$47rsvp,$tools$47node$45wrappers$47child_process,$tools$47node$45wrappers$47os,$tools$47node$45wrappers$47http,$tools$47node$45wrappers$47url,$richard$47test,$richard$47createSpy,$richard$47any,$tools$47node$45wrappers$47fs));
-var $igor$47loadconfig = (function (map,test) {
+var $igor$47loadconfig = (function (fs,path,map,test) {
+
+//max complexity higher because it's a flat if statement list for providing default values
+/* jshint maxcomplexity: 20 */
 
 // "()" exceptionHandler:
 //     exceptionHandler <- "Error: invalid config"
@@ -5109,10 +5176,6 @@ var $igor$47loadconfig = (function (map,test) {
 //         string+
 //         "<absolute path>":
 //         "<ends with pathsep>":
-
-var path = require('path'),
-    fs = require('fs');
-
 function dirSpecToPath(baseDir, dirSpec) {
     return path.resolve(baseDir, "./" + dirSpec) + path.sep;
 }
@@ -5150,52 +5213,45 @@ function loadConfig(configPath, appPath) {
     });
 
     if (config.runners) {
-        config.runners = map(config.runners, function (data) { return { type: data[0], parameters: data[1] }; });
+        config.runners = map(config.runners, function (data) {
+            return { type: data[0], parameters: data[1] }; 
+        });
     } else {
         config.runners = [];
     }
-    if (!config.lintpreferences) {
-        config.lintpreferences = {};
+    function setDefault(/*"the", "prop", "path", val*/) {
+        var i, 
+            currentKey = config,
+            lastProperty = arguments[arguments.length - 2],
+            val = arguments[arguments.length - 1];
+        for (i = 0; i < arguments.length - 2; i += 1) {
+            if (!currentKey[arguments[i]]) {
+                currentKey[arguments[i]] = {};
+                currentKey = currentKey[arguments[i]];
+            } else {
+                currentKey = currentKey[arguments[i]];
+            }
+        }
+        if (!currentKey[lastProperty]) {
+            currentKey[lastProperty] = val;
+        }
     }
-    if (!config.webserverport) {
-        config.webserverport = 8081;
-    }
-    if (!config.graphicDebuggerport) {
-        config.graphicDebuggerport = 8080;
-    }
-    if (!config.selenium) {
-        config.selenium = {};
-    }
-    if (!config.selenium.binaries) {
-        config.selenium.binaries = {};
-    }
-    if (!config.selenium.port) {
-        config.selenium.port = 8082;
-    }
-    if (!config.selenium.binaries.seleniumServer) {
-        config.selenium.binaries.seleniumServer = path.join(appPath, "selenium-server-standalone-2.19.0.jar");
-    }
-    if (!config.selenium.binaries.chromedriver) {
-        config.selenium.binaries.chromedriver = path.join(appPath, "chromedriver.exe");
-    }
-    if (!config.selenium.binaries.iedriver) {
-        config.selenium.binaries.iedriver = path.join(appPath, "IEDriver_x64_2.33.0.exe");
-    }
-    if (!config.saucelabs) {
-        config.saucelabs = {};
-    }
-    if (!config.saucelabs.url) {
-        config.saucelabs.url = "http://localhost:4445/wd/hub";
-    }
-    test(config.saucelabs.hasOwnProperty("username"), "You should provide a username for accessing saucelabs.");
-    test(config.saucelabs.hasOwnProperty("key"), "You should provide a key for accessing saucelabs (hexadecimal token string).");
+
+    setDefault("lintpreferences", {});
+    setDefault("webserverport", 8081);
+    setDefault("graphicDebuggerport", 8080);
+    setDefault("selenium","port", 8082);
+    setDefault("selenium","binaries","seleniumServer", path.join(appPath, "selenium-server-standalone-2.35.0.jar"));
+    setDefault("selenium","binaries","chromedriver", path.join(appPath, "chromedriver2.2.exe"));
+    setDefault("selenium","binaries","iedriver", path.join(appPath, "IEDriver_x64_2.35.2.exe"));
+    setDefault("saucelabs","url", "http://localhost:4445/wd/hub");
     if (errors.length > 0) {
         throw new Error(errors.join("\n"));
     }
     return config;
 }
 return loadConfig;
-}($tools$47map,$richard$47test));
+}($tools$47node$45wrappers$47fs,$tools$47node$45wrappers$47path,$tools$47map,$richard$47test));
 var $igor$47runTests$47debugRequested = (function () {
 
 function debugRequested(code) {
@@ -5518,35 +5574,38 @@ function reportResult(result, Module, writeLog) {
 
 function runLint(AMDid, snapshot, lintpreferences, writeLog) {
     var promise = rsvp.promise();
-    var module = snapshot[AMDid];
-    
-    writeLog(0, "Running linter...");
-    //module expectations are in scope
-    var predefinedVariables = objLoop(module.expectations, function (key, value) {
-        return false; //false indicates to jsHint that you may not assign to the variable;
-    });
-    //dependencies are in scope
-    map(module.dependencyVariables, function (variableName) {
-        predefinedVariables[variableName] = false;
-    });
-    
-    //when evaluating the test code, __module is in scope as well
-    predefinedVariables["__module"] = false;
-    
-    var testCodeResult = linter(module.testFunctionBody, lintpreferences, predefinedVariables);
-    reportResult(testCodeResult, "ModuleTests", writeLog);
+    try {
+        var module = snapshot[AMDid];
+        
+        writeLog(0, "Running linter...");
+        //module expectations are in scope
+        var predefinedVariables = objLoop(module.expectations, function (key, value) {
+            return false; //false indicates to jsHint that you may not assign to the variable;
+        });
+        //dependencies are in scope
+        map(module.dependencyVariables, function (variableName) {
+            predefinedVariables[variableName] = false;
+        });
+        
+        //when evaluating the test code, __module is in scope as well
+        predefinedVariables["__module"] = false;
+        
+        var testCodeResult = linter(module.testFunctionBody, lintpreferences, predefinedVariables);
+        reportResult(testCodeResult, "ModuleTests", writeLog);
 
-    delete predefinedVariables["__module"];
+        delete predefinedVariables["__module"];
 
-    var moduleCodeResult = linter(module.defineFunctionBody, lintpreferences, predefinedVariables);
-    reportResult(moduleCodeResult, "Module", writeLog);
+        var moduleCodeResult = linter(module.defineFunctionBody, lintpreferences, predefinedVariables);
+        reportResult(moduleCodeResult, "Module", writeLog);
 
-    if (testCodeResult.passed && moduleCodeResult.passed) {
-        promise.fulfill();
-    } else {
-        promise.reject();
+        if (testCodeResult.passed && moduleCodeResult.passed) {
+            promise.fulfill();
+        } else {
+            promise.reject();
+        }
+    } catch(e) {
+        promise.reject(e);
     }
-
     return promise;
 }
 return runLint;
@@ -5742,6 +5801,13 @@ seleniumServer = launchSeleniumServer(
 
 var testSystem = new TestSystem();
 
+if (!config.saucelabs.hasOwnProperty("username")) {
+    writeLog(1, "You should provide a saucelabs.username for accessing saucelabs.");
+}
+if (!config.saucelabs.hasOwnProperty("key")) {
+    writeLog(1, "You should provide a key for accessing saucelabs (hexadecimal token string).");
+}
+
 //start testrunners based on config
 loadTestRunners(
     writeLog,
@@ -5778,7 +5844,7 @@ moduleWatcherDisposer = getModules(
                 writeLog(0, errors ? errors.toString() : "");
             });
         } else {
-            writeLog(0, "Couldn't load '" + snapshot[AMDid].path + "'. ");
+            writeLog(0, "Couldn't load '" + AMDid + "'. ");
             writeLog(0, errors.stack);
         }
     },
