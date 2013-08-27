@@ -137,9 +137,9 @@ function loadConfig(configPath, appPath) {
     setDefault("webserverport", 8081);
     setDefault("graphicDebuggerport", 8080);
     setDefault("selenium","port", 8082);
-    setDefault("selenium","binaries","seleniumServer", path.join(appPath, "selenium-server-standalone-2.19.0.jar"));
-    setDefault("selenium","binaries","chromedriver", path.join(appPath, "chromedriver.exe"));
-    setDefault("selenium","binaries","iedriver", path.join(appPath, "IEDriver_x64_2.33.0.exe"));
+    setDefault("selenium","binaries","seleniumServer", path.join(appPath, "selenium-server-standalone-2.35.0.jar"));
+    setDefault("selenium","binaries","chromedriver", path.join(appPath, "chromedriver2.2.exe"));
+    setDefault("selenium","binaries","iedriver", path.join(appPath, "IEDriver_x64_2.35.2.exe"));
     setDefault("saucelabs","url", "http://localhost:4445/wd/hub");
     if (errors.length > 0) {
         throw new Error(errors.join("\n"));
