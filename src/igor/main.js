@@ -63,6 +63,13 @@ seleniumServer = launchSeleniumServer(
 
 var testSystem = new TestSystem();
 
+if (!config.saucelabs.hasOwnProperty("username")) {
+    writeLog(1, "You should provide a saucelabs.username for accessing saucelabs.");
+}
+if (!config.saucelabs.hasOwnProperty("key")) {
+    writeLog(1, "You should provide a key for accessing saucelabs (hexadecimal token string).");
+}
+
 //start testrunners based on config
 loadTestRunners(
     writeLog,

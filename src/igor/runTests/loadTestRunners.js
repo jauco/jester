@@ -39,13 +39,24 @@ function loadTestRunners(writeLog, testSystem, webserver, seleniumServer, runner
                 break;
             case 'sauce':
                 writeLog(0, "launching sauce runner: " + runner.parameters.browserType);
-                launchSeleniumRunner(runner, index, function () { return new Saucesession(saucelabsUrl, saucelabsUser, saucelabsKey, runner.parameters.browserType, runner.parameters.keepAlive); });
+                if (!runner.parameters.hasOwnProperty("keepAlive")) {
+                    writeLog(1, "You should provide a parameter called keepAlive to the sauce configuration to indicate how long to wait before closing the session.");
+                }
+                else if (!Saucesession.type.hasOwnProperty(runner.parameters.browserType)) {
+                    writeLog(1, "You should provide a parameter called browserType to the sauce configuration to indicate what browser to launch. Valid values are: " + Object.keys(Saucesession.type));
+                } else {
+                    launchSeleniumRunner(runner, index, function () {return new Saucesession(saucelabsUrl, saucelabsUser, saucelabsKey, runner.parameters.browserType, runner.parameters.keepAlive); });
+                }
                 break;
             case 'selenium':
                 seleniumServer.then(function (server) {
                     selenium_started = true;
                     writeLog(0, "launching selenium runner: " + runner.parameters.browserType);
-                    launchSeleniumRunner(runner, index, function () { return new LocalSeleniumsession(server.serverUrl, runner.parameters.browserType); });
+                    if (!LocalSeleniumsession.type.hasOwnProperty(runner.parameters.browserType)) {
+                        writeLog(1, "You should provide a parameter called browserType to the sauce configuration to indicate what browser to launch. Valid values are: " + Object.keys(Saucesession.type));
+                    } else {
+                        launchSeleniumRunner(runner, index, function () { return new LocalSeleniumsession(server.serverUrl, runner.parameters.browserType); });
+                    }
                 }).fail(function (e) { 
                     if (!selenium_started) {
                         writeLog(0, "selenium server failed to start");

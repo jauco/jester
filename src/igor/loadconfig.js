@@ -1,19 +1,23 @@
 ---
 expects:
-    require: http://nodejs.org/api/modules.html
-    _fs: http://nodejs.org/api/fs.html
-    _path: http://nodejs.org/api/path.html
+    console: http://developer.mozilla.org/en-US/docs/DOM/console.log
+
 dependencies:
+    fs: tools/node-wrappers/fs
+    path: tools/node-wrappers/path
     map: tools/map
+
     test: richard/test
 ---
-var path = require('path');
 test(__module.AMDid, function (it) {
     function createDependencyStructure() {
         var structure = {
             fs: {
                 readFileSync: function (file, encoding) {
                     return structure.data;
+                },
+                existsSync: function () {
+                    return true;
                 }
             },
             path: {
@@ -25,23 +29,29 @@ test(__module.AMDid, function (it) {
                     }
                 },
                 dirname: path.dirname,
-                sep: "\\"
+                sep: "\\",
+                join: path.join
             },
-            data: '{"includes": {"includeA":"./foo"}, "source":"../bar", "output": "baz"}'
+            data: '{"includes": {"includeA":"./foo", "source":"../bar" }, "output": "baz", "saucelabs": {"username": "", "key": ""} }'
         };
-        structure.loadConfig = __module.constructor(structure.fs, structure.path);
+        structure.loadConfig = __module.constructor(structure.fs, structure.path, map);
         return structure;
     }
     it("turns 'includes', 'source' and 'output' into absolute paths", function (expect) {
         var structure = createDependencyStructure();
-        var config = structure.loadConfig();
+        var config = structure.loadConfig("C:\\Code\\myproject\\jester_config.json", "c:\\app\\path\\");
         expect(config.includes.includeA).toEqual("C:\\Code\\myproject\\foo\\");
-        expect(config.source).toEqual("C:\\Code\\bar\\");
+        expect(config.includes.source).toEqual("C:\\Code\\bar\\");
         expect(config.output).toEqual("C:\\Code\\myproject\\baz\\");
+        //console.log(config.selenium);
+        expect(config.selenium.binaries.seleniumServer).toEqual("c:\\app\\path\\selenium-server-standalone-2.35.0.jar");
     });
 });
 ---
 ---
+//max complexity higher because it's a flat if statement list for providing default values
+/* jshint maxcomplexity: 20 */
+
 // "()" exceptionHandler:
 //     exceptionHandler <- "Error: invalid config"
 //     loaded_config as returnvalue
@@ -62,10 +72,6 @@ test(__module.AMDid, function (it) {
 //         string+
 //         "<absolute path>":
 //         "<ends with pathsep>":
-
-var path = require('path'),
-    fs = require('fs');
-
 function dirSpecToPath(baseDir, dirSpec) {
     return path.resolve(baseDir, "./" + dirSpec) + path.sep;
 }
@@ -103,45 +109,38 @@ function loadConfig(configPath, appPath) {
     });
 
     if (config.runners) {
-        config.runners = map(config.runners, function (data) { return { type: data[0], parameters: data[1] }; });
+        config.runners = map(config.runners, function (data) {
+            return { type: data[0], parameters: data[1] }; 
+        });
     } else {
         config.runners = [];
     }
-    if (!config.lintpreferences) {
-        config.lintpreferences = {};
+    function setDefault(/*"the", "prop", "path", val*/) {
+        var i, 
+            currentKey = config,
+            lastProperty = arguments[arguments.length - 2],
+            val = arguments[arguments.length - 1];
+        for (i = 0; i < arguments.length - 2; i += 1) {
+            if (!currentKey[arguments[i]]) {
+                currentKey[arguments[i]] = {};
+                currentKey = currentKey[arguments[i]];
+            } else {
+                currentKey = currentKey[arguments[i]];
+            }
+        }
+        if (!currentKey[lastProperty]) {
+            currentKey[lastProperty] = val;
+        }
     }
-    if (!config.webserverport) {
-        config.webserverport = 8081;
-    }
-    if (!config.graphicDebuggerport) {
-        config.graphicDebuggerport = 8080;
-    }
-    if (!config.selenium) {
-        config.selenium = {};
-    }
-    if (!config.selenium.binaries) {
-        config.selenium.binaries = {};
-    }
-    if (!config.selenium.port) {
-        config.selenium.port = 8082;
-    }
-    if (!config.selenium.binaries.seleniumServer) {
-        config.selenium.binaries.seleniumServer = path.join(appPath, "selenium-server-standalone-2.19.0.jar");
-    }
-    if (!config.selenium.binaries.chromedriver) {
-        config.selenium.binaries.chromedriver = path.join(appPath, "chromedriver.exe");
-    }
-    if (!config.selenium.binaries.iedriver) {
-        config.selenium.binaries.iedriver = path.join(appPath, "IEDriver_x64_2.33.0.exe");
-    }
-    if (!config.saucelabs) {
-        config.saucelabs = {};
-    }
-    if (!config.saucelabs.url) {
-        config.saucelabs.url = "http://localhost:4445/wd/hub";
-    }
-    test(config.saucelabs.hasOwnProperty("username"), "You should provide a username for accessing saucelabs.");
-    test(config.saucelabs.hasOwnProperty("key"), "You should provide a key for accessing saucelabs (hexadecimal token string).");
+
+    setDefault("lintpreferences", {});
+    setDefault("webserverport", 8081);
+    setDefault("graphicDebuggerport", 8080);
+    setDefault("selenium","port", 8082);
+    setDefault("selenium","binaries","seleniumServer", path.join(appPath, "selenium-server-standalone-2.19.0.jar"));
+    setDefault("selenium","binaries","chromedriver", path.join(appPath, "chromedriver.exe"));
+    setDefault("selenium","binaries","iedriver", path.join(appPath, "IEDriver_x64_2.33.0.exe"));
+    setDefault("saucelabs","url", "http://localhost:4445/wd/hub");
     if (errors.length > 0) {
         throw new Error(errors.join("\n"));
     }
