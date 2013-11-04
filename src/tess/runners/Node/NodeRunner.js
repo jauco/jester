@@ -6,6 +6,7 @@ expects:
     _fs: http://nodejs.org/api/fs.html
     _debugger: https://npmjs.org/package/node-inspector
     _child_process: http://nodejs.org/api/child_process.html
+    __dirname: http://nodejs.org/api/globals.html
     setTimeout: http://www.w3.org/TR/html5/webappapis.html#timers
     console: http://developer.mozilla.org/en-US/docs/DOM/console.log
 dependencies:
@@ -141,8 +142,8 @@ NodeRunner.prototype.run = function(code, useDebugger) {
                 });
                 if (useDebugger) {
                     setTimeout(function () {
-                        console.log("launching graphic debugger (open https://localhost:8080 in your browser)");
-                        child_process.exec(".\\node_modules\\.bin\\node-inspector.cmd", function (err, stdout, stderr) {
+                        console.log("launching graphic debugger (open http://localhost:8080 in your browser)");
+                        child_process.exec(".\\node_modules\\.bin\\node-inspector.cmd", {cwd: __dirname},  function (err, stdout, stderr) {
                             if (stdout.length > 0) {
                                 console.log(stdout);
                             }
