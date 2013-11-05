@@ -4936,8 +4936,8 @@ NodeRunner.prototype.run = function(code, useDebugger) {
                 });
                 if (useDebugger) {
                     setTimeout(function () {
-                        console.log("launching graphic debugger (open https://localhost:8080 in your browser)");
-                        child_process.exec(".\\node_modules\\.bin\\node-inspector.cmd", function (err, stdout, stderr) {
+                        console.log("launching graphic debugger (open http://localhost:8080 in your browser)");
+                        child_process.exec(".\\node_modules\\.bin\\node-inspector.cmd", {cwd: __dirname}, function (err, stdout, stderr) {
                             if (stdout.length > 0) {
                                 console.log(stdout);
                             }
