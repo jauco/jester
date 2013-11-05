@@ -17,9 +17,14 @@ function finishRun(passed, details) {
     req.send(JSON.stringify({passed: passed, details: details}));
 }
 
-window.onerror = function(errorMsg, url, lineNumber) {
-    url = url.substr((window.location.protocol+"//"+window.location.host+"/runtest").length);
-    finishRun({"run error": [url, lineNumber, errorMsg]});
+window.onerror = function(errorMsg, url, lineNumber, error) {
+    var details;
+    if (error) {
+        details = error.stack;
+    } else {
+        details = errorMsg + ' at line ' + lineNumber + ' at ' + url;
+    }
+    finishRun(false, [details]);
 };
 
 window.resultCallback = finishRun;
