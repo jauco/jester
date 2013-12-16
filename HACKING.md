@@ -25,7 +25,7 @@ You attach a graphical debugger ([node-inspector]) to the unittests, or to the c
 
         .\dist\node.exe .\dist\jester.js
 
-2. Add a breakpoint in a unittest by inserting the string `breakpoint;` somewhere and save the file.
+2. Add a breakpoint in a unittest by inserting the string `debugger;` somewhere and save the file.
 3. Open a browser on http://localhost:8080
 4. Press the play button to start running the unittest
 
