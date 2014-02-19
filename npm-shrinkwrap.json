@@ -795,6 +795,27 @@
           }
         }
       }
+    },
+    "rewire-webpack": {
+      "version": "0.0.2",
+      "from": "git://github.com/jauco/rewire-webpack#951b11c16429f6307e235a170f4a16c13f35b15f",
+      "resolved": "git://github.com/jauco/rewire-webpack#951b11c16429f6307e235a170f4a16c13f35b15f",
+      "dependencies": {
+        "enhanced-resolve": {
+          "version": "0.7.1",
+          "from": "enhanced-resolve@0.x",
+          "dependencies": {
+            "tapable": {
+              "version": "0.1.5",
+              "from": "tapable@0.1.x"
+            }
+          }
+        },
+        "rewire": {
+          "version": "2.0.0",
+          "from": "rewire@2.x"
+        }
+      }
     }
   }
 }
