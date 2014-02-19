@@ -2,11 +2,13 @@
 
 var fs = require('fs');
 var p = require("path");
+var FEATURES_PATH = "app/features/"
+
 
 var defaultConf = {
     eslintRulesDir: p.resolve("./eslint-rules/"),
     srcPath: p.resolve("./src/"),
-    entryGlob: "app/features/*/feature.js",
+    entryGlob: FEATURES_PATH + "*/feature.js",
     karmaPath: p.resolve("./build/karma/"),
     karmaOptions: {
         proxies: {},
@@ -137,6 +139,7 @@ var defaultConf = {
 };
 var mkdirp = require('mkdirp');
 mkdirp(defaultConf.karmaPath);
+mkdirp(p.join(defaultConf.srcPath, FEATURES_PATH));
 mkdirp(defaultConf.artifactPath);
 mkdirp(defaultConf.eslintRulesDir);
 
