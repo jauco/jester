@@ -22,7 +22,7 @@ function runFileTests(path) {
             clearDir(config.karmaPath, function directoryCleared() {
                 var testfile;
                 if (path.substr(-8) === ".test.js") {
-                    createTestFile(testfile, config.karmaPath, function filesGenerated() {
+                    createTestFile(path, config.karmaPath, function filesGenerated() {
                         karma.triggerRun();
                     });
                 } else {
