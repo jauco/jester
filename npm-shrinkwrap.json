@@ -1,6 +1,6 @@
 {
   "name": "jester-tester",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "dependencies": {
     "karma-script-launcher": {
       "version": "0.1.0",
@@ -15,8 +15,9 @@
       "from": "karma-firefox-launcher@*"
     },
     "karma-jasmine": {
-      "version": "0.1.5",
-      "from": "karma-jasmine@*"
+      "version": "0.2.1",
+      "from": "karma-jasmine@2_0",
+      "resolved": "https://registry.npmjs.org/karma-jasmine/-/karma-jasmine-0.2.1.tgz"
     },
     "karma-phantomjs-launcher": {
       "version": "0.1.2",
