@@ -1,5 +1,5 @@
 {
-  "name": "Jester-Tester",
+  "name": "jester-tester",
   "description": "Get your project tested and out there with minimal fuss.",
   "version": "0.2.0",
   "author": "Jauco Noordzij <code@jauco.nl>",
@@ -22,6 +22,7 @@
     "eslint": "0.4.0",
     "watchr": "2.4.11",
     "mkdirp": "0.3.5",
-    "glob": "3.2.8"
+    "glob": "3.2.8",
+    "node-source-map-support": "evanw/node-source-map-support#e7b02406fd23b0695db3449854619d1e542b36a1"
   }
 }
