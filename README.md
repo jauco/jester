@@ -37,14 +37,13 @@ of code. This file must have the same name of the tested code, with a `.test` su
 So let's start with hello world by creating the test file `./src/app/features/hello.test.js`:
 
 ```javascript
-// jasmine is implicilty available, but every symbol that is used 
+// jasmine is implicitly available, but every symbol that is used 
 // must be declared in the following manner:
 /*globals describe, it, expect*/
 
 // dependencies are imported using common.js:
 var hello = require("./hello");
 
-// unittests are written with jasmine:
 describe("Greetings", function() {
     it("returns `hello world`", function() {
         expect(hello()).toBe("hello world");
@@ -74,7 +73,7 @@ while developing to have jester watch for changes in your files and run the appr
 
 Jester packages your features with their dependencies for use in the browser with the help of webpack.
 It accomplishes this by searching for a file named *feature.js* in a subfolder of *src/app/features/*. The intent is to
-structure your app in modules, where each modules represents a significant feature and corresponds to a subfolder under
+structure your app in modules, where each module represents a significant feature and corresponds to a subfolder under
 the root *src/app/features/*. Each of those module folder must have a file named *feature.js* which is the main entry point
 of the feature and it is this file with its dependencies which jester compiles and places in the *build/artifacts* folder.
 
@@ -86,7 +85,7 @@ The feature is contained in *src/app/features/greeting/feature.js*:
 /*globals console*/
 var hello = require("./hello");
 
-/*silences the lint rule 'no-console':*/
+// silences the lint rule 'no-console':
 /*eslint no-console:0*/
 console.log(hello());
 ```
