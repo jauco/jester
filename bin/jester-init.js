@@ -6,15 +6,15 @@ var FEATURES_PATH = "app/features/"
 
 
 var defaultConf = {
-    eslintRulesDir: p.resolve("./eslint-rules/"),
-    srcPath: p.resolve("./src/"),
+    eslintRulesDir: "./eslint-rules/",
+    srcPath: "./src/",
     entryGlob: FEATURES_PATH + "*/feature.js",
-    karmaPath: p.resolve("./build/karma/"),
+    karmaPath: "./build/karma/",
+    artifactPath: "./build/artifacts",
     karmaOptions: {
         proxies: {},
         browsers: ['Chrome', 'Firefox', 'IE', 'PhantomJS'],
     },
-    artifactPath: p.resolve("./build/artifacts"),
     eslintRules: {
         "no-cond-assign": 2, //disallow assignment in conditional expressions
         "no-console": 1, //disallow use of console
@@ -138,10 +138,10 @@ var defaultConf = {
     }
 };
 var mkdirp = require('mkdirp');
-mkdirp(defaultConf.karmaPath);
+mkdirp(p.resolve(defaultConf.karmaPath));
 mkdirp(p.join(defaultConf.srcPath, FEATURES_PATH));
-mkdirp(defaultConf.artifactPath);
-mkdirp(defaultConf.eslintRulesDir);
+mkdirp(p.resolve(defaultConf.artifactPath));
+mkdirp(p.resolve(defaultConf.eslintRulesDir));
 
 fs.stat("./jester.json", function (err) {
     if (err) {
