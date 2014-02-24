@@ -1,5 +1,5 @@
 var webpack = require("webpack");
-var UseStrictPlugin = require("./UseStrictPlugin")
+var UseStrictPlugin = require("./UseStrictPlugin");
 var RewirePlugin = require("rewire-webpack");
 
 module.exports = function createTestFile(filenames, karmaPath, cb) {
