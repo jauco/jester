@@ -124,7 +124,7 @@ var defaultConf = {
         "space-infix-ops": 2, //require spaces around operators
         "space-return-throw-case": 2, //require a space after return, throw, and case
         "space-unary-word-ops": 2, //require a space around word operators such as typeof
-        "max-nested-callbacks": [1, 3], //specify the maximum depth callbacks can be nested
+        "max-nested-callbacks": [1, 5], //specify the maximum depth callbacks can be nested
         "one-var": 0, //allow just one var statement per function
         "wrap-regex": 0, //require regex literals to be wrapped in parentheses
 

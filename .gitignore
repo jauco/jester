@@ -13,3 +13,5 @@ Desktop.ini
 #############
 
 /artifacts/
+node_modules/
+build/

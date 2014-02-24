@@ -1,27 +1,35 @@
-/** @module lib/lintfile */
+/** @module lib/lintFile */
 
+/*globals __dirname */
 var p = require("path");
 var eslint = require("eslint").linter;
-var rules_loader = require("eslint/lib/rules");
-rules_loader.load(p.resolve("./eslint-rules"));
-rules_loader.load(p.join(__dirname, "../eslint-rules"));
-var formatter = require("eslint-path-formatter")
+var rulesLoader = require("eslint/lib/rules");
+rulesLoader.load(p.resolve("./eslint-rules"));
+rulesLoader.load(p.join(__dirname, "../eslint-rules"));
+var formatter = require("eslint-path-formatter");
 
 /** */
 module.exports = function lintFile(filename, rules, cb) {
-    require("fs").readFile(filename, {encoding: 'utf8'}, function (err, file) {
+    require("fs").readFile(filename, {encoding: "utf8"}, function (err, file) {
         if (err) {
             console.log(err);
             cb(false);
         } else {
             //Jslint doesn't get an env or globals. Specify globals in the source files like so:
             // /*globals document:false, window: false*/
+            var globals = {
+                "require": true,
+                "module": true,
+                "console": true
+            };
+            if (filename.substr(-8) === ".test.js") {
+                globals["describe"] = true;
+                globals["it"] = true;
+                globals["expect"] = true;
+            }
             var config = {
                 rules: rules,
-                globals: {
-                    "require": true,
-                    "module": true
-                }
+                globals: globals
             };
             var result = eslint.verify(file, config);
             var lintSucceeded = true;
@@ -40,4 +48,4 @@ module.exports = function lintFile(filename, rules, cb) {
             cb(lintSucceeded);
         }
     });
-}
+};

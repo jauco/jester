@@ -1,7 +1,7 @@
 /** @module lib/createTestFile */
 
 var webpack = require("webpack");
-var UseStrictPlugin = require("./UseStrictPlugin")
+var UseStrictPlugin = require("./UseStrictPlugin");
 var RewirePlugin = require("rewire-webpack");
 
 /** */
@@ -20,14 +20,14 @@ module.exports = function createTestFile(filenames, karmaPath, cb) {
     try {
         webpack({
             entry: entryModules,
+            bail: true,
             output: {
                 path: karmaPath,
                 filename: "[name].js"
             },
             devtool: "#inline-source-map",
             plugins: [
-                new UseStrictPlugin(),
-                new RewirePlugin()
+                new UseStrictPlugin()
             ]
         }, function (err, stats) {
             if (err) {
@@ -41,4 +41,4 @@ module.exports = function createTestFile(filenames, karmaPath, cb) {
     } catch (e) {
         console.log(e, e.stack);
     }
-} 
+};
