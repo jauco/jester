@@ -17,6 +17,7 @@ module.exports = function createTestFile(filenames, karmaPath, cb) {
     try {
         webpack({
             entry: entryModules,
+            bail: true,
             output: {
                 path: karmaPath,
                 filename: "[name].js"

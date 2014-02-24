@@ -17,6 +17,7 @@ module.exports = function rebuildProject(entryGlob, artifactPath) {
             });
             webpack({
                 entry: entryModules,
+                bail: true,
                 output: {
                     path: artifactPath,
                     filename: "[name].min.js",
