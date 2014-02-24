@@ -38,4 +38,4 @@ module.exports = function createTestFile(filenames, karmaPath, cb) {
     } catch (e) {
         console.log(e, e.stack);
     }
-} 
+};

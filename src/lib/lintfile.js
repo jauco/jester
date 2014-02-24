@@ -16,9 +16,9 @@ module.exports = function lintFile(filename, rules, cb) {
             var config = {
                 rules: rules,
                 globals: {
-                    "require": true,
+                "require": true,
                     "module": true
-                }
+            }
             };
             var result = eslint.verify(file, config);
             var lintSucceeded = true;
@@ -37,4 +37,4 @@ module.exports = function lintFile(filename, rules, cb) {
             cb(lintSucceeded);
         }
     });
-}
+};

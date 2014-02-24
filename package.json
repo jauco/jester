@@ -5,9 +5,9 @@
   "version": "0.5.0",
   "author": "Jauco Noordzij <code@jauco.nl>",
   "bin": {
-    "jester-watch": "./bin/jester-watch.js",
-    "jester-batch": "./bin/jester-batch.js",
-    "jester-init": "./bin/jester-init.js"
+    "jester-watch": "./src/bin/jester-watch.js",
+    "jester-batch": "./src/bin/jester-batch.js",
+    "jester-init": "./src/bin/jester-init.js"
   },
   "licence": "MIT",
   "dependencies": {

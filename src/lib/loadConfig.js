@@ -9,4 +9,4 @@ module.exports = function loadConfig(configLocation) {
 
     config.fullEntryGlob = require("path").join(config.srcPath, config.entryGlob);
     return config;
-}
+};
