@@ -25,7 +25,6 @@
     "mkdirp": "0.3.5",
     "glob": "3.2.8",
     "eslint-path-formatter": "0.1.1",
-    "source-map-support": "evanw/node-source-map-support#e7b02406fd23b0695db3449854619d1e542b36a1",
-    "rewire-webpack": "jauco/rewire-webpack#951b11c16429f6307e235a170f4a16c13f35b15f"
+    "source-map-support": "evanw/node-source-map-support#e7b02406fd23b0695db3449854619d1e542b36a1"
   }
 }

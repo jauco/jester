@@ -23,8 +23,7 @@ module.exports = function createTestFile(filenames, karmaPath, cb) {
             },
             devtool: "#inline-source-map",
             plugins: [
-                new UseStrictPlugin(),
-                new RewirePlugin()
+                new UseStrictPlugin()
             ]
         }, function (err, stats) {
             if (err) {
