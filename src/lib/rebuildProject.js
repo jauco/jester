@@ -1,9 +1,12 @@
+/** @module lib/rebuildProject */
+
 var glob = require("glob");
 var p = require("path");
 var webpack = require("webpack");
 var clearDir = require("./clearDir");
 
-module.exports = function rebuildProject(entryGlob, artifactPath) {
+/** rebuildProject */
+module.exports =  function rebuildProject(entryGlob, artifactPath) {
     clearDir(artifactPath, function filesCleared() {
         glob(entryGlob, function (err, featureFiles) {
             var entryModules = {
