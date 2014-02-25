@@ -1,6 +1,4 @@
 var webpack = require("webpack");
-var UseStrictPlugin = require("./UseStrictPlugin");
-var RewirePlugin = require("rewire-webpack");
 
 module.exports = function createTestFile(filenames, karmaPath, cb) {
     var entryModules = {
@@ -13,6 +11,7 @@ module.exports = function createTestFile(filenames, karmaPath, cb) {
             entryModules[featurename] = file;
         });
     }
+
     console.log(entryModules, karmaPath);
     try {
         webpack({
@@ -22,9 +21,13 @@ module.exports = function createTestFile(filenames, karmaPath, cb) {
                 path: karmaPath,
                 filename: "[name].js"
             },
+            module: {
+                loaders: [
+                    {test: /\.json$/, loader: require.resolve("json-loader")}
+                ]
+            },
             devtool: "#inline-source-map",
             plugins: [
-                new UseStrictPlugin()
             ]
         }, function (err, stats) {
             if (err) {
