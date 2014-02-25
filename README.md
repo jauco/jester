@@ -2,170 +2,184 @@
 
 >Get your project tested and out there with minimal fuss.
 
-[Jester](https://www.npmjs.org/package/jester-tester) is a javascript 
-testing tool which uses [karma](http://karma-runner.github.io/0.10/index.html) for 
-running unittests written with [jasmine](http://pivotal.github.io/jasmine/) on multiple clients, 
-[eslint code quality checker](https://github.com/eslint/eslint) for code quality control and 
-[webpack](https://github.com/webpack/webpack) for compiling your source and dependencies managed 
-by [common.js modules](http://wiki.commonjs.org/wiki/Modules/1.1).
+[Jester](https://www.npmjs.org/package/jester-tester) is a javascript testing
+tool which uses the [karma test runner][] for running unittests written with
+[jasmine][] on multiple browsers, [eslint][] for warning you of common bugs and
+[webpack][] for compiling your source and dependencies so that you can easily
+include other people's libraries using [commonJS modules][] and [npm][]
+
+The idea is to give you a bootstrap for integrating these tools so you can worry
+about your app code and not about the tooling.
+
+Jester should run equally well under Windows, Linux and macOS. I'm using the
+path.join methods etc. but I haven't done much testing on macOS and Linux so
+please report bugs if something doesn't work.
 
 ## Installation
 
-Install jester from npm with development dependencies:
-
-	npm install --save-dev jester-tester
+ 1. Install [node.js](http://nodejs.org/download/)
+ 2. Create a directory for your app `mkdir myApp; cd myApp`
+ 4. Add a basic machine readable description of your app `npm init`
+ 5. Install jester from npm and save it into the development dependencies: 
+    `npm install --save-dev jester-tester`
 
 ## Creating a project
 
 Initialize your project. This will create the required folders and
 a `jester.json` configuration file with default values for your project:
 
-	./node_modules/.bin/jester-init
+    ./node_modules/.bin/jester-init
 
 This will create the following paths:
 
-    ./src/app/features/     # root folder of your application
+    ./src/features/         # the actual top level code that does stuff
+    ./src/lib/              # supporting functionality
     ./build/artifacts/      # folder where your compiled application will be stored by jester
     ./build/karma/          # folder from which karma will run the unittests
-    ./eslint-rules          # rules for javascript code quality analysis
-
-## Writing a test
-
-Each javascript source file should have a corresponding file with the unittests for that piece
-of code. This file must have the same name of the tested code, with a `.test` suffix.
-
-So let's start with hello world by creating the test file `./src/app/features/hello.test.js`:
-
-```javascript
-// jasmine is implicitly available, but every symbol that is used 
-// must be declared in the following manner:
-/*globals describe, it, expect*/
-
-// dependencies are imported using common.js:
-var hello = require("./hello");
-
-describe("Greetings", function() {
-    it("returns `hello world`", function() {
-        expect(hello()).toBe("hello world");
-    });
-});
-```
-
-This test asserts that the function hello will return the string `hello world`. To run the rest execute
- `node_modules/jester-tester/bin/jester-batch.js` from the root folder of your application:
-
-This will run eslint on your code and run your tests in the configured browsers. Of course it will 
-fail because there isn't any hello function. Create the file `src/app/features/hello.js` and try
-running jester-batch again:
-
-```javascript
-function hello() {
-    return "hello world";
-}
-
-module.exports = hello;
-```
-
-Now it should succeed. Conveniently, you can run `node_modules/jester-tester/bin/jester-watch.js` instead
-while developing to have jester watch for changes in your files and run the appropiate tests on the fly.
+    ./eslint-rules          # custom rules for javascript code quality analysis
 
 ## Writing features with jester
+Jester assumes that you build your application from features. Each feature will
+be a seperate js file that you can load from an html file in the browser by
+using `<script src='myscriptsdir/myfeature.js'>`.
 
-Jester packages your features with their dependencies for use in the browser with the help of webpack.
-It accomplishes this by searching for a file named *feature.js* in a subfolder of *src/app/features/*. The intent is to
-structure your app in modules, where each module represents a significant feature and corresponds to a subfolder under
-the root *src/app/features/*. Each of those module folder must have a file named *feature.js* which is the main entry point
-of the feature and it is this file with its dependencies which jester compiles and places in the *build/artifacts* folder.
+Jester packages your features with their dependencies with the help of webpack.
+It accomplishes this by searching for a file named `feature.js` in a subfolder
+of `src/features/`.
 
-So to put it all together we'll create a javascript app which just logs "hello world" to the console.
+To show how this works we'll create a javascript app which just logs "hello
+world" to the console.
 
-The feature is contained in *src/app/features/greeting/feature.js*:
+The feature is contained in `src/features/greeting/feature.js`:
 
 ```javascript
 /*globals console*/
-var hello = require("./hello");
+// dependencies are imported using commonJS
+var hello = require("../../lib/hello");
 
-// silences the lint rule 'no-console':
-/*eslint no-console:0*/
 console.log(hello());
 ```
 
-The hello function is found in *src/app/features/greeting/hello.js*:
+The hello function is found in *src/lib/hello.js*:
 
 ```javascript
 function hello() {
-        return "hello world";
+    return "hello world!";
 }
 
 module.exports = hello;
 ```
 
-And the unittest for the hello function in *src/app/features/greeting/hello.test.js*:
+##Generating the results file
+Executing `node_modules/.bin/jester-batch.js` results in two files.
+*greeting.min.js* and *greeting.min.js.map*. The .js file contains the full
+javascript code (both feature.js and hello.js). The map is a source map which
+maps the source code in the compiled .js file to the original files and lines
+for use in the browser debuggers that support this (chrome and firefox atm).
+
+###warnings
+You might notice some warnings in the output. This is eslint telling you that
+using console in production code is frowned upon. Some other eslint tests are
+configured as errors and jester will flat out refuse to generate the
+greeting.min.js file if you forget to put a `var` in front of hello. You can
+configure eslint in the file `jester.js`.
+
+You can also create your own project specific custom eslint rules that analyse
+the javascript syntax tree. If you place them in eslint-rules eslint will
+automatically load them.
+
+###If you think jester-batch is too slow
+Jester-batch takes a while to launch and this gets tiresome. So you can also run
+jester-*w*atch (`node_modules/.bin/jester-watch.js`) which will keep running and
+therefore generate the result files much more quickly.
+
+## Writing a test
+Each javascript source file can (and should) have a corresponding file with the
+unittests for that piece of code. This file must have the same name of the
+tested code, with a `.test.js` suffix.
+
+So let's start with hello world by creating the test file
+`./src/lib/hello.test.js`:
 
 ```javascript
-/*globals describe, it, expect*/
-
+//Tests are normal js modules, so they load the module under test using commonJS
 var hello = require("./hello");
 
+// jasmine is implicitly available in .test.js files
 describe("Greetings", function() {
-    it("returns `hello world`", function() {
-        expect(hello()).toBe("hello world");
+    it("returns `hello tested world`", function() {
+        expect(hello()).toBe("hello tested world!");
     });
 });
 ```
 
-Running jester-batch.js results in two files. *greeting.min.js* and *greeting.min.js.map*. The
-.js file contains the code in feature.js to be linked by your html file. The map is a source map
-which maps the source code in the compiled .js file to the original files and lines for use in
-the chrome debugger.
+This test asserts that the function hello will return the string `hello tested world`.
+The test will run upon saving it if jester-watch is running, or else when you 
+execute jester-batch.
 
-## Configuration
+Jester will now run your tests in the browsers as specified in `jester.js`. Of
+course the test will fail because the result of hello is different. Fix the file
+hello.js file `src/lib/hello.js` and try running jester-batch again:
 
-TODO
+```javascript
+function hello() {
+    return "hello tested world!";
+}
 
-## Links
+module.exports = hello;
+```
 
-* [jester-tester npm](https://www.npmjs.org/package/jester-tester)
-* [common.js modules](http://wiki.commonjs.org/wiki/Modules/1.1)
-* [eslint code quality checker](https://github.com/eslint/eslint)
-* [karma test runner](http://karma-runner.github.io/0.10/index.html)
-* [webpack](https://github.com/webpack/webpack)
-* [jasmine](http://pivotal.github.io/jasmine/)
+##Dependency injection
+Jester makes it easy to replace a 'require'd module in the source file with a
+test-stub. 
 
-## Hacking
+Let's say we have a file called src/lib/db.js
+```javascript
+var retrieveHello = require("db/retrieveHello")
+module.exports = function db() {
+    return retrieveHello("pgsql://mypgserver")
+}
+```
 
-### How to debug Jester
+and that hello.js uses that:
+```javascript
+var db = require("./db");
+function hello() {
+    return db();
+}
 
-You attach a graphical debugger ([node-inspector]) to the unittests, or to the compiled jester.js
+module.exports = hello;
+```
+Then you're tests will fail because (a) you're missing the javascript module
+that implements retrieveHello and even if you would npm install it, your test
+would be dependant on `pgsql://mypgserver`.
 
-### Attaching the debugger to the compiled jester.js
+Instead your test should inject a shim for db.js
 
-1. Start node-inspector on port 8080:
+```javascript
+/**globals console*/
+function dbShim() {
+    return "Hello tested and injected world!";
+}
+var helloMaker = require("jester-tester/src/injectable!./hello");
+var hello = helloMaker({"./db": dbShim})
 
-        $ cd <jester source dir>
-        $ .\dist\node_modules\.bin\node-inspector --web-port=8080
-        info  - socket.io started
-        visit http://0.0.0.0:8080/debug?port=5858 to start debugging
+describe("Greetings", function() {
+    it("returns `hello world`", function() {
+        expect(hello()).toBe("Hello tested and injected world!");
+    });
+});
+```
+I encourage you to log the helloMaker function to the console so you can see
+what happens under the hood. It's not really magical.
 
-2. Start jester in debug mode:
-
-        $ .\dist\node.exe --debug-brk .\dist\jester.js
-        debugger listening on port 5858
-
-3. Open a browser on http://localhost:8080
-4. place your breakpoints and press the play button to start running jester.
-
-### Debug Jester's unittests
-
-1. Run jester:
-
-        .\dist\node.exe .\dist\jester.js
-
-2. Add a breakpoint in a unittest by inserting the string `debugger;` somewhere and save the file.
-3. Open a browser on http://localhost:8080
-4. Press the play button to start running the unittest
-
-[node-inspector]: https://npmjs.org/package/node-inspector
+[jester-tester npm]: https://www.npmjs.org/package/jester-tester
+[commonJS modules]: http://wiki.commonjs.org/wiki/Modules/1.1
+[eslint]: https://github.com/eslint/eslint
+[karma test runner]: http://karma-runner.github.io/0.10/index.html
+[webpack]: https://github.com/webpack/webpack
+[jasmine]: http://pivotal.github.io/jasmine/
+[npm]: https://www.npmjs.org/doc/cli/npm.html
 
 ### Todo:
  * source maps end up at the wrong url '.' (setting breakpoints does work though)
@@ -173,9 +187,5 @@ You attach a graphical debugger ([node-inspector]) to the unittests, or to the c
      - https://www.npmjs.org/package/stack-mapper
      - https://github.com/evanw/node-source-map-support
  * user interaction and GUI rendering tests through appthwack and Calabash.
- * rewire support (should be just a plugin away)
  * Allow config options for webpack to be defined
  * Add JSX compiler
-
-
-
