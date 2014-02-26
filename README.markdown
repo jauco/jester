@@ -1,6 +1,6 @@
 #Jester
 
-**TL;DR**: a javascript testing system with a specific view on what to test and how to test it. To see how it works: run `./node ./main.js` from the console, edit a javascript file in the ./src folder and save it in your editor. Watch the automatic testing goodness unfold.
+**TL;DR**: a javascript testing system with a specific view on what to test and how to test it. To see how it works: run `./node ./main.js` from the console, edit a javascript file in the ./src folder and save it in your editor. Watch the automatic testing goodness unfold. Or you can run `./run.bat` from a windows console. This will add java to your path and run `./dist/jester.js` with `./dist/node.exe`.
 
 ![](./img/a-cloudy-day-for-onefte.png)
 
