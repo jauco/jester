@@ -28,12 +28,6 @@ module.exports = function rebuildProject(entryGlob, artifactPath) {
                     ]
                 },
                 devtool: "#source-map",
-                plugins: [
-                    new webpack.ProvidePlugin({
-                        $: "jquery",
-                        jQuery: "jquery"
-                    })
-                ]
             }, require("./handleWebpackResult")(function () {}));
         });
     });
