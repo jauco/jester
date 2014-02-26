@@ -16,7 +16,6 @@ module.exports = function rebuildProject(entryGlob, artifactPath) {
             });
             webpack({
                 entry: entryModules,
-                bail: true,
                 output: {
                     path: artifactPath,
                     filename: "[name].min.js",
@@ -30,14 +29,12 @@ module.exports = function rebuildProject(entryGlob, artifactPath) {
                 },
                 devtool: "#source-map",
                 plugins: [
+                    new webpack.ProvidePlugin({
+                        $: "jquery",
+                        jQuery: "jquery"
+                    })
                 ]
-            }, function (err, stats) {
-                if (err) {
-                    console.error("Rebuild failed!", err);
-                } else {
-                    console.log("Rebuild succeeded!");
-                }
-            });
+            }, require("./handleWebpackResult"));
         });
     });
 };

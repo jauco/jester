@@ -45,7 +45,6 @@ function launchKarma(persistent, karmaPath, options, cb) {
         return new Karma();
     } else {
         karmaArguments.singleRun = true;
-        karmaArguments.colors = false;
         require("karma").server.start(karmaArguments, function (exitCode) {
             console.log("Karma server has exited with " + exitCode);
             cb(exitCode);
