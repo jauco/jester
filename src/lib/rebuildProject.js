@@ -34,7 +34,7 @@ module.exports = function rebuildProject(entryGlob, artifactPath) {
                         jQuery: "jquery"
                     })
                 ]
-            }, require("./handleWebpackResult"));
+            }, require("./handleWebpackResult")(function () {}));
         });
     });
 };

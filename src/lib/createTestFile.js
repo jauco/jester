@@ -31,7 +31,7 @@ module.exports = function createTestFile(filenames, karmaPath, cb) {
                     jQuery: "jquery"
                 })
             ]
-        }, require("./handleWebpackResult"));
+        }, require("./handleWebpackResult")(cb));
     } catch (e) {
         console.log(e, e.stack);
     }
