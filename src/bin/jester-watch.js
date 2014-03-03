@@ -1,8 +1,6 @@
 #!/usr/bin/env node
 "use strict";
 
-/** @module script bin/jester-watch */
-
 var loadConfig = require("../lib/loadConfig"),
     lintFile = require("../lib/lintFile"),
     clearDir = require("../lib/clearDir"),
@@ -17,7 +15,6 @@ var karma = launchKarma(true, config.karmaPath, config.karmaOptions, function ()
     process.exit();
 });
 
-/** */
 function runFileTests(path) {
     console.log("Running tests for " + path);
     lintFile(path, config.eslintRules, function onLintReady(lintSucceeded) {

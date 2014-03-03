@@ -1,8 +1,5 @@
-/** @module lib/createTestFile */
-
 var webpack = require("webpack");
 
-/** */
 module.exports = function createTestFile(filenames, karmaPath, cb) {
     var entryModules = {
     };

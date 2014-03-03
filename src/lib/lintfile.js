@@ -1,5 +1,3 @@
-/** @module lib/lintFile */
-
 /*globals __dirname */
 var p = require("path");
 var eslint = require("eslint").linter;
@@ -8,7 +6,6 @@ rulesLoader.load(p.resolve("./eslint-rules"));
 rulesLoader.load(p.join(__dirname, "../eslint-rules"));
 var formatter = require("eslint-path-formatter");
 
-/** */
 module.exports = function lintFile(filename, rules, cb) {
     require("fs").readFile(filename, {encoding: "utf8"}, function (err, file) {
         if (err) {

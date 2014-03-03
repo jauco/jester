@@ -1,8 +1,5 @@
-/** @module lib/clearDir*/
-
 var glob = require("glob");
 
-/** removes all *.js files recursively from path and calls cb when finished */
 module.exports = function clearDir(path, cb) {
     var files = glob.sync(path + "/**/*.js");
     var total = files.length;

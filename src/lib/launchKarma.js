@@ -1,5 +1,3 @@
-/** @module lib/launchKarma */
-
 function Karma() {
 }
 
@@ -10,7 +8,6 @@ Karma.prototype.triggerRun = function triggerKarma(cb) {
     });
 };
 
-/** */
 function launchKarma(persistent, karmaPath, options, cb) {
     if (!options) {
         options = {};
