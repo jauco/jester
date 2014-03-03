@@ -25,13 +25,7 @@ module.exports = function createTestFile(filenames, karmaPath, cb) {
                 ]
             },
             devtool: "#inline-source-map",
-            plugins: [
-                new webpack.ProvidePlugin({
-                    $: "jquery",
-                    jQuery: "jquery"
-                })
-            ]
-        }, require("./handleWebpackResult"));
+        }, require("./handleWebpackResult")(cb));
     } catch (e) {
         console.log(e, e.stack);
     }
