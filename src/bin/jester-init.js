@@ -1,12 +1,9 @@
 #!/usr/bin/env node
 
-/** @module script bin/jester-init */
-
 var fs = require('fs');
 var p = require("path");
 var FEATURES_PATH = "features/"
 
-/** */
 var defaultConf = {
     eslintRulesDir: "./eslint-rules/",
     srcPath: "./src/",
@@ -162,7 +159,12 @@ var defaultJSDocConf = {
     }
 }
 
-var defaultReadme = "# README FOR YOUR APP";
+var defaultReadme = "# README \n\
+  \n\
+  * Replace this readme with useful info about your app \n\
+  * [Start writing features](https://github.com/jauco/jester/blob/master/README.md#writing-features-with-jester) \n\
+  * Write unittests with [jasmine](http://jasmine.github.io/2.0/introduction.html) \n\
+  * Document your project with [jsdoc](http://usejsdoc.org/)";
 
 var mkdirp = require('mkdirp');
 mkdirp(p.resolve(defaultConf.karmaPath));
