@@ -1,5 +1,6 @@
 var child_process = require("child_process"),
     p = require("path"),
+    fs = require("fs"),
     when = require("when");
 
 module.exports = function rebuildDocumentation(srcPath, targetPath, confPath, readmePath) {
@@ -10,7 +11,11 @@ module.exports = function rebuildDocumentation(srcPath, targetPath, confPath, re
     var conf = p.resolve(confPath);
     var readme = p.resolve(readmePath);
 
-    var args = src + " " +  readme + " -r -d " + target + " -c " + conf;
+    var args = (fs.existsSync(readme) ? readme : "") + " ";
+
+    args = args + src + " -r -d " + target;
+    args = (fs.existsSync(conf) ? (args + " -c " + conf) : args);
+
     var jsdoc = require.resolve("jsdoc/jsdoc") + ".js ";
     var cmd = "node " + jsdoc + args;
     

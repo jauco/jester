@@ -60,11 +60,8 @@ function startTests() {
     return deferred.promise;
 }
 
-console.log("Rebuilding the project artifacts.");
-
-rebuildProject(config.fullEntryGlob, config.artifactPath);
-
 when.join(
+    rebuildProject(config.fullEntryGlob, config.artifactPath),
     startTests(), 
     rebuildDocumentation(config.srcPath, config.apiDocPath, config.jsdocConf, config.readme)
 ).then(function(exitCodes) {

@@ -7,7 +7,8 @@
   "bin": {
     "jester-watch": "./src/bin/jester-watch.js",
     "jester-batch": "./src/bin/jester-batch.js",
-    "jester-init": "./src/bin/jester-init.js"
+    "jester-init": "./src/bin/jester-init.js",
+    "jester-doc": "./src/bin/jester-doc.js"
   },
   "licence": "MIT",
   "dependencies": {
