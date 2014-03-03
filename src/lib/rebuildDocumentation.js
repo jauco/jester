@@ -1,10 +1,7 @@
-/** @module lib/rebuildDocumentation */
-
 var child_process = require("child_process"),
     p = require("path"),
     when = require("when");
 
-/** runs jsdoc on srcPath*/
 module.exports = function rebuildDocumentation(srcPath, targetPath, confPath, readmePath) {
     var deferred = when.defer();
 
