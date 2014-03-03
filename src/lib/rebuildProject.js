@@ -2,7 +2,6 @@
 
 var glob = require("glob");
 var p = require("path");
-var UseStrictPlugin = require("./UseStrictPlugin");
 var webpack = require("webpack");
 var clearDir = require("./clearDir");
 
@@ -20,24 +19,25 @@ module.exports =  function rebuildProject(entryGlob, artifactPath) {
             });
             webpack({
                 entry: entryModules,
-                bail: true,
                 output: {
                     path: artifactPath,
                     filename: "[name].min.js",
                     chunkFilename: "[id].chunk.js",
                     namedChunkFilename: "[name].chunk.js"
                 },
+                module: {
+                    loaders: [
+                        {test: /\.json$/, loader: require.resolve("json-loader")}
+                    ]
+                },
                 devtool: "#source-map",
                 plugins: [
-                    new UseStrictPlugin()
+                    new webpack.ProvidePlugin({
+                        $: "jquery",
+                        jQuery: "jquery"
+                    })
                 ]
-            }, function (err, stats) {
-                if (err) {
-                    console.error("Rebuild failed!", err);
-                } else {
-                    console.log("Rebuild succeeded!");
-                }
-            });
+            }, require("./handleWebpackResult"));
         });
     });
 };

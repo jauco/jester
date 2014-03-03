@@ -4,7 +4,7 @@
 
 var fs = require('fs');
 var p = require("path");
-var FEATURES_PATH = "app/features/"
+var FEATURES_PATH = "features/"
 
 /** */
 var defaultConf = {
@@ -167,6 +167,8 @@ var defaultReadme = "# README FOR YOUR APP";
 var mkdirp = require('mkdirp');
 mkdirp(p.resolve(defaultConf.karmaPath));
 mkdirp(p.join(defaultConf.srcPath, FEATURES_PATH));
+mkdirp(p.join(defaultConf.srcPath, 'lib'));
+mkdirp(p.join(defaultConf.srcPath, 'app', 'domain'));
 mkdirp(p.resolve(defaultConf.artifactPath));
 mkdirp(p.resolve(defaultConf.apiDocPath));
 mkdirp(p.resolve(defaultConf.eslintRulesDir));
