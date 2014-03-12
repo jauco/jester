@@ -1,9 +1,11 @@
-var glob = require("glob");
-var p = require("path");
-var webpack = require("webpack");
-var clearDir = require("./clearDir");
+var glob = require("glob"),
+    p = require("path"),
+    webpack = require("webpack"),
+    when = require("when")
+    clearDir = require("./clearDir");
 
-module.exports = function rebuildProject(entryGlob, artifactPath) {
+module.exports =  function rebuildProject(entryGlob, artifactPath) {
+    var deferred = when.defer();
     clearDir(artifactPath, function filesCleared() {
         glob(entryGlob, function (err, featureFiles) {
             var entryModules = {
@@ -28,7 +30,11 @@ module.exports = function rebuildProject(entryGlob, artifactPath) {
                     ]
                 },
                 devtool: "#source-map",
-            }, require("./handleWebpackResult")(function () {}));
+            }, require("./handleWebpackResult")(function (hasSucceeded) {
+                console.log("webpack finished");
+                deferred.resolve(hasSucceeded ? 0 : 1);
+            }));
         });
     });
+    return deferred.promise;
 };

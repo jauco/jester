@@ -7,7 +7,8 @@
   "bin": {
     "jester-watch": "./src/bin/jester-watch.js",
     "jester-batch": "./src/bin/jester-batch.js",
-    "jester-init": "./src/bin/jester-init.js"
+    "jester-init": "./src/bin/jester-init.js",
+    "jester-doc": "./src/bin/jester-doc.js"
   },
   "licence": "MIT",
   "dependencies": {
@@ -26,6 +27,10 @@
     "glob": "3.2.8",
     "eslint-path-formatter": "0.1.1",
     "source-map-support": "evanw/node-source-map-support#e7b02406fd23b0695db3449854619d1e542b36a1",
-    "json-loader": "~0.5.0"
+    "json-loader": "~0.5.0",
+    "rewire-webpack": "jauco/rewire-webpack#951b11c16429f6307e235a170f4a16c13f35b15f",
+    "source-map-support": "evanw/node-source-map-support#e7b02406fd23b0695db3449854619d1e542b36a1",
+    "jsdoc": "~3.3.0",
+    "when": "~2.8.0"
   }
 }
