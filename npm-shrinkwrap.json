@@ -1,6 +1,6 @@
 {
   "name": "jester-tester",
-  "version": "0.6.0",
+  "version": "0.7.1",
   "dependencies": {
     "karma-script-launcher": {
       "version": "0.1.0",
@@ -782,8 +782,7 @@
     },
     "source-map-support": {
       "version": "0.2.5",
-      "from": "git://github.com/evanw/node-source-map-support#e7b02406fd23b0695db3449854619d1e542b36a1",
-      "resolved": "git://github.com/evanw/node-source-map-support#e7b02406fd23b0695db3449854619d1e542b36a1",
+      "from": "source-map-support@",
       "dependencies": {
         "source-map": {
           "version": "0.1.29",
