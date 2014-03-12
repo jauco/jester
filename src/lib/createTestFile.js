@@ -24,7 +24,7 @@ module.exports = function createTestFile(filenames, karmaPath, cb) {
                     {test: /\.json$/, loader: require.resolve("json-loader")}
                 ]
             },
-            devtool: "#inline-source-map",
+            devtool: "#source-map"
         }, require("./handleWebpackResult")(cb));
     } catch (e) {
         console.log(e, e.stack);
