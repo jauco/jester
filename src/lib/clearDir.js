@@ -1,7 +1,7 @@
 var glob = require("glob");
 
 module.exports = function clearDir(path, cb) {
-    var files = glob.sync(path + "/**/*.js");
+    var files = glob.sync(path + "/**/*.{js,js.map}");
     var total = files.length;
     if (total === 0) {
         cb();
