@@ -140,7 +140,6 @@ var defaultConf = {
         "no-plusplus": 0 //disallow use of unary operators, ++ and -- (off by default)
     }
 };
-<<<<<<< HEAD
 
 var defaultJSDocConf = {
     "plugins": [ "plugins/markdown" ],
@@ -167,15 +166,13 @@ var defaultReadme = "# README \n\
   * Write unittests with [jasmine](http://jasmine.github.io/2.0/introduction.html) \n\
   * Document your project with [jsdoc](http://usejsdoc.org/)";
 
-=======
->>>>>>> jauco/master
 var mkdirp = require('mkdirp');
 mkdirp(p.resolve(defaultConf.karmaPath));
 mkdirp(p.join(defaultConf.srcPath, FEATURES_PATH));
 mkdirp(p.join(defaultConf.srcPath, 'lib'));
 mkdirp(p.join(defaultConf.srcPath, 'app', 'domain'));
 mkdirp(p.resolve(defaultConf.artifactPath));
-<<<<<<< HEAD
+
 mkdirp(p.resolve(defaultConf.apiDocPath));
 mkdirp(p.resolve(defaultConf.eslintRulesDir));
 
@@ -190,12 +187,3 @@ function writeFileIfNotExists(path, contents) {
 writeFileIfNotExists("./jester.json", JSON.stringify(defaultConf, null, 4));
 writeFileIfNotExists(defaultConf.jsdocConf, JSON.stringify(defaultJSDocConf, null, 4));
 writeFileIfNotExists(defaultConf.readme, defaultReadme);
-=======
-mkdirp(p.resolve(defaultConf.eslintRulesDir));
-
-fs.stat("./jester.json", function (err) {
-    if (err) {
-        fs.writeFile("./jester.json", JSON.stringify(defaultConf, null, 4));
-    }
-})
->>>>>>> jauco/master
