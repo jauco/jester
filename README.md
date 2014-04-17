@@ -77,6 +77,15 @@ javascript code (both feature.js and hello.js). The map is a source map which
 maps the source code in the compiled .js file to the original files and lines
 for use in the browser debuggers that support this (chrome and firefox atm).
 
+**Note!**: Source maps are not always interpreted and not all browsers support
+the same features.
+
+ * You have to enable them manually in chrome (FF has them enabled by default)
+ * You won't see the stack traces source mapped in jester's shell output
+ * You should see the stack trace source mapped when opening the development
+   console in chrome. Firefox doesn't source map stack traces and I haven't
+   found a way to enable it.
+
 ###warnings
 You might notice some warnings in the output. This is eslint telling you that
 using console in production code is frowned upon. Some other eslint tests are
@@ -183,9 +192,6 @@ what happens under the hood. It's not really magical.
 
 ### Todo:
  * source maps end up at the wrong url '.' (setting breakpoints does work though)
- * error stacks aren't sourcemapped by themselves apparently. 
-     - https://www.npmjs.org/package/stack-mapper
-     - https://github.com/evanw/node-source-map-support
  * user interaction and GUI rendering tests through appthwack and Calabash.
  * Allow config options for webpack to be defined
  * Add JSX compiler
