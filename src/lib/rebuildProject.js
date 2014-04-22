@@ -1,7 +1,7 @@
 var glob = require("glob"),
     p = require("path"),
     webpack = require("webpack"),
-    when = require("when")
+    when = require("when"),
     clearDir = require("./clearDir");
 
 module.exports =  function rebuildProject(entryGlob, artifactPath) {

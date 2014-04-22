@@ -4,7 +4,7 @@
 
 [Jester](https://www.npmjs.org/package/jester-tester) is a javascript testing
 tool which uses the [karma test runner][] for running unittests written with
-[jasmine](http://jasmine.github.io/2.0/introduction.html) on multiple browsers, [eslint][] for warning you of common bugs and
+[jasmine][] on multiple browsers, [eslint][] for warning you of common bugs and
 [webpack][] for compiling your source and dependencies so that you can easily
 include other people's libraries using [commonJS modules][] and [npm][]
 
@@ -187,7 +187,7 @@ what happens under the hood. It's not really magical.
 [eslint]: https://github.com/eslint/eslint
 [karma test runner]: http://karma-runner.github.io/0.10/index.html
 [webpack]: https://github.com/webpack/webpack
-[jasmine]: http://pivotal.github.io/jasmine/
+[jasmine]: http://jasmine.github.io/2.0/introduction.html
 [npm]: https://www.npmjs.org/doc/cli/npm.html
 
 ### Todo:
