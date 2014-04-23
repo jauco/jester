@@ -4,26 +4,35 @@ var child_process = require("child_process"),
     when = require("when");
 
 module.exports = function rebuildDocumentation(srcPath, targetPath, confPath, readmePath) {
+    var emptyOrAbsolutePathIfExists = function(path) {
+        var absolutePath = p.resolve(path);
+        if(fs.existsSync(absolutePath)) {
+            return absolutePath;
+        }
+        else {
+            return "";
+        }
+    };
+
     var deferred = when.defer();
 
     var src = p.resolve(srcPath);
-    var target = p.resolve(targetPath);
-    var conf = p.resolve(confPath);
-    var readme = p.resolve(readmePath);
+    var target = "-d " + p.resolve(targetPath);
+    var readme = emptyOrAbsolutePathIfExists(readmePath);
+    var options = "-r";
+    var conf = emptyOrAbsolutePathIfExists(confPath);
+    if(conf) {
+        conf = "-c " + conf;
+    }
 
-    var args = (fs.existsSync(readme) ? readme : "") + " ";
-
-    args = args + src + " -r -d " + target;
-    args = (fs.existsSync(conf) ? (args + " -c " + conf) : args);
-
-    var jsdoc = require.resolve("jsdoc/jsdoc") + ".js ";
-    var cmd = "node " + jsdoc + args;
-    
-    console.log("running jsdoc, output is written to " + target);
+    var node = "node";
+    var jsdoc = require.resolve("jsdoc/jsdoc");
+    var cmd = [node, jsdoc, readme, src, options, target, conf].join(" ");
 
     child_process.exec(cmd, function(error, stdout, stderr) {
         if(error !== null) {
             console.error("jsdoc failed!", stderr);
+            console.log("jsdoc command was: '", cmd, "'");
             deferred.resolve(error.code);
         }
         else {

@@ -9,6 +9,7 @@ var when = require("when");
 
 module.exports = function lintFile(filename, rules, cb) {
     return when.promise(function (resolve, reject, notify) {
+        console.log("lint for ", filename);
         require("fs").readFile(filename, {encoding: "utf8"}, function (err, file) {
             if (err) {
                 reject(err);

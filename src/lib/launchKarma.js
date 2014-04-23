@@ -19,6 +19,7 @@ Karma.prototype.triggerRun = function triggerKarma() {
 
 function launchKarma(persistent, karmaPath, options) {
     return when.promise(function(resolve, reject, notify) {
+        console.log("launchy launch!")
         if (!options) {
             options = {};
         }
