@@ -1,8 +1,19 @@
 var glob = require("../lib/globPromise"),
     p = require("path"),
-    webpack = require("webpack"),
+    webpack = require("../lib/webpackPromise"),
     when = require("when"),
-    clearDir = require("./clearDir");
+    clearDir = require("./clearDir"),
+    handleWebpackResult = require("./handleWebpackResult");
+
+function createEntryModules(featureFiles) {
+    var entryModules = {};
+    
+    featureFiles.forEach(function (file) {
+        var featurename = p.basename(p.dirname(file));
+        entryModules[featurename] = file;
+        console.log("    * " + featurename + " (" + file + ")." );
+    });
+}   
 
 module.exports =  function rebuildProject(entryGlob, artifactPath) {
     return clearDir(artifactPath).
@@ -10,17 +21,8 @@ module.exports =  function rebuildProject(entryGlob, artifactPath) {
             return glob(entryGlob);
         }).
         then(function (featureFiles) {
-            var deferred = when.defer();
-
-            var entryModules = {};
-            console.log("Building artifacts for ", entryGlob, ":");
-            featureFiles.forEach(function (file) {
-                var featurename = p.basename(p.dirname(file));
-                entryModules[featurename] = file;
-                console.log("    * " + featurename + " (" + file + ")." );
-            });
-            webpack({
-                entry: entryModules,
+            return webpack({
+                entry: createEntryModules(featureFiles),
                 output: {
                     path: artifactPath,
                     filename: "[name].min.js",
@@ -33,10 +35,15 @@ module.exports =  function rebuildProject(entryGlob, artifactPath) {
                     ]
                 },
                 devtool: "#source-map",
-            }, require("./handleWebpackResult")(function (hasSucceeded) {
-                console.log("webpack finished");
-                deferred.resolve(hasSucceeded ? 0 : 1);
-            }));
-            return deferred.promise;
+            });
+        }).
+        then(function(stats){
+            console.log("Building succeeded!");
         });
 };
+
+
+// , require("./handleWebpackResult")(function (hasSucceeded) {
+//                 console.log("webpack finished");
+//                 deferred.resolve(hasSucceeded ? 0 : 1);
+//             })
