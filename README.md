@@ -40,7 +40,7 @@ This will create the following paths:
 
 ## Writing features with jester
 Jester assumes that you build your application from features. Each feature will
-be a seperate js file that you can load from an html file in the browser by
+be a separate js file that you can load from an html file in the browser by
 using `<script src='myscriptsdir/myfeature.js'>`.
 
 Jester packages your features with their dependencies with the help of webpack.
@@ -71,7 +71,8 @@ module.exports = hello;
 ```
 
 ##Generating the results file
-Executing `node_modules/.bin/jester-batch.js` results in two files.
+
+Executing `./node_modules/.bin/jester-batch.js` results in two files.
 *greeting.min.js* and *greeting.min.js.map*. The .js file contains the full
 javascript code (both feature.js and hello.js). The map is a source map which
 maps the source code in the compiled .js file to the original files and lines
