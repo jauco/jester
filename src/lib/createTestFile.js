@@ -1,32 +1,35 @@
-var webpack = require("webpack");
+var webpack = require("./webpackPromise"),
+    handleWebpackResult = require("./handleWebpackResult");
 
-module.exports = function createTestFile(filenames, karmaPath, cb) {
-    var entryModules = {
-    };
+function createEntryModules(filenames) {
+    var entryModules = {};
     if (typeof filenames === "string") {
         filenames = [filenames];
     }
-    console.log("Building tests for:");
-    filenames.forEach(function (file) {
+
+    filenames.forEach(function(file) {
         var featurename = require("path").basename(file.substr(0, file.length - 8));
         entryModules[featurename] = file;
         console.log("    * " + featurename + " (" + file + ")." );
     });
-    try {
-        webpack({
-            entry: entryModules,
-            output: {
-                path: karmaPath,
-                filename: "[name].js"
-            },
-            module: {
-                loaders: [
-                    {test: /\.json$/, loader: require.resolve("json-loader")}
-                ]
-            },
-            devtool: "#source-map"
-        }, require("./handleWebpackResult")(cb));
-    } catch (e) {
-        console.log(e, e.stack);
-    }
+
+    return entryModules;
+}
+
+module.exports = function createTestFile(filenames, karmaPath) {
+    return webpack({
+        entry: createEntryModules(filenames),
+        output: {
+            path: karmaPath,
+            filename: "[name].js"
+        },
+        module: {
+            loaders: [
+                {test: /\.json$/, loader: require.resolve("json-loader")}
+            ]
+        },
+        devtool: "#source-map"
+    }).then(function(stats) {
+        return handleWebpackResult(stats);
+    });
 };

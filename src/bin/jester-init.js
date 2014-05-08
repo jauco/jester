@@ -39,7 +39,7 @@ var defaultConf = {
         "no-spare-arrays": 0, //disallow sparse arrays
         "no-unreachable": 2, //disallow unreachable statements after a return, throw, continue, or break statement
         "use-isnan": 2, //disallow comparisons with the value NaN
-        "valid-jsdoc": 0, //Ensure JSDoc comments are valid (off by default)
+        "valid-jsdoc": 1, //Ensure JSDoc comments are valid (off by default)
 
         //These are rules designed to prevent you from making mistakes. They either prescribe a better way of doing something or help you avoid footguns.
         "block-scoped-var": 0, //treat var statements as if they were block scoped
@@ -156,6 +156,9 @@ var defaultJSDocConf = {
         "default": {
             "outputSourceFiles": true
         }
+    },
+    "opts" : {
+        "template": "templates"
     }
 }
 

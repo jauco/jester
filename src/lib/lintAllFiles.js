@@ -1,4 +1,4 @@
-var glob = require("./promisedGlob");
+var glob = require("./globPromise");
 
 module.exports = function lintAllFiles(globPattern) {
     return glob(globPattern).then(function (jsFiles) {

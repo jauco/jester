@@ -11,10 +11,6 @@ include other people's libraries using [commonJS modules][] and [npm][]
 The idea is to give you a bootstrap for integrating these tools so you can worry
 about your app code and not about the tooling.
 
-Jester should run equally well under Windows, Linux and macOS. I'm using the
-path.join methods etc. but I haven't done much testing on macOS and Linux so
-please report bugs if something doesn't work.
-
 ## Installation
 
  1. Install [node.js](http://nodejs.org/download/)

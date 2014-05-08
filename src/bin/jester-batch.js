@@ -2,23 +2,28 @@
 "use strict";
 
 var loadConfig = require("../lib/loadConfig"),
+    rebuildDocumentation = require("../lib/rebuildDocumentation"),
     rebuildProject = require("../lib/rebuildProject"),
     runAllTests = require("../lib/runAllTests"),
-    when = require("when"),
-    rebuildDocumentation = require("../lib/rebuildDocumentation");
+    when = require("when");
 
 var config = loadConfig("./jester.json");
 
-when.join(
-    rebuildProject(config.fullEntryGlob, config.artifactPath),
-    //runAllTests(config),
-    rebuildDocumentation(config.srcPath, config.apiDocPath, config.jsdocConf, config.readme)
-).then(function(exitCodes) {
-    
-    console.log("ok", exitCodes);
-    // first non-zero exit code or 0
-    return exitCodes.reduce(function(a,b) { return a | b; }, 0);
-}).done(function(exitCode) {
-    //karma doesn't seem to end properly. This is a bit of a sledge hammer.
-    process.exit(exitCode);
-});
+rebuildProject(config.fullEntryGlob, config.artifactPath)
+    .then(function() {
+        return rebuildDocumentation(config.srcPath, config.apiDocPath, config.jsdocConf, config.readme);
+    })
+    .then(function() {
+        return runAllTests(config);
+    })
+    .done(
+        function(exitCode) {
+            //karma doesn't seem to end properly. This is a bit of a sledge hammer:
+            process.exit(exitCode);
+        },
+        function(err) {
+            console.log(err.stack);
+            var errorCode = 1;
+            process.exit(errorCode);
+        }
+    );

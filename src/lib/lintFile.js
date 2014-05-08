@@ -1,16 +1,16 @@
-/*globals __dirname */
-var p = require("path");
-var eslint = require("eslint").linter;
-var rulesLoader = require("eslint/lib/rules");
+var p = require("path"),
+    readFile = require("fs").readFile,
+    eslint = require("eslint").linter,
+    rulesLoader = require("eslint/lib/rules"),
+    formatter = require("eslint-path-formatter"),
+    when = require("when");
+
 rulesLoader.load(p.resolve("./eslint-rules"));
 rulesLoader.load(p.join(__dirname, "../eslint-rules"));
-var formatter = require("eslint-path-formatter");
-var when = require("when");
 
-module.exports = function lintFile(filename, rules, cb) {
+module.exports = function lintFile(filename, rules) {
     return when.promise(function (resolve, reject, notify) {
-        console.log("lint for ", filename);
-        require("fs").readFile(filename, {encoding: "utf8"}, function (err, file) {
+        readFile(filename, {encoding: "utf8"}, function (err, file) {
             if (err) {
                 reject(err);
             } else {

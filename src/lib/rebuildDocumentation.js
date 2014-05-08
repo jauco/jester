@@ -1,10 +1,12 @@
 var child_process = require("child_process"),
     p = require("path"),
     fs = require("fs"),
-    when = require("when");
+    when = require("when"),
+    whenNode = require("when/node");
 
 module.exports = function rebuildDocumentation(srcPath, targetPath, confPath, readmePath) {
-    var emptyOrAbsolutePathIfExists = function(path) {
+
+    var toAbsolutePath = function(path) {
         var absolutePath = p.resolve(path);
         if(fs.existsSync(absolutePath)) {
             return absolutePath;
@@ -14,14 +16,12 @@ module.exports = function rebuildDocumentation(srcPath, targetPath, confPath, re
         }
     };
 
-    var deferred = when.defer();
-
     var src = p.resolve(srcPath);
     var target = "-d " + p.resolve(targetPath);
-    var readme = emptyOrAbsolutePathIfExists(readmePath);
+    var readme = toAbsolutePath(readmePath);
     var options = "-r";
-    var conf = emptyOrAbsolutePathIfExists(confPath);
-    if(conf) {
+    var conf = toAbsolutePath(confPath);
+    if (conf) {
         conf = "-c " + conf;
     }
 
@@ -29,17 +29,16 @@ module.exports = function rebuildDocumentation(srcPath, targetPath, confPath, re
     var jsdoc = require.resolve("jsdoc/jsdoc");
     var cmd = [node, jsdoc, readme, src, options, target, conf].join(" ");
 
-    child_process.exec(cmd, function(error, stdout, stderr) {
-        if(error !== null) {
-            console.error("jsdoc failed!", stderr);
-            console.log("jsdoc command was: '", cmd, "'");
-            deferred.resolve(error.code);
-        }
-        else {
-            console.log("jsdoc succeeded!", stdout);
-            deferred.resolve(0);
-        }
-    });
+    var exec = whenNode.lift(child_process.exec);
 
-    return deferred.promise;
+    return exec(cmd)
+        .then(
+            function(){
+                console.log("jsdoc documentation successfully written to ", targetPath);
+            },
+            function(error){
+                console.error("jsdoc failed!", error);
+                console.log("jsdoc command was: ", cmd);
+            }
+        );
 };

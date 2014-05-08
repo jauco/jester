@@ -7,7 +7,7 @@ var loadConfig = require("../lib/loadConfig"),
 var config = loadConfig("./jester.json");
 
 rebuildDocumentation(config.srcPath, config.apiDocPath, config.jsdocConf, config.readme)
-    .then(function(exitCode) {
+    .done(function(exitCode) {
         process.exit(exitCode);
     });
 

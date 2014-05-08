@@ -1,9 +1,8 @@
 var glob = require("../lib/globPromise"),
-    p = require("path"),
     webpack = require("../lib/webpackPromise"),
-    when = require("when"),
     clearDir = require("./clearDir"),
-    handleWebpackResult = require("./handleWebpackResult");
+    handleWebpackResult = require("./handleWebpackResult"),
+    p = require("path");
 
 function createEntryModules(featureFiles) {
     var entryModules = {};
@@ -16,11 +15,11 @@ function createEntryModules(featureFiles) {
 }   
 
 module.exports =  function rebuildProject(entryGlob, artifactPath) {
-    return clearDir(artifactPath).
-        then(function filesCleared() {
+    return clearDir(artifactPath)
+        .then(function filesCleared() {
             return glob(entryGlob);
-        }).
-        then(function (featureFiles) {
+        })
+        .then(function (featureFiles) {
             return webpack({
                 entry: createEntryModules(featureFiles),
                 output: {
@@ -36,14 +35,8 @@ module.exports =  function rebuildProject(entryGlob, artifactPath) {
                 },
                 devtool: "#source-map",
             });
-        }).
-        then(function(stats){
-            console.log("Building succeeded!");
+        })
+        .then(function (stats){
+            return handleWebpackResult(stats);
         });
 };
-
-
-// , require("./handleWebpackResult")(function (hasSucceeded) {
-//                 console.log("webpack finished");
-//                 deferred.resolve(hasSucceeded ? 0 : 1);
-//             })
