@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 
-var fs = require('fs');
-var p = require("path");
+var fs = require('fs'),
+    p = require("path");
+
 var FEATURES_PATH = "features/"
 
 var defaultConf = {
@@ -177,11 +178,12 @@ mkdirp(p.resolve(defaultConf.apiDocPath));
 mkdirp(p.resolve(defaultConf.eslintRulesDir));
 
 function writeFileIfNotExists(path, contents) {
-    fs.stat(path, function (err) {
-        if (err) {
-            fs.writeFile(path, contents);
-        }
-    });    
+    if(fs.existsSync(path)) {
+        console.log("file exists, skipped " + path);
+    } else {
+        console.log("writing new file: " + path);
+        fs.writeFileSync(path, contents);
+    }
 }
 
 writeFileIfNotExists("./jester.json", JSON.stringify(defaultConf, null, 4));
