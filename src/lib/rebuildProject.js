@@ -12,6 +12,8 @@ function createEntryModules(featureFiles) {
         entryModules[featurename] = file;
         console.log("    * " + featurename + " (" + file + ")." );
     });
+
+    return entryModules;
 }   
 
 module.exports =  function rebuildProject(entryGlob, artifactPath) {
