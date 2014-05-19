@@ -156,9 +156,6 @@ var defaultJSDocConf = {
         "default": {
             "outputSourceFiles": true
         }
-    },
-    "opts" : {
-        "template": "templates"
     }
 }
 
