@@ -27,18 +27,18 @@ a `jester.json` configuration file with default values for your project:
 
 This will create the following directories:
 
-	./src/features/         # the actual top level code that does stuff
-    ./src/lib/              # supporting functionality
-    ./build/artifacts/      # folder where your compiled application will be stored by jester
-    ./build/karma/          # folder from which karma will run the unittests
-    ./doc/api/				# jsdoc api documentation
-	./eslint-rules          # custom rules for javascript code quality analysis/
+    ./src/features/       # the actual top level code that does stuff
+    ./src/lib/            # supporting functionality
+    ./build/artifacts/    # folder where your compiled application will be stored by jester
+    ./build/karma/        # folder from which karma will run the unittests
+    ./doc/api/            # jsdoc api documentation
+    ./eslint-rules        # custom rules for javascript code quality analysis/
 
 And the following files:
 
-	./jester.json			# configuration for jester
-	./jsdoc.conf			# configuration for jsdoc
-	./readme.md				# the readme is in markdown and will be included in the jsdoc output
+    ./jester.json    # configuration for jester
+    ./jsdoc.conf     # configuration for jsdoc, see: http://usejsdoc.org/about-configuring-jsdoc.html
+    ./readme.md      # the readme is in markdown and will be included in the jsdoc output
 
 ## Writing features with jester
 
