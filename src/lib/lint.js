@@ -1,14 +1,15 @@
-var p = require("path"),
-    readFile = require("fs").readFile,
-    eslint = require("eslint").linter,
-    rulesLoader = require("eslint/lib/rules"),
+var eslint = require("eslint").linter,
     formatter = require("eslint-path-formatter"),
+    glob = require("./globPromise"),
+    p = require("path"),
+    readFile = require("fs").readFile,
+    rulesLoader = require("eslint/lib/rules"),
     when = require("when");
 
 rulesLoader.load(p.resolve("./eslint-rules"));
 rulesLoader.load(p.join(__dirname, "../eslint-rules"));
 
-module.exports = function lintFile(filename, rules) {
+function lintFile(filename, rules) {
     return when.promise(function (resolve, reject, notify) {
         readFile(filename, {encoding: "utf8"}, function (err, file) {
             if (err) {
@@ -30,26 +31,42 @@ module.exports = function lintFile(filename, rules) {
                     rules: rules,
                     globals: globals
                 };
+
                 var result = eslint.verify(file, config);
+
+                var hasError = function(eslintMessage) {
+                    return eslintMessage.fatal || // parse error, or:
+                        (rules[eslintMessage.ruleId][0] || rules[eslintMessage.ruleId]) === 2; // lint error
+                };
+
                 var lintSucceeded = true;
-                if (result) {
-                    lintSucceeded = !result.some(function (message) {
-                        return message.fatal || (rules[message.ruleId][0] || rules[message.ruleId]) === 2;
-                    });
-                }
+
                 if (result && result.length > 0) {
+                    lintSucceeded = !result.some(hasError);
+
                     console.log(filename + ":");
                     console.log(formatter([{
                         messages: result,
                         filePath: filename
                     }], config));
                 }
-                if (lintSucceeded) {
-                    resolve();
-                } else {
-                    reject();
-                }
+
+                resolve(lintSucceeded);
             }
         });
     });
 };
+
+function lintGlob(globPattern, rules) {
+    return glob(globPattern).then(function (jsFiles) {
+        console.log("Linting ", jsFiles.length, " file" + (jsFiles.length === 1 ? "" : "s") + ".");
+        return when.map(jsFiles, function (file) {
+            return lintFile(file, rules);
+        }).then(function(values) {
+            return values.every(function(x) { return x; });
+        });
+    });
+}
+
+module.exports.lintFile = lintFile;
+module.exports.lintGlob = lintGlob;

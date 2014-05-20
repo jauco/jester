@@ -17,13 +17,18 @@ rebuildProject(config.fullEntryGlob, config.artifactPath)
         return runAllTests(config);
     })
     .done(
-        function(exitCode) {
+        function(hasSucceeded) {
+            if(!hasSucceeded) {
+                console.log("Finished with errors, not all tests or lints succeeded.");
+            }
             //karma doesn't seem to end properly. This is a bit of a sledge hammer:
-            process.exit(exitCode);
+            process.exit(hasSucceeded ? 0 : 1);
         },
         function(err) {
-            console.log(err.stack);
-            var errorCode = 1;
-            process.exit(errorCode);
+            console.log(err);
+            if(error.stack) {
+                console.log(err.stack);
+            }
+            process.exit(1);
         }
     );

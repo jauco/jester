@@ -38,14 +38,9 @@ function KarmaServer(karmaPath, options) {
         return when.promise(function (resolve, reject) {
             self.started = true;
             karma.server.start(self.karmaArguments, function(exitCode) {
-                console.log("Karma server has exited with " + exitCode);
-                if (exitCode === 0) {
-                    self.started = false;
-                    resolve(exitCode);
-                } else {
-                    self.started = false;
-                    reject(exitCode);
-                }
+                self.started = false;
+                console.log("Karma server has finished with " + exitCode);
+                resolve(exitCode);
             });
         });
     };
@@ -59,11 +54,7 @@ function KarmaServer(karmaPath, options) {
         return when.promise(function (resolve, reject) {
             var runner = karma.runner;
             runner.run({port: self.karmaArguments.port}, function (exitCode) {
-                if (exitCode === 0) {
-                    resolve(exitCode);
-                } else {
-                    reject(exitCode);
-                }
+                resolve(exitCode);
             });
         });
     };
@@ -71,10 +62,7 @@ function KarmaServer(karmaPath, options) {
     self.run = function() {
         if(!self.started) {
             self.karmaArguments.singleRun = false;
-            return self.start().then(function() {
-
-                return triggerKarma();
-            });
+            return self.start().then(function() { return triggerKarma(); });
         } else {
             return triggerKarma();
         }
