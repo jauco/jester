@@ -54,7 +54,7 @@ function KarmaServer(karmaPath, options) {
         return when.promise(function (resolve, reject) {
             var runner = karma.runner;
             runner.run({port: self.karmaArguments.port}, function (exitCode) {
-                resolve(exitCode);
+                resolve(exitCode === 0);
             });
         });
     };

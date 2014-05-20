@@ -2,7 +2,7 @@
 "use strict";
 
 var loadConfig = require("../lib/loadConfig"),
-    lintFile = require("../lib/lintFile"),
+    lint = require("../lib/lint"),
     clearDir = require("../lib/clearDir"),
     rebuildProject = require("../lib/rebuildProject"),
     KarmaServer = require("../lib/karmaServer"),
@@ -29,30 +29,30 @@ function getTestFileNameForPath(path) {
 }
 
 function runTests(path) {
-    lintFile(path, config.eslintRules)
-        .then(function() {
-            return clearDir(config.karmaPath);
-        })
-        .then(function() {
-            var testFile = getTestFileNameForPath(path);
-            if (!testFile) {
-                console.log("No tests found for '" + path + "'");
+    lint.lintFile(path, config.eslintRules)
+        .then(function(lintSucceeded) {
+            if(!lintSucceeded) {
                 return false;
             }
-            return createTestFile(testFile, config.karmaPath)
-                .then(function () {
-                    return server.run();
+
+            return clearDir(config.karmaPath).then(function() {
+                var testFile = getTestFileNameForPath(path);
+                if (!testFile) {
+                    console.log("No tests found for '" + path + "'");
+                    return false;
                 }
-            );
+                return createTestFile(testFile, config.karmaPath).then(function () {
+                    return server.run();
+                });
+            });
         })
-        .done(
-            function() {
-                console.log("karma test succeeded for " + path);
-            },
-            function() {
-                console.error("karma test failed for " + path);
+        .done(function(hasSucceeded) {
+            if(hasSucceeded) {
+                console.log("test succeeded for " + path);
+            } else {
+                console.log("test failed for " + path);
             }
-        );
+        });
 }
 
 function startWatching() {
