@@ -7,6 +7,7 @@ var loadConfig = require("../lib/loadConfig"),
     rebuildProject = require("../lib/rebuildProject"),
     KarmaServer = require("../lib/karmaServer"),
     createTestFile = require("../lib/createTestFile"),
+    when = require('when'),
     watchr = require('watchr');
 
 var config = loadConfig("./jester.json");
@@ -29,7 +30,7 @@ function getTestFileNameForPath(path) {
 }
 
 function runTests(path) {
-    lint.lintFile(path, config.eslintRules)
+    return lint.lintFile(path, config.eslintRules)
         .then(function(lintSucceeded) {
             if(!lintSucceeded) {
                 return false;
@@ -46,13 +47,17 @@ function runTests(path) {
                 });
             });
         })
-        .done(function(hasSucceeded) {
+        .then(function(hasSucceeded) {
             if(hasSucceeded) {
                 console.log("test succeeded for " + path);
             } else {
                 console.log("test failed for " + path);
             }
         });
+}
+
+function isReallyFileChangeEvent(changeType, fileCurrentStat, filePreviousStat) {
+    return changeType === 'create' || (changeType === 'update' && fileCurrentStat.mtime !== filePreviousStat.mtime);
 }
 
 function startWatching() {
@@ -69,13 +74,12 @@ function startWatching() {
                     }
 
                     if (filePath.length > 3 && filePath.substr(-3) === ".js") {
-                        console.log("change:", filePath);
-                        rebuildProject(config.fullEntryGlob, config.artifactPath)
-                            .done(function() {
-                                if (changeType === 'create' || (changeType === 'update' && fileCurrentStat.mtime !== filePreviousStat.mtime)) {
-                                    runTests(filePath);
-                                }
-                            });
+                        var build = rebuildProject(config.fullEntryGlob, config.artifactPath);
+                        if (isReallyFileChangeEvent(changeType, fileCurrentStat, filePreviousStat)) {
+                            when.join(build, runTests(filePath)).done(function(){});
+                        } else {
+                            when.done(function(){});
+                        }
                     }
                 } catch (error) {
                     console.error('An error happened in the file update watcher', error, error.stack);
