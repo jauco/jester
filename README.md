@@ -2,25 +2,20 @@
 
 >Get your project tested and out there with minimal fuss.
 
-[Jester](https://www.npmjs.org/package/jester-tester) is a javascript testing
-tool which uses the [karma test runner][] for running unittests written with
-[jasmine][] on multiple browsers, [eslint][] for warning you of common bugs and
-[webpack][] for compiling your source and dependencies so that you can easily
-include other people's libraries using [commonJS modules][] and [npm][]
+[Jester](https://www.npmjs.org/package/jester-tester) is a cross-platform javascript testing tool which uses the [karma test runner][] for running unittests written with [jasmine][] on multiple browsers. Furthermore, jester will:
 
-The idea is to give you a bootstrap for integrating these tools so you can worry
-about your app code and not about the tooling.
+* compile your sources and dependencies using [webpack][] so that you can easily include other people's libraries using [commonJS modules][] and [npm][]
+* check your source with [eslint][] to warn you of common bugs
+* generate documentation from source code and comments with [jsdoc](http://usejsdoc.org/)
 
-Jester should run equally well under Windows, Linux and macOS. I'm using the
-path.join methods etc. but I haven't done much testing on macOS and Linux so
-please report bugs if something doesn't work.
+The goal of Jester is to give you a bootstrap for integrating these tools so you can worry about your app code and not about the tooling. It can run in batch mode or it can watch your source directories for changes and rerun tests immediately when you update your sources.
 
 ## Installation
 
  1. Install [node.js](http://nodejs.org/download/)
  2. Create a directory for your app `mkdir myApp; cd myApp`
- 4. Add a basic machine readable description of your app `npm init`
- 5. Install jester from npm and save it into the development dependencies: 
+ 3. Add a basic machine readable description of your app `npm init`
+ 4. Install jester from npm and save it into the development dependencies. Under windows you'll have to run this as administrator (required by jsdoc for creating symlinks): 
     `npm install --save-dev jester-tester`
 
 ## Creating a project
@@ -30,17 +25,25 @@ a `jester.json` configuration file with default values for your project:
 
     ./node_modules/.bin/jester-init
 
-This will create the following paths:
+This will create the following directories:
 
-    ./src/features/         # the actual top level code that does stuff
-    ./src/lib/              # supporting functionality
-    ./build/artifacts/      # folder where your compiled application will be stored by jester
-    ./build/karma/          # folder from which karma will run the unittests
-    ./eslint-rules          # custom rules for javascript code quality analysis
+    ./src/features/       # the actual top level code that does stuff
+    ./src/lib/            # supporting functionality
+    ./build/artifacts/    # folder where your compiled application will be stored by jester
+    ./build/karma/        # folder from which karma will run the unittests
+    ./doc/api/            # jsdoc api documentation
+    ./eslint-rules        # custom rules for javascript code quality analysis/
+
+And the following files:
+
+    ./jester.json    # configuration for jester
+    ./jsdoc.conf     # configuration for jsdoc, see: http://usejsdoc.org/about-configuring-jsdoc.html
+    ./readme.md      # the readme is in markdown and will be included in the jsdoc output
 
 ## Writing features with jester
+
 Jester assumes that you build your application from features. Each feature will
-be a seperate js file that you can load from an html file in the browser by
+be a separate js file that you can load from an html file in the browser by
 using `<script src='myscriptsdir/myfeature.js'>`.
 
 Jester packages your features with their dependencies with the help of webpack.
@@ -71,7 +74,8 @@ module.exports = hello;
 ```
 
 ##Generating the results file
-Executing `node_modules/.bin/jester-batch.js` results in two files.
+
+Executing `./node_modules/.bin/jester-batch.js` results in two files.
 *greeting.min.js* and *greeting.min.js.map*. The .js file contains the full
 javascript code (both feature.js and hello.js). The map is a source map which
 maps the source code in the compiled .js file to the original files and lines
@@ -187,8 +191,14 @@ what happens under the hood. It's not really magical.
 [eslint]: https://github.com/eslint/eslint
 [karma test runner]: http://karma-runner.github.io/0.10/index.html
 [webpack]: https://github.com/webpack/webpack
-[jasmine]: http://pivotal.github.io/jasmine/
+[jasmine]: http://jasmine.github.io/2.0/introduction.html
 [npm]: https://www.npmjs.org/doc/cli/npm.html
+
+## Generating documentation from source
+
+Documentation will be generated from appropriately annotated sources by jsdoc and includes the syntax highlighted source code. See [usejsdoc](http://usejsdoc.org/) for how to annotate your code, especially relevant is [Document CommonJS Modules](http://usejsdoc.org/howto-commonjs-modules.html). The api documentation will be written to a directory specified by the `apiDocPath` setting in `jester.json`, which defaults to `./doc/api/`. These documentation files will be generated when you run `jester-batch` or `jester-doc`. The latter is a bit faster because it *only* runs jsdoc. The documentation is *not* automatically updated when running `jester-watch`. 
+
+An additional benefit of annotating your code with jsdoc style comments is that there are a number of tools such as ide's and compilers which can take advantages of the additional information contained in those comments.
 
 ### Todo:
  * source maps end up at the wrong url '.' (setting breakpoints does work though)

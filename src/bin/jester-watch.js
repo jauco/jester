@@ -2,63 +2,96 @@
 "use strict";
 
 var loadConfig = require("../lib/loadConfig"),
-    lintFile = require("../lib/lintFile"),
+    lint = require("../lib/lint"),
     clearDir = require("../lib/clearDir"),
     rebuildProject = require("../lib/rebuildProject"),
-    launchKarma = require("../lib/launchKarma"),
+    KarmaServer = require("../lib/karmaServer"),
     createTestFile = require("../lib/createTestFile"),
+    when = require('when'),
     watchr = require('watchr');
 
 var config = loadConfig("./jester.json");
-var karma = launchKarma(true, config.karmaPath, config.karmaOptions, function () {
-    //karma doesn't kill itself properly, or I don't know how to use it. This is a sledge hammer, but it works for now
-    process.exit();
-});
+var server = new KarmaServer(config.karmaPath, config.karmaOptions);
 
-function runFileTests(path) {
-    console.log("Running tests for " + path);
-    lintFile(path, config.eslintRules, function onLintReady(lintSucceeded) {
-        if (lintSucceeded) {
-            clearDir(config.karmaPath, function directoryCleared() {
-                var testfile;
-                if (path.substr(-8) === ".test.js") {
-                    createTestFile(path, config.karmaPath, function filesGenerated() {
-                        karma.triggerRun();
-                    });
-                } else {
-                    testfile = path.substr(0, path.length - 3) + ".test.js";
-                    require("fs").stat(testfile, function (err, stat) {
-                        if (stat) {
-                            createTestFile(testfile, config.karmaPath, function filesGenerated() {
-                                karma.triggerRun();
-                            });
-                        } else {
-                            console.log("No tests found for '" + path + "'");
-                        }
-                    })
-                }
-            });
+function getTestFileNameForPath(path) {
+    var result = "";
+    if (path.length > 8 && path.substr(-8) === ".test.js") {
+        result = path;
+    }
+    else if (path.length > 3 && path.substr(-3) === ".js") {
+        var testfile = path.substr(0, path.length - 3) + ".test.js";
+
+        if (require("fs").existsSync(testfile)) {
+            result = testfile;
         }
+    }
+
+    return result;
+}
+
+function runTests(path) {
+    return lint.lintFile(path, config.eslintRules)
+        .then(function(lintSucceeded) {
+            if(!lintSucceeded) {
+                return false;
+            }
+
+            return clearDir(config.karmaPath).then(function() {
+                var testFile = getTestFileNameForPath(path);
+                if (!testFile) {
+                    console.log("No tests found for '" + path + "'");
+                    return false;
+                }
+                return createTestFile(testFile, config.karmaPath).then(function () {
+                    return server.run();
+                });
+            });
+        })
+        .then(function(hasSucceeded) {
+            if(hasSucceeded) {
+                console.log("test succeeded for " + path);
+            } else {
+                console.log("test failed for " + path);
+            }
+        });
+}
+
+function isReallyFileChangeEvent(changeType, fileCurrentStat, filePreviousStat) {
+    return changeType === 'create' || (changeType === 'update' && fileCurrentStat.mtime !== filePreviousStat.mtime);
+}
+
+function startWatching() {
+    watchr.watch({
+        paths: [config.srcPath],
+        listeners: {
+            error: function (error) {
+                console.error('An error happened in the file update watcher', error);
+            },
+            change: function (changeType, filePath, fileCurrentStat, filePreviousStat) {
+                try {
+                    if (filePath == "jester.json") {
+                        config = loadConfig("./jester.json");
+                    }
+
+                    if (filePath.length > 3 && filePath.substr(-3) === ".js") {
+                        var build = rebuildProject(config.fullEntryGlob, config.artifactPath);
+                        if (isReallyFileChangeEvent(changeType, fileCurrentStat, filePreviousStat)) {
+                            when.join(build, runTests(filePath)).done(function(){});
+                        } else {
+                            build.done(function(){});
+                        }
+                    }
+                } catch (error) {
+                    console.error('An error happened in the file update watcher', error, error.stack);
+                }
+            }
+        },
+        persistent: true
     });
 }
 
-watchr.watch({
-    paths: [config.srcPath],
-    listeners: {
-        error: function (error) { console.error('An error happened in the file update watcher', error); },
-        change: function (changeType, filePath, fileCurrentStat, filePreviousStat) {
-            try {
-                if (filePath.substr(-3) === ".js") {
-                    config = loadConfig("./jester.json");
-                    if (changeType === 'create' || (changeType === 'update' && fileCurrentStat.mtime !== filePreviousStat.mtime)) {
-                        runFileTests(filePath);
-                    }
-                    rebuildProject(config.fullEntryGlob, config.artifactPath);
-                }
-            } catch (error) {
-                console.error('An error happened in the file update watcher', error, error.stack);
-            }
-        }
-    },
-    persistent: true
+server.start().done(function(exitCode) {
+     process.exit();
 });
+
+startWatching();

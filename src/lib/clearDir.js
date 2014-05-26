@@ -1,17 +1,12 @@
-var glob = require("glob");
+var glob = require("../lib/globPromise");
+var when = require("when");
+var node = require("when/node");
 
-module.exports = function clearDir(path, cb) {
-    var files = glob.sync(path + "/**/*.{js,js.map}");
-    var total = files.length;
-    if (total === 0) {
-        cb();
-    }
-    files.forEach(function (file) {
-        require("fs").unlink(file, function removeCompleted() {
-            total -= 1;
-            if (total === 0) {
-                cb();
-            }
+module.exports = function clearDir(path) {
+    var unlink = node.lift(require("fs").unlink);
+
+    return glob(path + "/**/*.{js,js.map}")
+        .then(function(files) {
+            return when.map(files, unlink);
         });
-    });
 };

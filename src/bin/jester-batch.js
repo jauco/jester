@@ -2,53 +2,33 @@
 "use strict";
 
 var loadConfig = require("../lib/loadConfig"),
-    lintFile = require("../lib/lintFile"),
-    clearDir = require("../lib/clearDir"),
+    rebuildDocumentation = require("../lib/rebuildDocumentation"),
     rebuildProject = require("../lib/rebuildProject"),
-    launchKarma = require("../lib/launchKarma"),
-    createTestFile = require("../lib/createTestFile"),
-    glob = require("glob");
+    runAllTests = require("../lib/runAllTests"),
+    when = require("when");
 
-var testsSucceeded = true;
 var config = loadConfig("./jester.json");
 
-function startTests() {
-    console.log("linting all files");
-    glob(config.srcPath + "/**/*.js", function (err, jsFiles) {
-        var filesToGo = jsFiles.length;
-        if (jsFiles.length === 0) {
-            console.log("No JS files found! My work here is done.")
-        }
-        jsFiles.forEach(function (file) {
-            lintFile(file, config.eslintRules, function onLintReady(lintSucceeded) {
-                testsSucceeded = testsSucceeded && lintSucceeded;
-                filesToGo -= 1;
-                if (filesToGo === 0) {
-                    createTestFiles();
-                }
-            });
-        })
-    });
-}
-
-function createTestFiles() {
-    console.log("Creating test files for karma");
-    clearDir(config.karmaPath, function directoryCleared() {
-        glob(config.srcPath + "/**/*.test.js", function (err, testfiles) {
-            createTestFile(testfiles, config.karmaPath, runTests)
-        });
-    });
-}
-
-function runTests() {
-    console.log("running the tests.");
-    new launchKarma(false, config.karmaPath, config.karmaOptions, function (exitCode) {
-        testsSucceeded = testsSucceeded && exitCode === 0;
-        //karma doesn't seem to end properly. This is a bit of a sledge hammer.
-        process.exit(testsSucceeded ? 0 : 1);
+rebuildProject(config.fullEntryGlob, config.artifactPath)
+    .then(function() {
+        return rebuildDocumentation(config.srcPath, config.apiDocPath, config.jsdocConf, config.readme);
     })
-}
-
-console.log("Rebuilding the project artifacts.");
-rebuildProject(config.fullEntryGlob, config.artifactPath);
-startTests();
+    .then(function() {
+        return runAllTests(config);
+    })
+    .done(
+        function(hasSucceeded) {
+            if(!hasSucceeded) {
+                console.log("Finished with errors, not all tests or lints succeeded.");
+            }
+            //karma doesn't seem to end properly. This is a bit of a sledge hammer:
+            process.exit(hasSucceeded ? 0 : 1);
+        },
+        function(err) {
+            console.log(err);
+            if(error.stack) {
+                console.log(err.stack);
+            }
+            process.exit(1);
+        }
+    );

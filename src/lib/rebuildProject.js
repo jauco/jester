@@ -1,21 +1,29 @@
-var glob = require("glob");
-var p = require("path");
-var webpack = require("webpack");
-var clearDir = require("./clearDir");
+var glob = require("../lib/globPromise"),
+    webpack = require("../lib/webpackPromise"),
+    clearDir = require("./clearDir"),
+    handleWebpackResult = require("./handleWebpackResult"),
+    p = require("path");
 
-module.exports = function rebuildProject(entryGlob, artifactPath) {
-    clearDir(artifactPath, function filesCleared() {
-        glob(entryGlob, function (err, featureFiles) {
-            var entryModules = {
-            };
-            console.log("Building artifacts for ", entryGlob, ":");
-            featureFiles.forEach(function (file) {
-                var featurename = p.basename(p.dirname(file));
-                entryModules[featurename] = file;
-                console.log("    * " + featurename + " (" + file + ")." );
-            });
-            webpack({
-                entry: entryModules,
+function createEntryModules(featureFiles) {
+    var entryModules = {};
+    
+    featureFiles.forEach(function (file) {
+        var featurename = p.basename(p.dirname(file));
+        entryModules[featurename] = file;
+        console.log("    * " + featurename + " (" + file + ")." );
+    });
+
+    return entryModules;
+}   
+
+module.exports =  function rebuildProject(entryGlob, artifactPath) {
+    return clearDir(artifactPath)
+        .then(function filesCleared() {
+            return glob(entryGlob);
+        })
+        .then(function (featureFiles) {
+            return webpack({
+                entry: createEntryModules(featureFiles),
                 output: {
                     path: artifactPath,
                     filename: "[name].min.js",
@@ -28,7 +36,9 @@ module.exports = function rebuildProject(entryGlob, artifactPath) {
                     ]
                 },
                 devtool: "#source-map",
-            }, require("./handleWebpackResult")(function () {}));
+            });
+        })
+        .then(function (stats){
+            return handleWebpackResult(stats);
         });
-    });
 };
