@@ -78,7 +78,7 @@ function startWatching() {
                         if (isReallyFileChangeEvent(changeType, fileCurrentStat, filePreviousStat)) {
                             when.join(build, runTests(filePath)).done(function(){});
                         } else {
-                            when.done(function(){});
+                            build.done(function(){});
                         }
                     }
                 } catch (error) {
