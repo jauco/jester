@@ -26,7 +26,7 @@ rebuildProject(config.fullEntryGlob, config.artifactPath)
         },
         function(err) {
             console.log(err);
-            if(error.stack) {
+            if(err.stack) {
                 console.log(err.stack);
             }
             process.exit(1);
