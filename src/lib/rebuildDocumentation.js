@@ -7,16 +7,16 @@ var child_process = require("child_process"),
 module.exports = function rebuildDocumentation(srcPath, targetPath, confPath, readmePath) {
 
     var toAbsolutePath = function(path) {
-        var absolutePath = p.resolve(path);
-        if(fs.existsSync(absolutePath)) {
-            return absolutePath;
+        if(path) {
+            var absolutePath = p.resolve(path);
+            if (fs.existsSync(absolutePath)) {
+                return absolutePath;
+            }
         }
-        else {
-            return "";
-        }
+        return "";
     };
 
-    var src = p.resolve(srcPath);
+    var src = toAbsolutePath(srcPath);
     var target = "-d " + p.resolve(targetPath);
     var readme = toAbsolutePath(readmePath);
     var options = "-r";
