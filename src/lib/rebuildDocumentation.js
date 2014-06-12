@@ -1,33 +1,31 @@
 var child_process = require("child_process"),
     p = require("path"),
     fs = require("fs"),
-    when = require("when"),
     whenNode = require("when/node");
 
 module.exports = function rebuildDocumentation(srcPath, targetPath, confPath, readmePath) {
-
-    var toAbsolutePath = function(path) {
-        if(path) {
-            var absolutePath = p.resolve(path);
-            if (fs.existsSync(absolutePath)) {
-                return absolutePath;
-            }
-        }
-        return "";
+    var pathExists = function(path) {
+        return path && fs.existsSync(path);
     };
 
-    var src = toAbsolutePath(srcPath);
-    var target = "-d " + p.resolve(targetPath);
-    var readme = toAbsolutePath(readmePath);
-    var options = "-r";
-    var conf = toAbsolutePath(confPath);
-    if (conf) {
-        conf = "-c " + conf;
-    }
+    var ensurePathExists = function(path, msg) {
+        if(!pathExists(path)) {
+            throw new Error(msg ? msg : "path does not exist: " + path);
+        }
+    };
 
-    var node = "node";
+    ensurePathExists(srcPath);
+    ensurePathExists(targetPath, "you must define a valid documentation directory by setting apiDocPath in jester.json");
+
+    // define command line options:
+    var options = "-r";
+    var src = p.resolve(srcPath);
+    var target = "-d " + p.resolve(targetPath);
+    var readme = pathExists(readmePath) ? p.resolve(readmePath) : "";
+    var conf = pathExists(confPath) ? "-c " + p.resolve(confPath) : "";
+
     var jsdoc = require.resolve("jsdoc/jsdoc");
-    var cmd = [node, jsdoc, readme, src, options, target, conf].join(" ");
+    var cmd = ["node", jsdoc, readme, src, options, target, conf].join(" ");
 
     var exec = whenNode.lift(child_process.exec);
 
