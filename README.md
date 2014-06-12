@@ -196,17 +196,24 @@ what happens under the hood. It's not really magical.
 
 ## Generating documentation from source
 
-Documentation will be generated from appropriately annotated sources by jsdoc and includes the syntax highlighted source code. See [usejsdoc](http://usejsdoc.org/) for how to annotate your code, especially relevant is [Document CommonJS Modules](http://usejsdoc.org/howto-commonjs-modules.html). The recommended way to export functions is:
+Documentation will be generated from appropriately annotated sources by jsdoc and includes the syntax highlighted source code. See [usejsdoc](http://usejsdoc.org/) for how to annotate your code, especially relevant is [Document CommonJS Modules](http://usejsdoc.org/howto-commonjs-modules.html). 
 
-    /** Clones a object */
-    module.exports.clone = function(obj)
+There are many ways to export and document code. The recommended way to export functions is:
 
-rather than, for example:
+    /**  
+     * Deep clone an object
+     *
+     * @param {Object} obj - the object to clone
+     * @returns {Object} a deep clone of the original object 
+     * @see {@link http://stackoverflow.com/questions/728360/most-elegant-way-to-clone-a-javascript-object}
+     */
+	function clone(obj) {
+        ...
+	}
 
-    /** Clones a object */
-	module.exports = function clone(obj)
+    module.exports = clone;
 
-This enables jsdoc to recognize that clone is a (static) function. 
+This enables jsdoc to recognize that clone is a (static) function, the clone symbol will show up in stack traces and is fully supported by IE8.
 
 The api documentation will be written to a directory specified by the `apiDocPath` setting in `jester.json`, which defaults to `./doc/api/`. You can set the configuration option `readme` to point to a file that is a markdown formatted readme which will be included in the generated documentation on the homepage. 
 
