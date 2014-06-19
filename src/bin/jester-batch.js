@@ -11,7 +11,11 @@ var config = loadConfig("./jester.json");
 
 rebuildProject(config.fullEntryGlob, config.artifactPath)
     .then(function() {
-        return rebuildDocumentation(config.srcPath, config.apiDocPath, config.jsdocConf, config.readme);
+        if(config.srcPath && config.apiDocPath) {
+            return rebuildDocumentation(config.srcPath, config.apiDocPath, config.jsdocConf, config.readme);
+        } else {
+            console.log("please configure srcPath and apiDocPath in order to generate jsdoc documentation")
+        }
     })
     .then(function() {
         return runAllTests(config);
@@ -26,7 +30,7 @@ rebuildProject(config.fullEntryGlob, config.artifactPath)
         },
         function(err) {
             console.log(err);
-            if(error.stack) {
+            if(err.stack) {
                 console.log(err.stack);
             }
             process.exit(1);
