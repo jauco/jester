@@ -196,12 +196,27 @@ what happens under the hood. It's not really magical.
 
 ## Generating documentation from source
 
-Documentation will be generated from appropriately annotated sources by jsdoc and includes the syntax highlighted source code. See [usejsdoc](http://usejsdoc.org/) for how to annotate your code, especially relevant is [Document CommonJS Modules](http://usejsdoc.org/howto-commonjs-modules.html). The api documentation will be written to a directory specified by the `apiDocPath` setting in `jester.json`, which defaults to `./doc/api/`. These documentation files will be generated when you run `jester-batch` or `jester-doc`. The latter is a bit faster because it *only* runs jsdoc. The documentation is *not* automatically updated when running `jester-watch`. 
+Documentation will be generated from appropriately annotated sources by jsdoc and includes the syntax highlighted source code. See [usejsdoc](http://usejsdoc.org/) for how to annotate your code, especially relevant is [Document CommonJS Modules](http://usejsdoc.org/howto-commonjs-modules.html). 
+
+There are many ways to export and document code. The recommended way to export functions is:
+
+    /**  
+     * Deep clone an object
+     *
+     * @param {Object} obj - the object to clone
+     * @returns {Object} a deep clone of the original object 
+     * @see {@link http://stackoverflow.com/questions/728360/most-elegant-way-to-clone-a-javascript-object}
+     */
+	function clone(obj) {
+        ...
+	}
+
+    module.exports = clone;
+
+This enables jsdoc to recognize that clone is a (static) function, the clone symbol will show up in stack traces and is fully supported by IE8.
+
+The api documentation will be written to a directory specified by the `apiDocPath` setting in `jester.json`, which defaults to `./doc/api/`. You can set the configuration option `readme` to point to a file that is a markdown formatted readme which will be included in the generated documentation on the homepage. 
+
+The api documentation will be generated when you run `jester-batch` or `jester-doc`. The latter is a bit faster because it *only* runs jsdoc. The documentation is *not* automatically updated when running `jester-watch`. 
 
 An additional benefit of annotating your code with jsdoc style comments is that there are a number of tools such as ide's and compilers which can take advantages of the additional information contained in those comments.
-
-### Todo:
- * source maps end up at the wrong url '.' (setting breakpoints does work though)
- * user interaction and GUI rendering tests through appthwack and Calabash.
- * Allow config options for webpack to be defined
- * Add JSX compiler
