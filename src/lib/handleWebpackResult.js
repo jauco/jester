@@ -13,9 +13,9 @@ module.exports = function handleWebpackResult(stats) {
         };
 
         var logErrorsByLine = function (errors) {
-            errors.byLine(function (err) {
-                console.log("    ", err); 
-            })
+            byLine(errors, function (err) {
+                console.log("    ", err, typeof err);
+            });
         };
 
         var pluralizeIf = function(noun, count) {
@@ -26,12 +26,12 @@ module.exports = function handleWebpackResult(stats) {
             console.log(pluralizeIf("Non-fatal error", nonFatalErrors.length) + ":");
             nonFatalErrors.forEach(logErrorsByLine);
         }
-        
+
         if (warnings.length > 0) {
-            console.log(pluralizeIf("Warning", nonFatalErrors.length) + ":");
+            console.log(pluralizeIf("Warning", warnings.length) + ":");
             warnings.forEach(logErrorsByLine);
         }
-        
+
         console.error("Building finished, but the result might not work!");
     } else {
         console.log("Building succeeded!");
