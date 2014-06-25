@@ -19,14 +19,4 @@ You attach a graphical debugger ([node-inspector]) to the unittests, or to the c
 3. Open a browser on http://localhost:8080
 4. place your breakpoints and press the play button to start running jester.
 
-### Debug Jester's unittests
-
-1. Run jester:
-
-        .\dist\node.exe .\dist\jester.js
-
-2. Add a breakpoint in a unittest by inserting the string `debugger;` somewhere and save the file.
-3. Open a browser on http://localhost:8080
-4. Press the play button to start running the unittest
-
 [node-inspector]: https://npmjs.org/package/node-inspector
