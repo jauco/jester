@@ -1,6 +1,10 @@
 module.exports = function handleWebpackResult(stats, webpackWarningFilters) {
     if (stats) {
-        stats.compilation.warnings = filterWebpackWarnings(stats.compilation.warnings, webpackWarningFilters);
+        try {
+            stats.compilation.warnings = filterWebpackWarnings(stats.compilation.warnings, webpackWarningFilters);
+        } catch (error) {
+            console.error(error);
+        }
         stats = stats.toJson();
     }
     var nonFatalErrors = (stats && stats.errors) || [];
@@ -41,23 +45,60 @@ module.exports = function handleWebpackResult(stats, webpackWarningFilters) {
 };
 
 function filterWebpackWarnings(unfilteredWarnings, webpackWarningFilters) {
-    // TODO check sanity of config
+    if (!webpackWarningFilters) {
+        // No filters are configured. Use the complete, unfiltered list of warnings.
+        return unfilteredWarnings;
+    }
 
-    var filteredWarnings = unfilteredWarnings.filter(function filterWarnings(warning, index, unfilteredWarnings) {
-        // TODO use webpackWarningFilters
-
-        if (warning.name === "ModuleNotFoundError"
-            && warning.origin.rawRequest === "imports?process=>undefined!when"
-            && warning.dependencies[0].request === "vertx"
+    // Check the sanity of the webpackWarningFilters-configuration.
+    if (!Array.isArray(webpackWarningFilters)) {
+        throw new TypeError("config.webpackWarningFilters must be an array.");
+    }
+    for (var i = 0; i < webpackWarningFilters.length; i++) {
+        var webpackWarningFilter = webpackWarningFilters[i];
+        if ("name" in webpackWarningFilter
+            && "origin/rawRequest" in webpackWarningFilter
+            && "dependencies/0/request" in webpackWarningFilter
+            && Object.keys(webpackWarningFilter).length === 3 // That is, webpackWarningFilter contains no keys other than these three.
+            && webpackWarningFilter.name === "ModuleNotFoundError"
         ) {
-            // This warning matches one of the filters.
-            // Remove it from the list, so that it is NOT shown in Jester's output.
-            return false;
+            // This filter config is supported. Proceed.
         } else {
-            // This warning matches none of the filters.
-            // Leave it in the list, so that it IS shown in Jester's output.
+            // This filter config isn't supported. Abort.
+            throw new Error(
+                "config.webpackWarningFilters[" + i + "] must be an object similar to {\n" +
+                "   'name': 'ModuleNotFoundError',\n" +
+                "   'origin/rawRequest': 'imports?process=>undefined!when',\n" +
+                "   'dependencies/0/request': 'vertx'\n" +
+                "}."
+            );
+        }
+    }
+
+    // There's at least one filter and all filter configs are supported. Do the actual filtering.
+    var filteredWarnings = unfilteredWarnings.filter(function filterWarning(warning, index, unfilteredWarnings) {
+        if (warning.name !== "ModuleNotFoundError") {
+            // filterWebpackWarnings only supports filtering of ModuleNotFoundError-warnings.
+            // This is some other kind of warning. Leave it in the list, so that it IS shown in Jester's output.
             return true;
         }
+
+        for (var i = 0; i < webpackWarningFilters.length; i++) {
+            var webpackWarningFilter = webpackWarningFilters[i];
+            if (
+                warning.origin.rawRequest === webpackWarningFilter["origin/rawRequest"]
+                && warning.dependencies.length > 0
+                && warning.dependencies[0].request === webpackWarningFilter["dependencies/0/request"]
+            ) {
+                // This warning matches one of the filters.
+                // Remove it from the list, so that it is NOT shown in Jester's output.
+                return false;
+            }
+        }
+
+        // This warning matches none of the filters.
+        // Leave it in the list, so that it IS shown in Jester's output.
+        return true;
     });
 
     return filteredWarnings;
