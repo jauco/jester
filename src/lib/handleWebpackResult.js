@@ -1,5 +1,6 @@
-module.exports = function handleWebpackResult(stats) {
+module.exports = function handleWebpackResult(stats, webpackWarningFilters) {
     if (stats) {
+        stats.compilation.warnings = filterWebpackWarnings(stats.compilation.warnings, webpackWarningFilters);
         stats = stats.toJson();
     }
     var nonFatalErrors = (stats && stats.errors) || [];
@@ -38,3 +39,26 @@ module.exports = function handleWebpackResult(stats) {
     }
 
 };
+
+function filterWebpackWarnings(unfilteredWarnings, webpackWarningFilters) {
+    // TODO check sanity of config
+
+    var filteredWarnings = unfilteredWarnings.filter(function filterWarnings(warning, index, unfilteredWarnings) {
+        // TODO use webpackWarningFilters
+
+        if (warning.name === "ModuleNotFoundError"
+            && warning.origin.rawRequest === "imports?process=>undefined!when"
+            && warning.dependencies[0].request === "vertx"
+        ) {
+            // This warning matches one of the filters.
+            // Remove it from the list, so that it is NOT shown in Jester's output.
+            return false;
+        } else {
+            // This warning matches none of the filters.
+            // Leave it in the list, so that it IS shown in Jester's output.
+            return true;
+        }
+    });
+
+    return filteredWarnings;
+}
