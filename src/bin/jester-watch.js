@@ -42,7 +42,7 @@ function runTests(path) {
                     console.log("No tests found for '" + path + "'");
                     return false;
                 }
-                return createTestFile(testFile, config.karmaPath).then(function () {
+                return createTestFile(testFile, config.karmaPath, config.webpackWarningFilters).then(function () {
                     return server.run();
                 });
             });
@@ -74,7 +74,7 @@ function startWatching() {
                     }
 
                     if (filePath.length > 3 && filePath.substr(-3) === ".js") {
-                        var build = rebuildProject(config.fullEntryGlob, config.artifactPath);
+                        var build = rebuildProject(config.fullEntryGlob, config.artifactPath, config.webpackWarningFilters);
                         if (isReallyFileChangeEvent(changeType, fileCurrentStat, filePreviousStat)) {
                             when.join(build, runTests(filePath)).done(function(){});
                         } else {
