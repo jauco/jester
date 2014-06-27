@@ -1,6 +1,7 @@
 module.exports = function handleWebpackResult(stats, webpackWarningFilters) {
     if (stats) {
         try {
+            assertFiltersValid(webpackWarningFilters);
             stats.compilation.warnings = filterWebpackWarnings(stats.compilation.warnings, webpackWarningFilters);
         } catch (error) {
             console.error(error);
@@ -44,13 +45,14 @@ module.exports = function handleWebpackResult(stats, webpackWarningFilters) {
 
 };
 
-function filterWebpackWarnings(unfilteredWarnings, webpackWarningFilters) {
+/**
+ * Checks the sanity of the webpackWarningFilters-configuration.
+ */
+function assertFiltersValid(webpackWarningFilters) {
     if (!webpackWarningFilters) {
-        // No filters are configured. Use the complete, unfiltered list of warnings.
-        return unfilteredWarnings;
+        // No filters are configured. That's okay.
+        return;
     }
-
-    // Check the sanity of the webpackWarningFilters-configuration.
     if (!Array.isArray(webpackWarningFilters)) {
         throw new TypeError("config.webpackWarningFilters must be an array.");
     }
@@ -73,6 +75,13 @@ function filterWebpackWarnings(unfilteredWarnings, webpackWarningFilters) {
                 "}."
             );
         }
+    }
+}
+
+function filterWebpackWarnings(unfilteredWarnings, webpackWarningFilters) {
+    if (!webpackWarningFilters) {
+        // No filters are configured. Use the complete, unfiltered list of warnings.
+        return unfilteredWarnings;
     }
 
     // There's at least one filter and all filter configs are supported. Do the actual filtering.
