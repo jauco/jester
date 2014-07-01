@@ -1,10 +1,7 @@
 module.exports = function handleWebpackResult(stats, webpackWarningFilters) {
     if (stats) {
-        try {
-            assertFiltersValid(webpackWarningFilters);
+        if (filterConfigIsValid(webpackWarningFilters)) {
             stats.compilation.warnings = filterWebpackWarnings(stats.compilation.warnings, webpackWarningFilters);
-        } catch (error) {
-            console.error(error);
         }
         stats = stats.toJson();
     }
@@ -48,34 +45,40 @@ module.exports = function handleWebpackResult(stats, webpackWarningFilters) {
 /**
  * Checks the sanity of the webpackWarningFilters-configuration.
  */
-function assertFiltersValid(webpackWarningFilters) {
-    if (!webpackWarningFilters) {
-        // No filters are configured. That's okay.
-        return;
-    }
-    if (!Array.isArray(webpackWarningFilters)) {
-        throw new TypeError("config.webpackWarningFilters must be an array.");
-    }
-    for (var i = 0; i < webpackWarningFilters.length; i++) {
-        var webpackWarningFilter = webpackWarningFilters[i];
-        if ("name" in webpackWarningFilter
-            && "origin/rawRequest" in webpackWarningFilter
-            && "dependencies/0/request" in webpackWarningFilter
-            && Object.keys(webpackWarningFilter).length === 3 // That is, webpackWarningFilter contains no keys other than these three.
-            && webpackWarningFilter.name === "ModuleNotFoundError"
-        ) {
-            // This filter config is supported. Proceed.
+function filterConfigIsValid(webpackWarningFilters) {
+    var filterConfigIsValid = true;
+    if (webpackWarningFilters) {
+        if (Array.isArray(webpackWarningFilters)) {
+            for (var i = 0; i < webpackWarningFilters.length; i++) {
+                var webpackWarningFilter = webpackWarningFilters[i];
+                if ("name" in webpackWarningFilter
+                    && "origin/rawRequest" in webpackWarningFilter
+                    && "dependencies/0/request" in webpackWarningFilter
+                    && Object.keys(webpackWarningFilter).length === 3 // That is, webpackWarningFilter contains no keys other than these three.
+                    && webpackWarningFilter.name === "ModuleNotFoundError"
+                ) {
+                    // This filter config is supported. Proceed.
+                } else {
+                    // This filter config isn't supported. Abort.
+                    console.warn(
+                        "config.webpackWarningFilters[" + i + "] must be an object similar to {\n" +
+                        "   'name': 'ModuleNotFoundError',\n" +
+                        "   'origin/rawRequest': 'imports?process=>undefined!when',\n" +
+                        "   'dependencies/0/request': 'vertx'\n" +
+                        "}."
+                    );
+                    filterConfigIsValid = false;
+                }
+            }
         } else {
-            // This filter config isn't supported. Abort.
-            throw new Error(
-                "config.webpackWarningFilters[" + i + "] must be an object similar to {\n" +
-                "   'name': 'ModuleNotFoundError',\n" +
-                "   'origin/rawRequest': 'imports?process=>undefined!when',\n" +
-                "   'dependencies/0/request': 'vertx'\n" +
-                "}."
-            );
+            console.warn("config.webpackWarningFilters must be an array.");
+            filterConfigIsValid = false;
         }
+    } else {
+        // No filters are configured. That's okay.
+        filterConfigIsValid = true;
     }
+    return filterConfigIsValid;
 }
 
 function filterWebpackWarnings(unfilteredWarnings, webpackWarningFilters) {
