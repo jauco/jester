@@ -1,22 +1,25 @@
 # How to debug Jester
 
-You attach a graphical debugger ([node-inspector]) to the unittests, or to the compiled jester.js
+You attach a graphical debugger ([node-inspector]) to jester.
 
-### Attaching the debugger to the compiled jester.js
+- Install [node-inspector] somewhere. Doesn't matter where.
 
-1. Start node-inspector on port 8080:
+        $ npm install node-inspector
 
-        $ cd <jester source dir>
-        $ .\dist\node_modules\.bin\node-inspector --web-port=8080
-        info  - socket.io started
-        visit http://0.0.0.0:8080/debug?port=5858 to start debugging
+- Start node-inspector.
 
-2. Start jester in debug mode:
+        $ node_modules/.bin/node-inspector
+        Node Inspector v0.7.4
+        Visit http://127.0.0.1:8080/debug?port=5858 to start debugging.
 
-        $ .\dist\node.exe --debug-brk .\dist\jester.js
+  *node-inspector* now waits for the process-to-debug on port 5858, and for you on port 8080.
+
+- Start jester in debug mode.
+
+        $ node --debug-brk node_modules/jester-tester/src/bin/jester-watch.js
         debugger listening on port 5858
 
-3. Open a browser on http://localhost:8080
-4. place your breakpoints and press the play button to start running jester.
+- Browse to http://127.0.0.1:8080/debug?port=5858.
+- Place your breakpoints and press the play button to start running jester.
 
 [node-inspector]: https://npmjs.org/package/node-inspector

@@ -16,7 +16,7 @@ function createEntryModules(featureFiles) {
     return entryModules;
 }   
 
-module.exports =  function rebuildProject(entryGlob, artifactPath) {
+module.exports = function rebuildProject(entryGlob, artifactPath, webpackWarningFilters) {
     return clearDir(artifactPath)
         .then(function filesCleared() {
             return glob(entryGlob);
@@ -39,6 +39,6 @@ module.exports =  function rebuildProject(entryGlob, artifactPath) {
             });
         })
         .then(function (stats){
-            return handleWebpackResult(stats);
+            return handleWebpackResult(stats, webpackWarningFilters);
         });
 };
