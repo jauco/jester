@@ -16,7 +16,7 @@ function createEntryModules(filenames) {
     return entryModules;
 }
 
-module.exports = function createTestFile(filenames, karmaPath) {
+module.exports = function createTestFile(filenames, karmaPath, webpackWarningFilters) {
     return webpack({
         entry: createEntryModules(filenames),
         output: {
@@ -30,6 +30,6 @@ module.exports = function createTestFile(filenames, karmaPath) {
         },
         devtool: "#source-map"
     }).then(function(stats) {
-        return handleWebpackResult(stats);
+        return handleWebpackResult(stats, webpackWarningFilters);
     });
 };

@@ -15,7 +15,7 @@ module.exports = function runAllTests(config) {
                     return glob(config.srcPath + "/**/*.test.js");
                 })
                 .then(function (testInputFiles) {
-                    return createTestFile(testInputFiles, config.karmaPath);
+                    return createTestFile(testInputFiles, config.karmaPath, config.webpackWarningFilters);
                 })
                 .catch(function(err) {
                     console.error("failed creating test files ", err);

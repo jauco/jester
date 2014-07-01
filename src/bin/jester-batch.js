@@ -9,7 +9,7 @@ var loadConfig = require("../lib/loadConfig"),
 
 var config = loadConfig("./jester.json");
 
-rebuildProject(config.fullEntryGlob, config.artifactPath)
+rebuildProject(config.fullEntryGlob, config.artifactPath, config.webpackWarningFilters)
     .then(function() {
         if(config.srcPath && config.apiDocPath) {
             return rebuildDocumentation(config.srcPath, config.apiDocPath, config.jsdocConf, config.readme);
