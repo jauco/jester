@@ -14,15 +14,19 @@ module.exports = function rebuildDocumentation(srcPath, targetPath, confPath, re
         }
     };
 
+    var enquote = function enquote(str) {
+        return "\"" + str + "\"";
+    }
+
     ensurePathExists(srcPath);
     ensurePathExists(targetPath, "you must define a valid documentation directory by setting apiDocPath in jester.json");
 
     // define command line options:
     var options = "-r";
-    var src = p.resolve(srcPath);
-    var target = "-d " + p.resolve(targetPath);
-    var readme = pathExists(readmePath) ? p.resolve(readmePath) : "";
-    var conf = pathExists(confPath) ? "-c " + p.resolve(confPath) : "";
+    var src = enquote(p.resolve(srcPath));
+    var target = "-d " + enquote(p.resolve(targetPath));
+    var readme = pathExists(readmePath) ? enquote(p.resolve(readmePath)) : "";
+    var conf = pathExists(confPath) ? "-c " + enquote(p.resolve(confPath)) : "";
 
     var jsdoc = require.resolve("jsdoc/jsdoc");
     var cmd = ["node", jsdoc, readme, src, options, target, conf].join(" ");
