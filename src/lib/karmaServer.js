@@ -17,7 +17,11 @@ function KarmaServer(karmaPath, options) {
         ],
         proxies: options.proxies || {},
         preprocessors: options.preprocessors || {},
-        reporters: ["dots"],
+        reporters: ["dots", "junit"],
+        junitReporter: {
+          outputFile: 'test-results.xml',
+          suite: ''
+        },
         colors: true,
         autoWatch: false,
         browsers: options.browsers || [],
@@ -28,7 +32,8 @@ function KarmaServer(karmaPath, options) {
           "karma-chrome-launcher",
           "karma-firefox-launcher",
           "karma-phantomjs-launcher",
-          "karma-ie-launcher"
+          "karma-ie-launcher",
+          "karma-junit-reporter"
         ].concat(options.plugins || [])
     };
 
