@@ -1,43 +1,43 @@
 var when = require("when"),
-    karma = require("karma");
+    karma = require("karma"),
+    overrideConfig = require("figc");
+
+var defaultConfig = {
+    port: 9876,
+    basePath: karmaPath,
+    colors: true,
+    files: [
+        {pattern: require.resolve("source-map-support/browser-source-map-support"), watched: false, included: true},
+        {pattern: require.resolve("./loadSourcemapsupport"), watched: false, included: true},
+        {pattern: '*.js.map', watched: false, included: false, served: true}
+    ],
+    autoWatch: false,
+    captureTimeout: 20000,
+    reportSlowerThan: 500,
+    logLevel: "LOG_DEBUG",
+    plugins: [
+      "karma-jasmine",
+      "karma-chrome-launcher",
+      "karma-firefox-launcher",
+      "karma-phantomjs-launcher",
+      "karma-ie-launcher"
+    ]
+};
+
+function withDefaultOptions(options) {
+    return overrideConfig(defaultConfig, options);
+}
 
 function KarmaServer(karmaPath, options) {
     var self = this;
 
-    if (!options) {
-        options = {};
-    }
-
-    self.karmaArguments = {
-        port: 9876,
-        basePath: karmaPath,
-        frameworks: ["jasmine"].concat(options.frameworks || []),
-        files: [
-          "*.js"
-        ],
-        proxies: options.proxies || {},
-        preprocessors: options.preprocessors || {},
-        reporters: ["dots"],
-        colors: true,
-        autoWatch: false,
-        browsers: options.browsers || [],
-        captureTimeout: 20000,
-        reportSlowerThan: 500,
-        plugins: [
-          "karma-jasmine",
-          "karma-chrome-launcher",
-          "karma-firefox-launcher",
-          "karma-phantomjs-launcher",
-          "karma-ie-launcher"
-        ].concat(options.plugins || [])
-    };
-
     self.started = false;
+    options = overrideConfig(defaultConfig, options);
 
     self.start = function() {
         return when.promise(function (resolve, reject) {
             self.started = true;
-            karma.server.start(self.karmaArguments, function(exitCode) {
+            karma.server.start(options, function(exitCode) {
                 self.started = false;
                 console.log("Karma server has finished with " + exitCode);
                 resolve(exitCode);
@@ -70,3 +70,5 @@ function KarmaServer(karmaPath, options) {
 }
 
 module.exports = KarmaServer;
+
+module.exports.withDefaultOptions = withDefaultOptions;

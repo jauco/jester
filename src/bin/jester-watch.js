@@ -4,13 +4,13 @@
 var loadConfig = require("../lib/loadConfig"),
     lint = require("../lib/lint"),
     clearDir = require("../lib/clearDir"),
-    rebuildProject = require("../lib/rebuildProject"),
+    rebuildProject = require("../lib/rebuildFiles").rebuildProject,
     KarmaServer = require("../lib/karmaServer"),
-    createTestFile = require("../lib/createTestFile"),
+    createTestFile = require("../lib/rebuildFiles").createTestFile,
     when = require('when'),
     watchr = require('watchr');
 
-var config = loadConfig("./jester.json");
+var config = loadConfig();
 var server = new KarmaServer(config.karmaPath, config.karmaOptions);
 
 function getTestFileNameForPath(path) {
@@ -69,8 +69,8 @@ function startWatching() {
             },
             change: function (changeType, filePath, fileCurrentStat, filePreviousStat) {
                 try {
-                    if (filePath == "jester.json") {
-                        config = loadConfig("./jester.json");
+                    if (loadConfig.isConfigFile(filePath)) {
+                        config = loadConfig();
                     }
 
                     if (filePath.length > 3 && filePath.substr(-3) === ".js") {

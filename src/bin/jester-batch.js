@@ -3,11 +3,11 @@
 
 var loadConfig = require("../lib/loadConfig"),
     rebuildDocumentation = require("../lib/rebuildDocumentation"),
-    rebuildProject = require("../lib/rebuildProject"),
+    rebuildProject = require("../lib/rebuildFiles").rebuildProject,
     runAllTests = require("../lib/runAllTests"),
     when = require("when");
 
-var config = loadConfig("./jester.json");
+var config = loadConfig();
 
 rebuildProject(config.fullEntryGlob, config.artifactPath, config.webpackWarningFilters)
     .then(function() {

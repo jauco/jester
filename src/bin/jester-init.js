@@ -12,13 +12,38 @@ var defaultConf = {
     jsdocConf: "./jsdoc.conf",
     readme: "./readme.md",
     entryGlob: FEATURES_PATH + "*/feature.js",
-    karmaPath: "./build/karma/",
-    artifactPath: "./build/artifacts",
     karmaOptions: {
-        proxies: {},
-        browsers: ['Chrome', 'Firefox', 'IE', 'PhantomJS'],
+        frameworks: ["jasmine"],
+        files: ["*.js"],
+        reporters: ["dots"],
+        browsers: ['Chrome', 'Firefox', 'IE', 'PhantomJS']
     },
-
+    webPackOptions: {
+        shared: {
+            module: {
+                loaders: [
+                    
+                ]
+            },
+            devtool: "#source-map",
+        },
+        entrypoints: {
+            entry: createEntryModules(featureFiles),
+            output: {
+                path: "./build/artifacts",
+                filename: "[name].min.js",
+                chunkFilename: "[id].chunk.js",
+                namedChunkFilename: "[name].chunk.js"
+            }
+        },
+        testfiles: {
+            entry: createEntryModules(filenames),
+            output: {
+                path: "./build/karma/",
+                filename: "[name].js"
+            }
+        }
+    },
     eslintRules: {
         "no-cond-assign": 2, //disallow assignment in conditional expressions
         "no-console": 1, //disallow use of console
@@ -166,6 +191,12 @@ var defaultReadme = "# README \n\
   * [Start writing features](https://github.com/jauco/jester/blob/master/README.md#writing-features-with-jester) \n\
   * Write unittests with [jasmine](http://jasmine.github.io/2.0/introduction.html) \n\
   * Document your project with [jsdoc](http://usejsdoc.org/)";
+
+var defaulKarmaConfig = 
+"module.exports = function (config) {\n\
+    config.set(require('jester-tester').loadKarmaConfig());\n\
+}";
+var defaulKarmaConfig = "module.exports = require('jester-tester').loadWebpackConfig()";
 
 var mkdirp = require('mkdirp');
 mkdirp(p.resolve(defaultConf.karmaPath));

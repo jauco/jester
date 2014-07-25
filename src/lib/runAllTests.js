@@ -1,7 +1,7 @@
 var lint = require("../lib/lint"),
     clearDir = require("../lib/clearDir"),
     KarmaServer = require("../lib/karmaServer"),
-    createTestFile = require("../lib/createTestFile"),
+    createTestFile = require("../lib/rebuildFiles").createTestFile,
     glob = require("../lib/globPromise");
 
 module.exports = function runAllTests(config) {
