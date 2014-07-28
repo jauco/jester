@@ -10,8 +10,8 @@ function normalizePaths(config) {
     config.fullEntryGlob = require("path").join(config.srcPath, config.entryGlob);
 }
 
-module.exports = function loadConfig(configLocation) {
-    var config = confuse({files: [configLocation]}); //FIXME: test if command line options work
+module.exports = function loadConfig() {
+    var config = confuse({dir: process.cwd(), files: [JESTER_CONFIG_FILE]}); //FIXME: test if command line options work
     normalizePaths(config);
     return config;
 };

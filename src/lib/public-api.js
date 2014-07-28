@@ -1,7 +1,7 @@
 var loadConfig = require("./loadConfig");
 var withDefaultKarma = require("./karmaServer").withDefaultOptions;
 var withDefaultWebpack = require("./rebuildFiles").withDefaultOptions;
-var overrideConfig = require("figc");
+var overrideConfig = require("deepmerge");
 
 module.exports = {
     loadKarmaConfig: function loadKarmaConfig() {

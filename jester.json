@@ -8,6 +8,10 @@
     "karmaPath": "./build/karma/",
     "artifactPath": "./build/artifacts",
     "karmaOptions": {
+        "basePath": "./build/karma/",
+        "frameworks": ["jasmine"],
+        "files": ["*.js"],
+        "reporters": ["dots"],
         "proxies": {},
         "browsers": [
             "Chrome",

@@ -13,34 +13,22 @@ var defaultConf = {
     readme: "./readme.md",
     entryGlob: FEATURES_PATH + "*/feature.js",
     karmaOptions: {
+        basePath: "./build/karma/",
         frameworks: ["jasmine"],
         files: ["*.js"],
         reporters: ["dots"],
         browsers: ['Chrome', 'Firefox', 'IE', 'PhantomJS']
     },
     webPackOptions: {
-        shared: {
-            module: {
-                loaders: [
-                    
-                ]
-            },
-            devtool: "#source-map",
-        },
+        shared: {},
         entrypoints: {
-            entry: createEntryModules(featureFiles),
             output: {
-                path: "./build/artifacts",
-                filename: "[name].min.js",
-                chunkFilename: "[id].chunk.js",
-                namedChunkFilename: "[name].chunk.js"
+                path: "./build/artifacts"
             }
         },
         testfiles: {
-            entry: createEntryModules(filenames),
             output: {
-                path: "./build/karma/",
-                filename: "[name].js"
+                path: "./build/karma/"
             }
         }
     },

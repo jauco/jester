@@ -1,10 +1,9 @@
 var when = require("when"),
     karma = require("karma"),
-    overrideConfig = require("figc");
+    overrideConfig = require("deepmerge");
 
 var defaultConfig = {
     port: 9876,
-    basePath: karmaPath,
     colors: true,
     files: [
         {pattern: require.resolve("source-map-support/browser-source-map-support"), watched: false, included: true},
@@ -28,7 +27,7 @@ function withDefaultOptions(options) {
     return overrideConfig(defaultConfig, options);
 }
 
-function KarmaServer(karmaPath, options) {
+function KarmaServer(options) {
     var self = this;
 
     self.started = false;

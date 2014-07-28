@@ -31,6 +31,7 @@
     "json-loader": "~0.5.0",
     "jsdoc": "3.3.0-alpha8",
     "when": "~3.1.0",
-    "confuse": "0.0.1"
+    "confuse": "0.0.1",
+    "deepmerge": "~0.2.7"
   }
 }

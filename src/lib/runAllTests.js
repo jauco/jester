@@ -15,13 +15,13 @@ module.exports = function runAllTests(config) {
                     return glob(config.srcPath + "/**/*.test.js");
                 })
                 .then(function (testInputFiles) {
-                    return createTestFile(testInputFiles, config.karmaPath, config.webpackWarningFilters);
+                    return createTestFile(testInputFiles, config.webPackOptions, config.webpackWarningFilters);
                 })
                 .catch(function(err) {
                     console.error("failed creating test files ", err);
                 })
                 .then(function() {
-                    var server = new KarmaServer(config.karmaPath, config.karmaOptions);
+                    var server = new KarmaServer(config.karmaOptions);
                     return server.runOnce().then(function(exitCode) {
                         return exitCode === 0 && hasLintSucceeded;
                     });

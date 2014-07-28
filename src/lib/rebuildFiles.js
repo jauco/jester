@@ -3,7 +3,7 @@ var glob = require("../lib/globPromise"),
     clearDir = require("./clearDir"),
     handleWebpackResult = require("./handleWebpackResult"),
     p = require("path"),
-    overrideConfig = require("figc");
+    overrideConfig = require("deepmerge");
 
 function createEntryModules(filenames, makeFeatureName) {
     var entryModules = {};
@@ -22,7 +22,10 @@ function createEntryModules(filenames, makeFeatureName) {
 
 //FIXME: testen of de json loader inderdaad de eerste in de array van loaders wordt zodat de user hem kan overriden
 var defaultConfig = {
-    devtool: "#source-map"
+    devtool: "#source-map",
+    output: {
+        filename: "[name].min.js"
+    },
     module: {
         loaders: [
             {test: /\.json$/, loader: require.resolve("json-loader")}
@@ -38,7 +41,7 @@ function runWebpack(files, options, makeFeatureName) {
     var filesToBuildAsWebpackOptions = {
         entry: createEntryModules(files, makeFeatureName)
     };
-    return webpack(options, filesToBuildAsWebpackOptions));
+    return webpack(overrideConfig(options, filesToBuildAsWebpackOptions));
 }
 
 function getNameOfDir(file) {
@@ -46,13 +49,13 @@ function getNameOfDir(file) {
 }
 module.exports.rebuildProject = function rebuildProject(entryGlob, options, webpackWarningFilters) {
     var combinedOptions = withDefaultOptions(options, "entrypoints");
-
+    console.log(combinedOptions.module.loaders);
     return clearDir(combinedOptions.output.path)
         .then(function filesCleared() {
             return glob(entryGlob);
         })
         .then(function (files) {
-            return runWebpack(files, combinedOptions, getNameOfDir)
+            return runWebpack(files, combinedOptions, getNameOfDir);
         })
         .then(function (stats){
             return handleWebpackResult(stats, webpackWarningFilters);
