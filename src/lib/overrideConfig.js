@@ -1,32 +1,10 @@
-var defaultMatchConfig = {}
-
-function indexOf(element, matchConfig, orig) {
-    if (typeof element === 'object' && element !== null) {
-        if (matchConfig === undefined) {
-            return -1; //treat objects as unequal to each other by default
-        } else {
-            for (var i = 0; i < orig.length; i++) {
-                if (matchConfig.areTheSame(orig[i], element)) {
-                    return i;
-                }
-                return -1;
-            }
-        }
-    } else {
-        return orig.indexOf(element) === -1;
-    }
-}
-module.exports = function overrideConfig(orig, change, matchConfig) {
+module.exports = function overrideConfig(orig, change) {
     if (typeof change !== "object" || change === null ) {
         return change;
     }
 
     var array = Array.isArray(change);
     var dst = array && [] || {};
-
-    if (overrideConfig.caller !== overrideConfig) {
-        matchConfig = defaultMatchConfig;
-    }
 
     if (array) {
         if (!Array.isArray(orig)){
@@ -35,19 +13,16 @@ module.exports = function overrideConfig(orig, change, matchConfig) {
             dst = dst.concat(orig);
             var shift = 0;
             change.forEach(function(e) {
-                //use orig instead of dst so that if you add two items to the
-                //change that the config considers the same, they will both be
-                //added
-                var i = indexOf(e, matchConfig, orig)
-                if (i === -1) {
-                    if (matchConfig && matchConfig.prependInsteadOfAppend) {
-                        dst.unshift(e);
-                        shift++;
-                    } else {
+                if (typeof e === "object" && e !== null) {
+                    //no de-duplication for objects
+                    dst.push(e);
+                } else {
+                    //use orig instead of dst so that if you add two items to the
+                    //change that the config considers the same, they will both be
+                    //added
+                    if (orig.indexOf(e) === -1) {
                         dst.push(e);
                     }
-                } else {
-                    dst[shift+i] = overrideConfig(orig[i], e, matchConfig && matchConfig[i]);
                 }
             });
         }
@@ -61,7 +36,7 @@ module.exports = function overrideConfig(orig, change, matchConfig) {
             if (!orig[key]) {
                 dst[key] = change[key]
             } else {
-                dst[key] = overrideConfig(orig[key], change[key], matchConfig && matchConfig[key])
+                dst[key] = overrideConfig(orig[key], change[key])
             }
         })
     }

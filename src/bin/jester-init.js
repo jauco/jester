@@ -184,7 +184,7 @@ var defaulKarmaConfig =
 "module.exports = function (config) {\n\
     config.set(require('jester-tester').loadKarmaConfig());\n\
 }";
-var defaulKarmaConfig = "module.exports = require('jester-tester').loadWebpackConfig()";
+var defaulWebpackConfig = "module.exports = require('jester-tester').loadWebpackConfig()";
 
 var mkdirp = require('mkdirp');
 mkdirp(p.resolve(defaultConf.karmaPath));

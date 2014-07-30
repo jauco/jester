@@ -1,6 +1,7 @@
 var p = require("path");
 var confuse = require("confuse");
 var JESTER_CONFIG_FILE="jester.json"
+var overrideConfig = require("./overrideConfig")
 
 function normalizePaths(config) {
     config.eslintRulesDir = p.resolve(config.eslintRulesDir);
@@ -11,7 +12,7 @@ function normalizePaths(config) {
 }
 
 module.exports = function loadConfig() {
-    var config = confuse({dir: process.cwd(), files: [JESTER_CONFIG_FILE]}); //FIXME: test if command line options work
+    var config = confuse({dir: process.cwd(), files: [JESTER_CONFIG_FILE], mergeImplementation: overrideConfig}); //FIXME: test if command line options work
     normalizePaths(config);
     return config;
 };

@@ -42,7 +42,7 @@ function runTests(path) {
                     console.log("No tests found for '" + path + "'");
                     return false;
                 }
-                return createTestFile(testFile, config.webPackOptions, config.webpackWarningFilters).then(function () {
+                return createTestFile(testFile, config).then(function () {
                     return server.run();
                 });
             });
@@ -69,13 +69,8 @@ function startWatching() {
             },
             change: function (changeType, filePath, fileCurrentStat, filePreviousStat) {
                 try {
-                    console.log("sadfs", filePath)
-                    if (loadConfig.isConfigFile(filePath)) {
-                        config = loadConfig();
-                    }
-
                     if (filePath.length > 3 && filePath.substr(-3) === ".js") {
-                        var build = rebuildProject(config.fullEntryGlob, config.webPackOptions, config.webpackWarningFilters);
+                        var build = rebuildProject(config);
                         if (isReallyFileChangeEvent(changeType, fileCurrentStat, filePreviousStat)) {
                             when.join(build, runTests(filePath)).done(function(){});
                         } else {

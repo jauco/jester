@@ -1,4 +1,4 @@
-/*global describe, it, expect, setTimeout*/
+/*global setTimeout*/
 var withPermutations = require("./withPermutations");
 
 describe("permutator", function () {

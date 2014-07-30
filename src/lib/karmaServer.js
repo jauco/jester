@@ -13,7 +13,6 @@ var defaultConfig = {
     autoWatch: false,
     captureTimeout: 20000,
     reportSlowerThan: 500,
-    logLevel: "LOG_DEBUG",
     plugins: [
       "karma-jasmine",
       "karma-chrome-launcher",
