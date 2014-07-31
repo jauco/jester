@@ -1,6 +1,6 @@
 var when = require("when"),
     karma = require("karma"),
-    overrideConfig = require("deepmerge");
+    overrideConfig = require("./overrideConfig");
 
 var defaultConfig = {
     port: 9876,

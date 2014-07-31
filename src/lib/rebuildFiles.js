@@ -3,7 +3,7 @@ var glob = require("../lib/globPromise"),
     clearDir = require("./clearDir"),
     handleWebpackResult = require("./handleWebpackResult"),
     p = require("path"),
-    overrideConfig = require("deepmerge");
+    overrideConfig = require("./overrideConfig");
 
 function createEntryModules(filenames, makeFeatureName) {
     var entryModules = {};

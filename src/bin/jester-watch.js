@@ -30,14 +30,14 @@ function getTestFileNameForPath(path) {
 }
 
 function runTests(path) {
-    return lint.lintFile(path, config.eslintRules)
+    var testFile = getTestFileNameForPath(path);
+    return lint.lintFile(path, path === testFile, config)
         .then(function(lintSucceeded) {
             if(!lintSucceeded) {
                 return false;
             }
 
             return clearDir(config.karmaPath).then(function() {
-                var testFile = getTestFileNameForPath(path);
                 if (!testFile) {
                     console.log("No tests found for '" + path + "'");
                     return false;
@@ -62,6 +62,7 @@ function isReallyFileChangeEvent(changeType, fileCurrentStat, filePreviousStat) 
 
 function startWatching() {
     watchr.watch({
+        // paths: [config.srcPath].concat(config.configFiles),
         paths: [config.srcPath],
         listeners: {
             error: function (error) {
@@ -69,6 +70,14 @@ function startWatching() {
             },
             change: function (changeType, filePath, fileCurrentStat, filePreviousStat) {
                 try {
+                    // if (config.isConfigFile(filePath)) {
+                    //     var oldConfig = config;
+                    //     config = loadConfig();
+                    //     if (!deepEqual(oldConfig.karmaOptions, config.karmaOptions)) {
+                    //         server.stop();
+                    //         server = new KarmaServer(config.karmaOptions);
+                    //     }
+                    // }
                     if (filePath.length > 3 && filePath.substr(-3) === ".js") {
                         var build = rebuildProject(config);
                         if (isReallyFileChangeEvent(changeType, fileCurrentStat, filePreviousStat)) {

@@ -1,4 +1,4 @@
-var eslintEngine = require("eslint/lib/cli-engine"),
+var eslintEngine = require("eslint").CLIEngine,
     formatter = require("eslint-path-formatter"),
     glob = require("./globPromise"),
     p = require("path"),
@@ -7,29 +7,40 @@ var eslintEngine = require("eslint/lib/cli-engine"),
 
 //slightly modified copy from eslint/lib/cli.js:calculateExitCode
 function didLintSucceed(results) {
-    return results.some(function(result) {
-        return result.messages.some(function(message) {
-            return message.severity === 2;
+    return results.every(function(result) {
+        return result.messages.every(function(message) {
+            return message.severity !== 2;
         });
     });
 }
 
-function lintFile(filenames) {
+function lintFile(filenames, asUnitTest, config) {
     return when.promise(function (resolve, reject, notify) {
+        var globals = [
+            "require:false"
+        ];
+        if (asUnitTest) {
+            globals = globals.concat([
+                "describe:false",
+                "it:false",
+                "expect:false"
+            ]);
+        }
+
         var engine = new eslintEngine({
-            //fixme custom linters
             rulePaths: [
                 //load jester's rules
                 p.resolve("./eslint-rules"),
                 //load the originating project's rules
-                p.join(__dirname, "../eslint-rules")
-            ]
+                config.eslintRulesDir
+            ],
+            globals: globals
         });
         if (!Array.isArray(filenames)) {
             filenames = [filenames];
         }
         var result = engine.executeOnFiles(filenames);
-        var output = formatter(result.results, undefined); //in eslint/lib/cli.js the formatter is always called with 'options' as the second argument which at that point is always undefined
+        var output = formatter(result.results);
         var lintSucceeded = didLintSucceed(result.results);
 
         console.log(output);
