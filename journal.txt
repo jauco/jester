@@ -1,0 +1,2 @@
+ - [ ] eslint mee laten werken
+ - [ ] webpack gelaunched houden zodat hij sneller is

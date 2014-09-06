@@ -5,11 +5,34 @@ var fs = require('fs'),
 
 var FEATURES_PATH = "features/"
 
-var defaultConf = require("../template-files/jester.json");
+var defaultConf = {
+    eslintRulesDir: "./eslint-rules/",
+    srcPath: "./src/",
+    entryGlob: FEATURES_PATH + "*/feature.js",
+    apiDocPath: "./doc/api/",
+};
+
+var defaultJSDocConf = {
+    "plugins": [ "plugins/markdown" ],
+    "tags": {
+        "allowUnknownTags": true
+    },
+    "source": {
+        "includePattern": ".+\\.js(doc)?$",
+        "excludePattern": "(^|\\/|\\\\)_"
+    },
+    "templates": {
+        "cleverLinks": false,
+        "monospaceLinks": false,
+        "default": {
+            "outputSourceFiles": true
+        }
+    }
+};
 
 var mkdirp = require('mkdirp');
 mkdirp(p.resolve(defaultConf.karmaPath));
-mkdirp(p.join(defaultConf.srcPath, defaultConf.entryPath));
+mkdirp(p.join(defaultConf.srcPath, FEATURES_PATH));
 mkdirp(p.join(defaultConf.srcPath, 'lib'));
 mkdirp(p.join(defaultConf.srcPath, 'app', 'domain'));
 mkdirp(p.resolve(defaultConf.artifactPath));
@@ -27,3 +50,4 @@ function writeFileIfNotExists(path, contents) {
 }
 
 writeFileIfNotExists("./jester.json", JSON.stringify(defaultConf, null, 4));
+writeFileIfNotExists(defaultConf.jsdocConf, JSON.stringify(defaultJSDocConf, null, 4));

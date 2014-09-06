@@ -46,14 +46,6 @@ console.log(
 "╚═════════════════════════════════════════════════════════════════════════════╝\n" +
 "\n" +
 "╔═════════════════════════════════════════════════════════════════════════════╗\n" +
-"║ .\\src\\app\\main.js                                                [14:09:55] ║\n" +
-"╠═════════════════════════════════════════════════════════════════════════════╣\n" +
-"║                              See ./build/latest-output.txt for detailed info║\n" +
-"║  × Lint errors found by eslint                                              ║\n" +
-"║                                                                             ║\n" +
-"╚═════════════════════════════════════════════════════════════════════════════╝\n" +
-"\n" +
-"╔═════════════════════════════════════════════════════════════════════════════╗\n" +
 "║ .\\src\\app\\main.js                                                [14:14:55] ║\n" +
 "╠═════════════════════════════════════════════════════════════════════════════╣\n" +
 "║                              See ./build/latest-output.txt for detailed info║\n"
@@ -71,13 +63,14 @@ console.log(
 
 
 
-Generated
- - app.min.js
-- Dependencies relating to src\app\main.js:
-- .\src\app\main.js <-- that's the file!
- - .\mainModel.js
- - .\mainView.js
-   - ./main.css
-   - <jquery>
-   - <react>
 
+// Generated
+//  - app.min.js
+//- Dependencies relating to src\app\main.js:
+// - .\src\app\main.js <-- that's the file!
+//  - .\mainModel.js
+//  - .\mainView.js
+//    - ./main.css
+//    - <jquery>
+//    - <react>
+//

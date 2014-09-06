@@ -520,6 +520,15 @@
 	"buffers":
 	[
 		{
+			"file": "test.js",
+			"settings":
+			{
+				"buffer_size": 4181,
+				"line_ending": "Unix",
+				"name": "console.log("
+			}
+		},
+		{
 			"contents": "halve dag\n    - Zaken uitzoeken omdat de formats, sommige kolommen zijn niet duidelijk\n    - Dat de invoer data waarschijnlijk niet klopt in order intake\n    - Forecast input is gewijzigd gaande het project en gaat nog meer gewijzigd worden, obv voorstel van Jeroen.\n    - aangepaste countries tabel omdat er in een aantal bestanden niet op dezelfde manier wordt gerefereerd dan in de rest.\n\n4 uur + waarschijnlijk nog 4 uur. = meerwerk\n\n1 uurtje voor de targets\n\n4 uur voor danny en rapportages\n\n\n\npivot -> niet meegeteld\ndatum niet in het rapport -> niet meegeteld",
 			"settings":
 			{
@@ -529,18 +538,62 @@
 			}
 		},
 		{
-			"file": "journal.txt",
+			"file": "/D/Code/OGD/ODN/mini-server.js",
 			"settings":
 			{
-				"buffer_size": 2843,
+				"buffer_size": 796,
+				"line_ending": "Unix",
+				"name": "var PORT = 8080;"
+			}
+		},
+		{
+			"file": "/D/Code/OGD/ODN/index.html",
+			"settings":
+			{
+				"buffer_size": 1122,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "/D/Code/non-OGD/jrnl/git-jrnl",
+			"contents": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n    <meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" />\n    <title>Browser Caching Tests</title>\n    <base href=\"/\">\n    <script type=\"text/javascript\">\n\n        /* Common functions */\n\n        function getReq() {\n            var req = false;\n            if(window.XMLHttpRequest) {\n                try {\n                    req = new XMLHttpRequest();\n                } catch(e) {\n                    req = false;\n                }\n            } else if(window.ActiveXObject) {\n                try {\n                    req = new ActiveXObject(\"Microsoft.XMLHTTP\");\n                } catch(e) {\n                    req = false;\n                }\n            }\n            if (! req) {\n                alert(\"Your browser does not support XMLHttpRequest.\");\n            }\n            return req;\n        }\n\n        function writeResults(test_id, success, error_msg) {\n            target = document.getElementById(test_id);\n            // results = document.getElementById(\"results\");\n            // results.innerHTML += test_id + \": \";\n            if (success) {\n                target.innerHTML = \"success\";\n                target.className = \"success\";\n            } else {\n                var message = error_msg ? \"(\" + error_msg + \")\" : \"\"\n                target.innerHTML = \"fail \" + message;\n                target.className = \"fail\";\n            }\n        }\n\n        function testCaching(uri, test_id, caching_expected, fail_text) {\n            var req = getReq();\n            var success = true;\n            var error_msg = \"\";\n            try {\n                req.open(\"GET\", uri, false);\n                req.setRequestHeader(\"x-reqnum\", \"1\");\n                req.send(\"\");\n                setTimeout(\"testCaching2('\" + uri + \"','\" + test_id + \"',\" + caching_expected + \",'\" + fail_text + \"')\", 1001);\n            } catch (e) {\n                success = false;\n                error_msg = \"Error: \" + e;\n                writeResults(test_id, success, error_msg);\n            }\n        }\n            \n        function testCaching2(uri, test_id, caching_expected, fail_text) {\n            var req = getReq();\n            var success = true;\n            var error_msg = \"\";\n            try {\n                req.open(\"GET\", uri, false);\n                req.setRequestHeader(\"x-reqnum\", \"2\");\n                req.send(\"\");\n            } catch (e) {\n                success = false;\n                error_msg = \"Error: \" + e;\n            }\n            if (req.status == 304) {\n                success = false;\n                error_msg = \"304 not handled\";\n            }\n            if (success && req.status != 200) {\n                success = false;\n                error_msg = \"Status code:\" + req.status;\n            }\n            if (success && caching_expected && req.responseText != \"success\") {\n                success = false;\n                error_msg = fail_text;\n            }\n            if (success && !caching_expected && req.responseText != \"fail\") {\n                success = false;\n                error_msg = fail_text;\n            }\n            writeResults(test_id, success, error_msg);\n        }\n\n        function testConneg(uri, test_id, hdr_name, hdr_val, caching_expected, fail_text) {\n            var req = getReq();\n            var success = true;\n            var error_msg = \"\";\n            try {\n                req.open(\"GET\", uri, false);\n                req.setRequestHeader(\"x-reqnum\", \"1\");\n                req.setRequestHeader(\"x-test\", \"foo\");\n                req.send(\"\");\n                setTimeout(\"testConneg2('\" + uri + \"','\" + test_id + \"','\" + hdr_name + \"','\" + hdr_val + \"',\" + caching_expected + ',\"' + fail_text + '\")', 1001);\n            } catch (e) {\n                success = false;\n                writeResults(test_id, success, error_msg);\n                error_msg = \"Error: \" + e;\n            }\n        }\n\n        function testConneg2(uri, test_id, hdr_name, hdr_val, caching_expected, fail_text) {\n            var req = getReq();\n            var success = true;\n            var error_msg = \"\";\n            try {\n                req.open(\"GET\", uri, false);\n                req.setRequestHeader(\"x-reqnum\", \"2\");\n                req.setRequestHeader(hdr_name, hdr_val);\n                req.send(\"\");\n            } catch (e) {\n                success = false;\n                error_msg = \"Error: \" + e;\n            }\n            if (req.status == 304) {\n                success = false;\n                error_msg = \"304 not handled\";\n            }\n            if (success && req.status != 200) {\n                success = false;\n                error_msg = \"Status code:\" + req.status;\n            }\n            if (success && caching_expected && req.responseText != \"success\") {\n                success = false;\n                error_msg = fail_text;\n            }\n            if (success && !caching_expected && req.responseText != \"fail\") {\n                success = false;\n                error_msg = fail_text;\n            }\n            writeResults(test_id, success, error_msg);\n        }\n\n        function testInvalidation(method, req_type, test_id, fail_text) {\n            var req = getReq();\n            var cache_uri = \"http://www.mnot.net/javascript/xmlhttprequest/check_cache_invalidate.s\"; // needs to be absolute for Location\n            var invalidate_uri;\n            if (req_type == \"Request-URI\") {\n                invalidate_uri = cache_uri;\n            } else {\n                invalidate_uri = \"cache_invalidate.s\";\n            }\n            var success = true;\n            var error_msg = \"\";\n            try {\n                req.open(\"GET\", cache_uri, false);\n                req.setRequestHeader(\"x-reqnum\", \"1\");\n                req.send(\"\");\n                req.open(method, invalidate_uri, false);\n                req.setRequestHeader(\"x-reqtype\", req_type);\n                req.setRequestHeader(\"x-uri\", cache_uri);\n                req.send(\"\");\n                req.open(\"GET\", cache_uri, false);\n                req.setRequestHeader(\"x-reqnum\", \"2\");\n                req.send(\"\");\n                req.open(\"GET\", cache_uri, false);\n                req.setRequestHeader(\"x-reqnum\", \"3\");\n                req.send(\"\");\n            } catch (e) {\n                success = false;\n                error_msg = \"Error: \" + e;\n            }\n            if (success && req.status != 200) {\n                success = false;\n                error_msg = \"Status code:\" + req.status;\n            }\n            if (success && req.responseText == \"1\") {\n                success = false;\n                error_msg = fail_text;\n            }\n            if (success && req.responseText == \"3\") {\n                success = false;\n                error_msg = \"GET not cached\";\n            }\n            if (success && req.responseText != \"2\") {\n                success = false;\n                error_msg = \"Test error: \" + req.responseText;\n            }\n            writeResults(test_id, success, error_msg);\n        }\n\n        function givenResponse(url, status, headers, content) {\n            return {\n                butWithContent: function (c) { return givenResponse(url, status, headers, c); },\n                butWithStatus: function (s) { return givenResponse(url, s, headers, content); },\n                butWithHeader: function (h) { \n                    var newHeaders = {}; \n                    Object.keys(headers).foreach(function (header) { newHeaders[header] = headers[header]; });\n                    Object.keys(h).foreach(function (header) {\n                        if (h[header] === undefined) {\n                            delete newHeaders[header]\n                        } else {\n                            newHeaders[header] = h[header];\n                        }\n                    });\n                    return givenResponse(url, status, newHeaders, content);\n                },\n                doRequest: function (method, headersToSend, contentToSend) {\n                    return new Promise(function(resolve, reject) {\n                        var req = getReq();\n                        req.onreadystatechange = function () {\n                            if (req.readyState == 4) {\n                                resolve(req);\n                            }\n                        }\n                        req.open(\"GET\", url);\n                        req.setRequestHeader(\"x-status\", status);\n                        req.setRequestHeader(\"x-headers\", JSON.stringify(headers));\n                        req.setRequestHeader(\"x-content\", JSON.stringify(content));\n                        Object.keys(headersToSend).map(function (header) {\n                            console.log(method, header, headersToSend[header]);\n                            req.setRequestHeader(header, headersToSend[header]);\n                        })\n                        req.send(contentToSend);\n                        window.setTimeout(function () { reject(Error(\"Timeout\")); }, 1000);\n                    });\n                }\n            }\n        }\n\n        function testRequestHdr(hdr, cc, test_id) {\n            var cachedResponse = givenResponse(\"/\" + test_id, 200, {\"Cache-Control\":\"public, max-age=31536000\"}, \"\");\n            var headers = {};\n            headers[hdr] = cc;\n\n            return cachedResponse.butWithContent(\"1\").doRequest(\"GET\", {}, \"\")\n                .then(function () { return cachedResponse.butWithContent(\"2\").doRequest(\"GET\", headers, \"\");})\n                .then(function () { return cachedResponse.butWithContent(\"3\").doRequest(\"GET\", {}, \"\");})\n                .then(function (result) {\n                    var success, error_msg;\n                    if (result.status === 200) {\n                        if (result.responseText === \"2\") {\n                            success = true;\n                        } else if (result.responseText === \"3\") {\n                            success = false;\n                            error_msg = \"GET not cached at all\";\n                        } else if (result.responseText === \"1\") {\n                            success = false;\n                            error_msg = \"GET cached, but '\" + hdr + \": \" + cc + \"' not honoured\";\n                        } else {\n                            success = false;\n                            error_msg = \"Test error: \" + result.responseText;\n                        }\n                    } else {\n                        success = false;\n                        error_msg = \"HTTP Error (\" + result.status + \"): \" + result.responseText;\n                    }\n                    writeResults(test_id, success, error_msg);\n                }, \n                function (error) {\n                    writeResults(test_id, false, \"javascript error: \" + error);\n                });\n        }\n\n        function testUriSuccess(test_id) {\n            return givenResponse(\"/\" + test_id, 200, {}, \"\").doRequest(\"GET\", {}, \"\").then(\n                function (req) {\n                    if (req.status != 200 && req.status != 304) {  // don't want to catch caching problems here...\n                        writeResults(test_id, false, \"Status Code: \" + req.status);\n                    } else {\n                        var headersSent = JSON.parse(req.responseText);\n                        if (\"cache-control\" in headersSent) {\n                            writeResults(test_id, false, \"Request cache-control header sent.\");\n                        } else {\n                            writeResults(test_id, true);\n                        }\n                    }\n                },\n                function (error) {\n                    writeResults(test_id, false, \"Error: \" + error);\n                }\n            );\n        }\n\n    </script>\n</head>\n<body>\n\n<h1>\n<h2>Request Cache-Control</h2>\n<p><a href=\"http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.9\" class=\"offsit\">Cache-Control headers</a> in HTTP <b>requests</b> allow clients to control how downstream caches operate. In APIs like XMLHttpRequest, they can also be used to control how the local (i.e., in-browser) cache operates.</p>\n\n<h3>Request Header Pass-Through</h3>\n\n<p>Request cache-control headers can be used by page authors to control the behaviour of the local as well as downstream caches. For example, an author may want to bound the freshness of a response based on the request context, or invalidate the cache from code.</p>\n\n<p>If the browser cache does not pay attention to these directives, it can't be controlled by authors.</p>\n\n<ol>\n<li>Cache-Control: no-store request header honoured: <span id=\"req_no_store\"> </span></li>\n<li>Cache-Control: no-cache request header honoured: <span id=\"req_no_cache\"> </span></li>\n<li>Pragma: no-cache request header honoured: <span id=\"req_pragma\"> </span></li>\n</ol>\n\n<script type=\"text/javascript\">\ntestRequestHdr(\"Cache-Control\", \"no-store\",\"req_no_store\", \"Cache-Control: no-store not honoured.\");\ntestRequestHdr(\"Cache-Control\", \"no-cache\",\"req_no_cache\", \"Cache-Control: no-cache not honoured.\");\ntestRequestHdr(\"Pragma\", \"no-cache\", \"req_pragma\", \"Pragma: no-cache not honoured.\");\n</script>\n<h3>Automatic Request Cache-Control</h3>\n\n<p>Some implementations try to automatically bust upstream caches for XmlHttpRequests, because many people\nuse XHR as an RPC mechanism. However, doing so takes control away from calling code that might want to take\nadvantage of the cache, and reduces cache efficiency.</p>\n\n<p>Implementations that fail this test have automatically appended Cache-Control request headers.</p>\n\n<ol>\n<li>Cache-Control request headers automatically appended: <span id=\"req_cache_control\"> </span></li>\n</ol>\n<script type=\"text/javascript\">\ntestUriSuccess(\"req_cache_control\");\n</script>\n\n\n<h2>Validation</h2>\n\n<p>Validation is one of the primary caching mechanisms in HTTP; it allows a cache to \nsee if it can reuse an entity it already has, by asking the server if it's still fresh.</p>\n\n<h3>Conditional Request Headers</h3>\n\n<p>HTTP defines request headers that can be used to make conditional requests, which are\nused to <a href=\"http://www.w3.org/Protocols/rfc2616/rfc2616-sec13.html#sec13.3\" class=\"offsite\">validate</a>\ncached representations on the server. Implementations that fail these tests don't send the appropriate\nrequest headers that trigger validation.</p>\n<ol>\n<li>If-Modified-Since request header used: <span id=\"ims\"> </span></li>\n<li>If-None-Match request header used: <span id=\"inm\"> </span></li>\n</ol>\n<script type=\"text/javascript\">\ntestCaching(\"check_ims\", \"ims\", true, \"Header not sent\");\ntestCaching(\"check_inm\", \"inm\", true, \"Header not sent\");\n</script>\n<!--\n\n<h3>304 Not Modified Handling</h3>\n\n<p>The <a class=\"offsite\" href=\"http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.3.5\">304 Not Modified</a>\nstatus code indicates that a cached representation is still fresh. Generally, it isn't useful to\nexpose this to authors; a 200 OK response should instead be constructed from the cache.</p>\n\n<ol>\n<li>304 status code automatically handled: <span id=\"validation\"> </span></li>\n</ol>\n<script type=\"text/javascript\">\ntestCaching(\"check_validation\", \"validation\", true, \"Cache not used\");\n</script>\n\n<h2>Freshness</h2>\n\n<p>Another key caching technique is allowing the server to specify that a representation\nis fresh for a given amount of time, so that caches can avoid round-trips to check if it's fresh altogther.</p>\n\n<h3>Basic Freshness</h3>\n\n<p>Servers can \n<a href=\"http://www.w3.org/Protocols/rfc2616/rfc2616-sec13.html#sec13.2.1\" class=\"offsite\">instruct</a> \ncaches to use a stored response without validation. Additionally, clients can use a heuristic (usually\nbased on the Last-Modified header) if no explicit freshness information is present.</p>\n\n<p>Implementations that fail this test do not take advantage of these hints.</p>\n\n<ol>\n<li>Heuristic freshness: <span id=\"response_stale\"> </span></li>\n<li>Cache-Control max-age response freshness: <span id=\"response_fresh_max_age\"> </span></li>\n<li>Expires response freshness: <span id=\"response_fresh_expires\"> </span></li>\n</ol>\n\n<script type=\"text/javascript\">\ntestCaching(\"stale.s\", \"response_stale\", true, \"Freshness heuristics not used\");\ntestCaching(\"fresh_max_age.s\", \"response_fresh_max_age\", true, \"Fresh representation not used\");\ntestCaching(\"fresh_expires.s\", \"response_fresh_expires\", true, \"Fresh representation not used\");\n</script>\n\n<h3>Query Freshness</h3>\n\n<p>HTTP <a class=\"offsite\" href=\"http://www.w3.org/Protocols/rfc2616/rfc2616-sec13.html#sec13.9\">requires<a> \nthat URIs with a query string (i.e., those containing a \"?\") not be cached, unless \nthe server gives explicit freshness information.</p>\n\n<ol>\n<li>Heuristic freshness w/ \"?\": <span id=\"query_stale\"> </span></li>\n<li>Cache-Control max-age response freshness w/ \"?\": <span id=\"query_max_age\"> </span></li>\n<li>Expires response freshness w/ \"?\": <span id=\"query_expires\"> </span></li>\n</ol>\n<script type=\"text/javascript\">\ntestCaching(\"stale.s?foo=bar\", \"query_stale\", false, \"Stale representation used\");\ntestCaching(\"fresh_max_age.s?foo=bar\", \"query_max_age\", true, \"Fresh representation not used\");\ntestCaching(\"fresh_expires.s?foo=bar\", \"query_expires\", true, \"Fresh representation not used\");\n</script>\n\n<p>Note that failing the first test is an indication that a freshness heuristic may not\nbe used, which may be desireable behaviour for some applications.</p>\n\n<h3>Redirect Caching</h3>\n\n<p>Certain 3xx redirects are allowed to be cached. 301 Moved Permanently is cacheable by\ndefault, while 302 Found and 307 Temporary Redirect both need explicit information. 303\nSee Other is not cacheable.</p>\n\n<ol>\n<li>301 w/ freshness information: <span id=\"301_fresh\"> </span></li>\n<li>301 w/o freshness information: <span id=\"301_stale\"> </span></li>\n<li>302 w/ freshness information: <span id=\"302_fresh\"> </span></li>\n<li>302 w/o freshness information: <span id=\"302_stale\"> </span></li>\n<li>303 w/ freshness information: <span id=\"303_fresh\"> </span></li>\n<li>303 w/o freshness information: <span id=\"303_stale\"> </span></li>\n<li>307 w/ freshness information: <span id=\"307_fresh\"> </span></li>\n<li>307 w/o freshness information: <span id=\"307_stale\"> </span></li>\n</ol>\n\n<script type=\"text/javascript\">\ntestCaching('redirect-caching/301-fresh.s', '301_fresh', true, '301 w/ freshness not cached.');\ntestCaching('redirect-caching/301-stale.s', '301_stale', true, '301 w/o freshness not cached.');\ntestCaching('redirect-caching/302-fresh.s', '302_fresh', true, '302 w/ freshness not cached.');\ntestCaching('redirect-caching/302-stale.s', '302_stale', false, '302 w/o freshness cached.');\ntestCaching('redirect-caching/303-fresh.s', '303_fresh', false, '303 w/ freshness cached.');\ntestCaching('redirect-caching/303-stale.s', '303_stale', false, '303 w/o freshness cached.');\ntestCaching('redirect-caching/307-fresh.s', '307_fresh', true, '307 w/ freshness not cached.');\ntestCaching('redirect-caching/307-stale.s', '307_stale', false, '307 w/o freshness cached.');\n</script>\n\n<h3>Private Caches</h3>\n\n<p>HTTP distinguishes between private and public caches; a browser cache is private, and should cache\nresponses marked as such. Implementations that fail this test don't recognise that they're a \nshared cache, and therefore can't be targetted as one (which is a useful technique for\nseparating browser-cacheable content from proxy-cacheable content).</p>\n\n<ol>\n<li>Private responses cached: <span id=\"private\"> </span></li>\n</ol>\n\n<script type=\"text/javascript\">\ntestCaching(\"private.s\", \"private\", true, \"Private response not cached\");\n</script>\n\n\n<h3>Directive Precedence</h3>\n\n<p>HTTP has many caching directives that might conflict, such as HTTP 1.0's <code>Pragma</code> and\n<code>Expires</code>, as well as HTTP 1.1's <code>Cache-Control: max-age</code>.</p>\n\n<p>Sometimes, it is useful to direct caches that understand HTTP/1.1 caching directives (like Cache-Control)\nto do one thing, while directing those that don't to do something else. For example, if you're taking advantage\nof advanced features, you might want to allow more capable devices to cache something, while making sure \nthat older ones don't.</p>\n\n<p>HTTP accommodates this by specifying that the Cache-Control: max-age directive takes precedence over\nthe Expires header; a response that contains both of them should be cached according to the Cache-Control \nheader by a device that understands it, while those that don't will honour the Expires header.</p>\n\n<p>There are a number of other situations where directives may conflict; in most cases, caches should\nfollow the most conservative directive (i.e., something that says not to cache) present.</p>\n\n<p>Browsers that don't correctly handle directive precedence will make it difficult to target\ndirectives at caches with different levels of conformance.</p>\n\n<p>Tests where there are two results test each combination with a different ordering of headers; the results <em>should</em> be the same.</p>\n\n<ol>\n<li>Cache-Control: max-age and stale Expires is fresh: <span id=\"max_age_expires\"></span>, <span id=\"expires_max_age\"></span></li>\n<li>Cache-Control: max-age and Pragma: no-cache is stale: <span id=\"max_age_pragma\"></span>, <span id=\"pragma_max_age\"></span></li>\n<li>Cache-Control: no-cache and fresh Expires is stale: <span id=\"no_cache_expires\"></span>, <span id=\"expires_no_cache\"></span></li>\n<li>Cache-Control: no-store and fresh Expires is not cached: <span id=\"no_store_expires\"></span>, <span id=\"expires_no_store\"></span></li>\n</ol>\n\n<script type=\"text/javascript\">\ntestCaching(\"max_age_expires.s\", \"max_age_expires\", true, \"Fresh representation not used\");\ntestCaching(\"expires_max_age.s\", \"expires_max_age\", true, \"Fresh representation not used\");\ntestCaching(\"pragma_max_age.s\", \"pragma_max_age\", false, \"Fresh representation not used\");\ntestCaching(\"max_age_pragma.s\", \"max_age_pragma\", false, \"Fresh representation not used\");\ntestCaching(\"no_cache_expires.s\", \"no_cache_expires\", false, \"Cached representation used\");\ntestCaching(\"expires_no_cache.s\", \"expires_no_cache\", false, \"Cached representation used\");\ntestCaching(\"no_store_expires.s\", \"no_store_expires\", false, \"Cached representation used\");\ntestCaching(\"expires_no_store.s\", \"expires_no_store\", false, \"Cached representation used\");\n</script>\n\n<h3>Variant Caching</h3>\n\n<p>HTTP allows responses to requests for the same URI to vary based on the values of request \nheaders; this is called \n<a href=\"http://www.w3.org/Protocols/rfc2616/rfc2616-sec12.html#sec12.1\" class=\"offsite\">server-driven \ncontent negotiation</a>. This has special implications for caches, because they usually store representations\nbased on their URIs, but HTTP 1.1 requires them to also consider the content of the Vary header, which\nindicates what other headers form part of the cache key.</p>\n\n<p>The first test checks to see that a negotiated response will be cached; the second makes sure\nthat two different variants aren't cached as the same thing. The third test sees if the cache is smart\nenough to ignore the case of the request header-names specified by the Vary response header. Finally,\nthe fourth test specifically checks to see if responses that vary on the Accept-Encoding header (which commonly\nimplements compression in HTTP) work.</p>\n\n<p>This last test is important, because if compressed content isn't cached by the browser, this popular technique may become less useful.</p>\n\n<ol>\n<li>Arbitrary Negotiated response caching: <span id=\"conneg_same\"> </span></li>\n<li>Arbitrary Negotiated response differentiation: <span id=\"conneg_different\"> </span></li>\n<li>Arbitrary Negotiated response canonicalisation: <span id=\"conneg_canonical\"> </span></li>\n<li>Encoded Negotiated response caching: <span id=\"conneg_enc_same\"> </span></li>\n</ol>\n\n<script type=\"text/javascript\">\ntestConneg(\"conneg.s/1\", \"conneg_same\", \"x-test\", \"foo\", true, \"Negotiated response not used\");\ntestConneg(\"conneg.s/2\", \"conneg_different\", \"x-test\", \"bar\", false, \"Negotiated response used when it shouldn't have been\");\ntestConneg(\"conneg.s/3\", \"conneg_canonical\", \"X-Test\", \"foo\", true, \"Negotiation doesn't canonicalise header names\");\ntestConneg(\"conneg_enc.s\", \"conneg_enc_same\", \"x-test\", \"foo\", true, \"Negotiated response not used\");\n</script>\n\n\n<h3>POST Caching</h3>\n\n<p>Contrary to conventional wisdom, HTTP does allow caching of the response to a POST\nrequest. From <a href=\"http://www.ietf.org/rfc/rfc2616.txt\" class=\"offsite\">RFC2616</a>, section 9.5;</p>\n\n<pre class=\"spec\">\n   Responses to this method are not cacheable, unless the response\n   includes appropriate Cache-Control or Expires header fields. However,\n   the 303 (See Other) response can be used to direct the user agent to\n   retrieve a cacheable resource.\n</pre>\n\n<p>This means that if a POST response includes Cache-Control or Expires (or, given\na strict reading of section 13, even a validator like Last-Modified or ETag), the\nresponse can be used to satisfy future GET requests.</p>\n\n<p>For example, a blog entry page could accept comments by taking a POST with\nthe comment text; if the response were cacheable, the commenter would immediately \nsee their comment on the page, even if they reloaded from cache (because their\ncache would contain the POST response).</p>\n\n<p>Implementations that pass this test will cache a POST response.</p>\n\n<script type=\"text/javascript\">\nfunction testPostCaching(test_id, fail_text) {\n    var req = getReq();\n    var uri = \"check_cache_method.s\";    \n    var success = true;\n    var error_msg = \"\";\n    try {\n        req.open(\"POST\", uri, false);\n        req.send(\"\");\n        // pause(100);\n        req.open(\"GET\", uri, false);\n        req.send(\"\");\n    } catch (e) {\n        success = false;\n        error_msg = \"Error: \" + e;\n    }\n    if (req.status == 304) {\n        success = false;\n        error_msg = \"304 not handled\";\n    }\n    if (success && req.status != 200) {\n        success = false;\n        error_msg = \"Status code: \" + req.status;\n    }\n    if (success && req.responseText != \"POST\") {\n        success = false;\n        error_msg = fail_text;\n    }\n    writeResults(test_id, success, error_msg);\n}\n</script>\n\n<ol>\n<li>POST freshness: <span id=\"post_cache\"> </span></li>\n</ol>\n\n<script type=\"text/javascript\">\ntestPostCaching(\"post_cache\", \"POST not cached\");\n</script>\n\n\n<h2>Cache Invalidation</h2>\n\n<p>Even if an implementation doesn't actively cache POST responses, it needs to \ninvalidate the cache when a POST is made. Otherwise, the wrong response may be\nsent from cache.</p>\n\n<p>For example, if the blog entry page above used the same URI for POSTing comments\nand GETting the latest version of the entry, an implementation that doesn't invalidate the \ncache upon a POST will show an old version of the page (out of cache) upon a \nsubsequent GET.</p>\n\n<p>HTTP talks about this in <a class=\"offsite\" href=\"http://www.w3.org/Protocols/rfc2616/rfc2616-sec13.html#sec13.10\">RFC2616</a>, \nsection 13.10;</p>\n\n<pre class=\"spec\">\n   Some HTTP methods MUST cause a cache to invalidate an entity. This is\n   either the entity referred to by the Request-URI, or by the Location\n   or Content-Location headers (if present). These methods are:\n\n      - PUT\n      - DELETE\n      - POST\n\n   In order to prevent denial of service attacks, an invalidation based\n   on the URI in a Location or Content-Location header MUST only be\n   performed if the host part is the same as in the Request-URI.\n\n   A cache that passes through requests for methods it does not\n   understand SHOULD invalidate any entities referred to by the\n   Request-URI.\n</pre>\n\n\n<h3>POST Invalidation</h3>\n\n<p>Implementations that pass this test will invalidate the appropriate cache entry \n(the Request-URI, the Content-Location and Location) upon a POST. Implementations \nthat fail this test are not  conformant to RFC2616, and will serve the incorrect entry from cache.</p>\n\n<ul>\n<li>Request-URI: <span id=\"post_requri_invalid\"> </span></li>\n<li>Content-Location: <span id=\"post_content_location_invalid\"> </span></li>\n<li>Location: <span id=\"post_location_invalid\"> </span></li>\n</ul>\n\n<script type=\"text/javascript\">\ntestInvalidation(\"POST\", \"Request-URI\", \"post_requri_invalid\", \"POST to Request URI did not invalidate the cache.\");\ntestInvalidation(\"POST\", \"Content-Location\", \"post_content_location_invalid\", \"POST to Content-Location did not invalidate the cache.\");\ntestInvalidation(\"POST\", \"Location\", \"post_location_invalid\", \"POST to Location did not invalidate the cache.\");\n</script>\n\n<h3>PUT Invalidation</h3>\n\n<p>Implementations that pass this test will invalidate the appropriate cache entry \n(the Request-URI, the Content-Location and Location) upon a DELETE. Implementations \nthat fail this test are not  conformant to RFC2616, and will serve the incorrect entry from cache.</p>\n\n<ul>\n<li>Request-URI: <span id=\"put_requri_invalid\"> </span></li>\n<li>Content-Location: <span id=\"put_content_location_invalid\"> </span></li>\n<li>Location: <span id=\"put_location_invalid\"> </span></li>\n</ul>\n\n<script type=\"text/javascript\">\ntestInvalidation(\"PUT\", \"Request-URI\", \"put_requri_invalid\", \"PUT to Request URI did not invalidate the cache.\");\ntestInvalidation(\"PUT\", \"Content-Location\", \"put_content_location_invalid\", \"PUT to Content-Location did not invalidate the cache.\");\ntestInvalidation(\"PUT\", \"Location\", \"put_location_invalid\", \"PUT to Location did not invalidate the cache.\");\n</script>\n\n<h3>DELETE Invalidation</h3>\n\n<p>Implementations that pass this test will invalidate the appropriate cache entry \n(the Request-URI, the Content-Location and Location) upon a DELETE. Implementations \nthat fail this test are not  conformant to RFC2616, and will serve the incorrect entry from cache.</p>\n\n<ul>\n<li>Request-URI: <span id=\"delete_requri_invalid\"> </span></li>\n<li>Content-Location: <span id=\"delete_content_location_invalid\"> </span></li>\n<li>Location: <span id=\"delete_location_invalid\"> </span></li>\n</ul>\n\n<script type=\"text/javascript\">\ntestInvalidation(\"DELETE\", \"Request-URI\", \"delete_requri_invalid\", \"DELETE to Request URI did not invalidate the cache.\");\ntestInvalidation(\"DELETE\", \"Content-Location\", \"delete_content_location_invalid\", \"DELETE to Content-Location did not invalidate the cache.\");\ntestInvalidation(\"DELETE\", \"Location\", \"delete_location_invalid\", \"DELETE to Location did not invalidate the cache.\");\n</script>\n\n\n<h3>Unknown Method Invalidation</h3>\n\n<p><a class=\"offsite\" href=\"http://www.ietf.org/rfc/rfc2616.txt\">RFC2616</a>, \nsection 13.10 goes on to say how unrecognised methods should be handled;</p>\n\n<pre class=\"spec\">\n   A cache that passes through requests for methods it does not\n   understand SHOULD invalidate any entities referred to by the\n   Request-URI.\n</pre>\n\n<ul>\n<li>Request-URI: <span id=\"foo_requri_invalid\"> </span></li>\n</ul>\n\n<script type=\"text/javascript\">\ntestInvalidation(\"FOO\", \"Request-URI\", \"foo_requri_invalid\", \"Unknown method to Request URI did not invalidate the cache.\");\n</script>\n</div>\n\n</body>\n</html>\n\n\n<p class=\"banner\">Test results:\n<script type=\"text/javascript\">\n  document.write(navigator.userAgent);\n</script>\n</p>\n\n\n\n</body>\n</html>\n-->",
+			"file": "/D/Code/OGD/ODN/xhrtest.html",
+			"file_size": 31241,
+			"file_write_time": 130536280166386956,
 			"settings":
 			{
-				"buffer_size": 3571,
+				"buffer_size": 31241,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/bin/jester-batch.js",
+			"settings":
+			{
+				"buffer_size": 1268,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/lib/lint.js",
+			"settings":
+			{
+				"buffer_size": 1541,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/lib/loadConfig.js",
+			"settings":
+			{
+				"buffer_size": 765,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/bin/jester-watch.js",
+			"settings":
+			{
+				"buffer_size": 3002,
 				"line_ending": "Unix"
 			}
 		},
@@ -548,31 +601,7 @@
 			"file": "src/bin/jester-init.js",
 			"settings":
 			{
-				"buffer_size": 855,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "src/template-files/jester.json",
-			"settings":
-			{
-				"buffer_size": 139,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "src/template-files/jsdoc.conf",
-			"settings":
-			{
-				"buffer_size": 362,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "src/template-files/karma.conf.js",
-			"settings":
-			{
-				"buffer_size": 370,
+				"buffer_size": 1425,
 				"line_ending": "Unix"
 			}
 		},
@@ -580,15 +609,15 @@
 			"file": "src/template-files/webpack.config.js",
 			"settings":
 			{
-				"buffer_size": 420,
+				"buffer_size": 421,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "test.js",
+			"file": "src/template-files/webpack_all_configs.js",
 			"settings":
 			{
-				"buffer_size": 4764,
+				"buffer_size": 462,
 				"line_ending": "Unix"
 			}
 		}
@@ -709,24 +738,10 @@
 	},
 	"file_history":
 	[
-		"/D/Code/non-OGD/jrnl/README",
-		"/D/Code/non-OGD/jester/node_modules/karma/lib/cli.js",
-		"/D/Code/non-OGD/jester/src/template-files/eslintrc",
-		"/D/Code/non-OGD/jester/src/template-files/webpack_all_configs.js",
-		"/D/Code/non-OGD/jester/src/template-files/webpack.config.js",
-		"/D/Code/non-OGD/jester/src/bin/jester-init.js",
-		"/D/Code/non-OGD/jester/src/bin/jester-watch.js",
-		"/D/Code/non-OGD/jester/src/lib/loadConfig.js",
-		"/D/Code/non-OGD/jester/src/lib/lint.js",
-		"/D/Code/non-OGD/jester/src/bin/jester-batch.js",
-		"/D/Code/non-OGD/jester/test.js",
-		"/D/Code/non-OGD/jester/.gitignore",
-		"/D/Code/OGD/ODN/mini-server.js",
-		"/D/Code/OGD/ODN/index.html",
-		"/D/Code/OGD/ODN/xhrtest.html",
 		"/D/Code/OGD/ODN/node_modules/notmodified/notmodified.js",
 		"/D/Code/non-OGD/jester/src/template-files/karma.conf.js",
 		"/D/Code/non-OGD/jester/src/lib/public-api.js",
+		"/D/Code/non-OGD/jester/.gitignore",
 		"/D/Code/non-OGD/jester/package.json",
 		"//ogd.local/data/homedirs/jauco.noordzij/AppData/Roaming/Sublime Text 2/Packages/Default/Preferences.sublime-settings",
 		"//ogd.local/data/homedirs/jauco.noordzij/AppData/Roaming/Sublime Text 2/Packages/User/Preferences.sublime-settings",
@@ -736,11 +751,14 @@
 		"/D/Code/non-OGD/jester/jester.json",
 		"/D/Code/non-OGD/jester/src/lib/rebuildDocumentation.js",
 		"/D/Code/non-OGD/jester/src/template-files/README",
+		"/D/Code/non-OGD/jester/src/template-files/eslintrc",
 		"/D/Code/non-OGD/jester/.eslintrc",
 		"/D/Code/non-OGD/jester-testproject/.eslintrc",
 		"/D/Code/non-OGD/eslint-path-formatter/index.js",
 		"/D/Dropbox/Public/doc/index2.html",
 		"/D/Code/non-OGD/jester/src/lib/karmaServer.js",
+		"/D/Code/non-OGD/jester/src/bin/jester-watch.js",
+		"/D/Code/non-OGD/jester/src/lib/loadConfig.js",
 		"/D/Code/non-OGD/node-confuse/index.js",
 		"/D/Code/non-OGD/jester/src/lib/runAllTests.js",
 		"/D/Code/non-OGD/jester-testproject/src/features/amazingFeature/feature.js",
@@ -760,6 +778,7 @@
 		"/D/Code/non-OGD/eslint/package.json",
 		"/D/Code/non-OGD/jester-testproject/karma.conf.js",
 		"/D/Code/non-OGD/jester/node_modules/karma/bin/karma",
+		"/D/Code/non-OGD/jester/src/bin/jester-init.js",
 		"/D/Code/non-OGD/jester/src/lib/globPromise.js",
 		"/D/Code/non-OGD/jester/src/lib/overrideConfig.js",
 		"/D/Code/non-OGD/jester-testproject/jester.json",
@@ -779,6 +798,7 @@
 		"/D/Code/non-OGD/jester-testproject/build/artifacts/amazingFeature.min.js",
 		"/D/Code/non-OGD/jester-testproject/src/serror.js",
 		"/D/Code/non-OGD/jester.json",
+		"/D/Code/non-OGD/jester/src/bin/jester-batch.js",
 		"/D/Code/non-OGD/jester/src/lib/rebuildProject.js",
 		"/D/Code/non-OGD/jester/src/lib/createTestFile.js",
 		"/D/Code/non-OGD/jester/npm-shrinkwrap.json",
@@ -836,7 +856,16 @@
 		"/D/Code/OGD/appification/Stanley/src/reactiveModel/readWriteObject/splitPath.js",
 		"/D/Code/OGD/appification/Stanley/src/reactiveModel/lib/applyPatch.test.js",
 		"/D/Code/OGD/appification/Stanley/src/reactiveModel/lib/applyPatch.js",
-		"/D/Code/OGD/appification/Stanley/src/reactiveModel/lib/project.js"
+		"/D/Code/OGD/appification/Stanley/src/reactiveModel/lib/project.js",
+		"/D/Code/OGD/appification/Stanley/src/reactiveModel/emptyPatch.js",
+		"/D/Code/OGD/appification/Stanley/src/reactiveModel/test/stap3/excelUpload.js",
+		"/D/Code/OGD/greenvis-networks-generiek/Source/js/bootstrap_elements/components/alert.js",
+		"/D/Code/OGD/appification/Stanley/src/reactiveModel/patchers/toLookup.js",
+		"/D/Code/OGD/appification/Stanley/src/reactiveModel/patchers/translate.js",
+		"/D/Code/OGD/appification/Stanley/jester.json",
+		"/D/Code/OGD/appification/Stanley/src/reactiveModel/patchers/caller.test.js",
+		"/D/Code/OGD/appification/Stanley/src/reactiveModel/lib/throwIfpathsAreWritingToTheSameObject.js",
+		"/D/Code/OGD/appification/Stanley/src/reactiveModel/lib/throwIfpathsAreWritingToTheSameObject.test.js"
 	],
 	"find":
 	{
@@ -896,11 +925,6 @@
 		"case_sensitive": false,
 		"find_history":
 		[
-			"JOURNAL_FILE",
-			", //",
-			"//",
-			"FEATURES_PATH",
-			"defaultJSDocConf",
 			"heaeders",
 			"status",
 			"withContent",
@@ -1023,7 +1047,12 @@
 			"untracked",
 			"Untracked",
 			"untracked",
-			"ref_stash"
+			"ref_stash",
+			"INDEX_FILE",
+			"GIT_INDEX_FILE",
+			"FILE",
+			"GIT_INDEX_FILE",
+			"GIT_DIR"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1063,11 +1092,38 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 4,
 			"sheets":
 			[
 				{
 					"buffer": 0,
+					"file": "test.js",
+					"settings":
+					{
+						"buffer_size": 4181,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								134,
+								134
+							]
+						],
+						"settings":
+						{
+							"auto_name": "console.log(",
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
 					"settings":
 					{
 						"buffer_size": 566,
@@ -1093,76 +1149,24 @@
 					"type": "text"
 				},
 				{
-					"buffer": 1,
-					"file": "journal.txt",
-					"settings":
-					{
-						"buffer_size": 2843,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2680,
-								2680
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Markdown/Markdown.tmLanguage",
-							"word_wrap": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 707.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
 					"buffer": 2,
-					"file": "/D/Code/non-OGD/jrnl/git-jrnl",
+					"file": "/D/Code/OGD/ODN/mini-server.js",
 					"settings":
 					{
-						"buffer_size": 3571,
+						"buffer_size": 796,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2292,
-								2292
+								771,
+								771
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/ShellScript/Shell-Unix-Generic.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 648.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "src/bin/jester-init.js",
-					"settings":
-					{
-						"buffer_size": 855,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								197,
-								239
-							]
-						],
-						"settings":
-						{
+							"auto_name": "var PORT = 8080;",
 							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
 						},
 						"translation.x": 0.0,
@@ -1172,24 +1176,24 @@
 					"type": "text"
 				},
 				{
-					"buffer": 4,
-					"file": "src/template-files/jester.json",
+					"buffer": 3,
+					"file": "/D/Code/OGD/ODN/index.html",
 					"settings":
 					{
-						"buffer_size": 139,
+						"buffer_size": 1122,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								7,
-								24
+								490,
+								490
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/JavaScript/JSON.tmLanguage"
+							"syntax": "Packages/HTML/HTML.tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -1198,19 +1202,46 @@
 					"type": "text"
 				},
 				{
-					"buffer": 5,
-					"file": "src/template-files/jsdoc.conf",
+					"buffer": 4,
+					"file": "/D/Code/OGD/ODN/xhrtest.html",
 					"settings":
 					{
-						"buffer_size": 362,
+						"buffer_size": 31241,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								362,
-								362
+								13869,
+								13869
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"word_wrap": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 5703.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "src/bin/jester-batch.js",
+					"settings":
+					{
+						"buffer_size": 1268,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								308,
+								318
 							]
 						],
 						"settings":
@@ -1225,18 +1256,18 @@
 				},
 				{
 					"buffer": 6,
-					"file": "src/template-files/karma.conf.js",
+					"file": "src/lib/lint.js",
 					"settings":
 					{
-						"buffer_size": 370,
+						"buffer_size": 1541,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								193,
-								193
+								686,
+								686
 							]
 						],
 						"settings":
@@ -1244,25 +1275,25 @@
 							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 216.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 7,
-					"file": "src/template-files/webpack.config.js",
+					"file": "src/lib/loadConfig.js",
 					"settings":
 					{
-						"buffer_size": 420,
+						"buffer_size": 765,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								354,
-								354
+								24,
+								24
 							]
 						],
 						"settings":
@@ -1277,18 +1308,18 @@
 				},
 				{
 					"buffer": 8,
-					"file": "test.js",
+					"file": "src/bin/jester-watch.js",
 					"settings":
 					{
-						"buffer_size": 4764,
+						"buffer_size": 3002,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								4035,
-								4035
+								2346,
+								2346
 							]
 						],
 						"settings":
@@ -1296,7 +1327,85 @@
 							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 583.0,
+						"translation.y": 972.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "src/bin/jester-init.js",
+					"settings":
+					{
+						"buffer_size": 1425,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								186,
+								186
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "src/template-files/webpack.config.js",
+					"settings":
+					{
+						"buffer_size": 421,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								140,
+								140
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"file": "src/template-files/webpack_all_configs.js",
+					"settings":
+					{
+						"buffer_size": 462,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								462,
+								462
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"

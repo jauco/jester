@@ -1,6 +1,0 @@
-{
-    "karmaTestFilePath": "./build/karma/",
-    "srcPath": "./src/",
-    "entryGlob": "./src/features/",
-    "apiDocPath": "./doc/api/",
-}
