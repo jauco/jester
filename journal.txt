@@ -46,4 +46,24 @@ hmmm, dit probleem hebben we ook met webpack. Dat het systeem is ingericht op 1 
 
 misschien kan ik daar beter mee omgaan. dan fix ik gelijk de todo uit L2
 
+                                                                    Sep 07 11:23
+================================================================================
 
+dus: dan moet ik webpack zo opstarten dat hij voor alle .test.js files een losse
+file bouwt die de unittests bevat.
+
+dan moet ik webpack herstarten zodra iemand een .test.js file toevoegd, want
+webpack vereist benoemde files die hij gaat bouwen
+
+Ik moet webpack ook opstarten zodat hij voor alle features een losse file bouwt
+op een andere plek
+
+Ik moet karma zo instellen dat hij de unittests gaat uitvoeren zodra er een test
+file wordt gewijzigd. <- Dit werkt niet lekker want karma voert altijd _alle_
+unittests uit. niet alleen de gewijzigde file.
+
+ * Jester kan js-feature-endpoints herkennen en tests herkennen.
+ * webpack.conf wordt geladen en laadt de entrypoints uit jester
+ * Jester restart webpack als hier iets aan wijzigt
+
+ * karma wordt door jester gestart
