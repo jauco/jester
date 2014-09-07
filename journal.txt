@@ -3,9 +3,47 @@
 
  in test.js een voorbeeldje gezet van de output die me wel wat lijkt.
 
-                                                                  Sep 6 21:34:25
+                                                                 Sat Sep 6 21:34
 ================================================================================
-
 Nu even opschonen. zorgen dat jester-init de juiste configs aanmaakt. eslint rule changes voor verschillende types laat ik nog even achterwege.
 
 beetje veel circulaire dependencies nu
+
+                                                                 Sun Sep 7 10:29
+================================================================================
+
+Eslintrc aan het documenteren. Niet echt nuttig
+
+ - [ ] gedocumenteerde eslintrc met correcte instellingen en de laatste rules
+
+Beetje git-jrnl gefixed (date printing)
+
+
+oke
+
+[testing while editing]
+jester 
+    -> laadt karma.conf.js
+        -> die laadt by default het karma path uit jester.json
+        -> de default instellingen uit de karmaLauncher
+    -> roept karma aan via API
+    -> moet dan een options object meegeven
+
+zullen we de karma conf zo inrichten dat je de files altijd moet meegeven bij een karma run?
+
+blijkt niet echt te kunnen. Files moet een array zijn en optimist krijg je niet zover dat hij options als een array parsed
+
+dus: overnieuw
+
+karma.conf.js is een config om karma standalone te runnen (dus niet vanuit jester)
+
+Een jester karma run is dus:
+
+jester defaults + karma.conf.js overrides + jester overrides om de juiste file te vinden
+
+
+hmmm, dit probleem hebben we ook met webpack. Dat het systeem is ingericht op 1 keer alle files definieren en er dan niet meer aanzitten
+
+misschien kan ik daar beter mee omgaan. dan fix ik gelijk de todo uit L2
+
+
