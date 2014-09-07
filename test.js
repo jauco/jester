@@ -64,13 +64,13 @@ console.log(
 
 
 
-// Generated
-//  - app.min.js
-//- Dependencies relating to src\app\main.js:
-// - .\src\app\main.js <-- that's the file!
-//  - .\mainModel.js
-//  - .\mainView.js
-//    - ./main.css
-//    - <jquery>
-//    - <react>
-//
+Generated
+ - app.min.js
+- Dependencies relating to src\app\main.js:
+- .\src\app\main.js <-- that's the file!
+ - .\mainModel.js
+ - .\mainView.js
+   - ./main.css
+   - <jquery>
+   - <react>
+

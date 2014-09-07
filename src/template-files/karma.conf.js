@@ -1,7 +1,8 @@
 var defaultConfigWith = require("jester-tester").karmaConfigWith;
+var jesterconfig = require("./jester.json");
 module.exports = function (config) {
     config.set(defaultConfigWith({
-        basePath: "./build/karma/",
+        basePath: jesterconfig.karmaTestFilePath,
         frameworks: ["jasmine"],
         files: ["*.js"],
         reporters: ["dots"],

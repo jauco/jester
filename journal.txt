@@ -1,2 +1,11 @@
  - [ ] eslint mee laten werken
  - [ ] webpack gelaunched houden zodat hij sneller is
+
+ in test.js een voorbeeldje gezet van de output die me wel wat lijkt.
+
+                                                                  Sep 6 21:34:25
+================================================================================
+
+Nu even opschonen. zorgen dat jester-init de juiste configs aanmaakt. eslint rule changes voor verschillende types laat ik nog even achterwege.
+
+beetje veel circulaire dependencies nu
