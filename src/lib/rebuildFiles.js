@@ -81,7 +81,7 @@ function interpretWebpackOptions(options, buildType) {
 }
 
 function getWebpackOptionsForStandaloneRun(jesterOptions) {
-    var options = interpretWebpackOptions(jesterOptions.webPackOptions, "entrypoints");
+    var options = interpretWebpackOptions("entrypoints", jesterOptions.webPackOptions);
     var files = require("glob").sync(jesterOptions.fullEntryGlob);
     var filesToBuildAsWebpackOptions = {
         entry: createEntryModules(files, getNameOfDir)
@@ -100,7 +100,7 @@ function getNameOfDir(file) {
     return p.basename(p.dirname(file));
 }
 module.exports.rebuildProject = function rebuildProject(jesterOptions) {
-    var combinedOptions = interpretWebpackOptions(jesterOptions.webPackOptions, "entrypoints");
+    var combinedOptions = interpretWebpackOptions("entrypoints", jesterOptions.webPackOptions);
 
     return clearDir(combinedOptions.output.path)
         .then(function filesCleared() {
@@ -119,7 +119,7 @@ function stripTestJs(file) {
     return p.basename(file).slice(0,-testjsLength);
 }
 module.exports.createTestFile = function createTestFile(filenames, jesterOptions) {
-    var combinedOptions = interpretWebpackOptions(jesterOptions.webPackOptions, "testfiles");
+    var combinedOptions = interpretWebpackOptions("testfiles", jesterOptions.webPackOptions);
     
     return runWebpack(filenames, combinedOptions, stripTestJs)
         .then(function (stats){

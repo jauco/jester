@@ -12,6 +12,8 @@ Desktop.ini
 ## jester
 #############
 
-/artifacts/
 node_modules/
 build/
+
+# see jauco/git-jrnl
+journal.txt

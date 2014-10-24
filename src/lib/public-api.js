@@ -1,14 +1,16 @@
-var loadConfig = require("./loadConfig");
-var withDefaultKarma = require("./karmaServer").withDefaultOptions;
-var withDefaultWebpack = require("./rebuildFiles").interpretWebpackOptions;
 
 module.exports = {
-    loadKarmaConfig: function loadKarmaConfig() {
-        var config = loadConfig();
-        return withDefaultKarma(config.karmaOptions);
+    withDefaultKarma: function withDefaultKarma() {
+        var withDefaultKarma = require("./karmaServer").withDefaultOptions;
+        return withDefaultKarma;
     },
-    loadWebpackConfig: function loadWebpackConfig() {
+    withDefaultWebpack: function withDefaultWebpack(config, entrypoints) {
+        var withDefaultWebpack = require("./rebuildFiles").interpretWebpackOptions;
+        var files = require("glob").sync(jesterOptions.fullEntryGlob);
+        return withDefaultWebpack("entrypoints", config, entrypoints);
+    },
+    listEntryFiles: function listEntryFiles() {
+        var loadConfig = require("./loadConfig");
         var config = loadConfig();
-        return withDefaultWebpack(config, "entrypoints");
     }
 }

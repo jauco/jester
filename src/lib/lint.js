@@ -17,7 +17,8 @@ function didLintSucceed(results) {
 function lintFile(filenames, asUnitTest, config) {
     return when.promise(function (resolve, reject, notify) {
         var globals = [
-            "require:false"
+            "require:false",
+            "module:false"
         ];
         if (asUnitTest) {
             globals = globals.concat([

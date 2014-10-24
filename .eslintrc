@@ -1,8 +1,6 @@
 {
     "globals": {
-        "require": true,
-        "module": true,
-        "console": true,
+        "console": false
     },
     "rules": {
         "no-cond-assign": 2,
@@ -130,14 +128,5 @@
         "max-statements": 0,
         "no-bitwise": 1,
         "no-plusplus": 0
-    },
-    "fileSpecificConfigs": {
-        "*.test.js": {
-            "globals": {
-                "describe": true,
-                "it": true,
-                "expect": true
-            }
-        }
     }
 }

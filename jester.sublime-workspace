@@ -1,0 +1,1917 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"head",
+				"header"
+			],
+			[
+				"err",
+				"error"
+			],
+			[
+				"hea",
+				"header"
+			],
+			[
+				"heade",
+				"headersToSend"
+			],
+			[
+				"s",
+				"success"
+			],
+			[
+				"new",
+				"newHeaders"
+			],
+			[
+				"co",
+				"content"
+			],
+			[
+				"give",
+				"givenResponse"
+			],
+			[
+				"he",
+				"header"
+			],
+			[
+				"but",
+				"butWithContent"
+			],
+			[
+				"resp",
+				"responseText"
+			],
+			[
+				"res",
+				"result"
+			],
+			[
+				"erro",
+				"error_msg"
+			],
+			[
+				"has",
+				"hashMatch"
+			],
+			[
+				"hash",
+				"hashWasSent"
+			],
+			[
+				"hashWas",
+				"hashWasProvided"
+			],
+			[
+				"clie",
+				"clientHash"
+			],
+			[
+				"mt",
+				"mtimeSent"
+			],
+			[
+				"no",
+				"notmodified"
+			],
+			[
+				"load",
+				"loadedConfigFile"
+			],
+			[
+				"conf",
+				"config"
+			],
+			[
+				"karma",
+				"karmaOptions"
+			],
+			[
+				"fil",
+				"filePath"
+			],
+			[
+				"test",
+				"testSources"
+			],
+			[
+				"fi",
+				"filenames"
+			],
+			[
+				"es",
+				"eslint-path-formatter"
+			],
+			[
+				"lin",
+				"lintFile"
+			],
+			[
+				"file",
+				"filename"
+			],
+			[
+				"resu",
+				"results"
+			],
+			[
+				"lint",
+				"lintSucceeded"
+			],
+			[
+				"eslint",
+				"eslintEngine"
+			],
+			[
+				"files",
+				"fileSpecificConfigs"
+			],
+			[
+				"de",
+				"defaultMerge"
+			],
+			[
+				"re",
+				"resolve"
+			],
+			[
+				"int",
+				"interpretRegexp"
+			],
+			[
+				"inte",
+				"interpretRegexpArray"
+			],
+			[
+				"over",
+				"overrideConfig"
+			],
+			[
+				"are",
+				"areTheSame"
+			],
+			[
+				"ar",
+				"areTheSame"
+			],
+			[
+				"merge",
+				"mergeImplementation"
+			],
+			[
+				"merg",
+				"merge"
+			],
+			[
+				"mer",
+				"mergeImplementation"
+			],
+			[
+				"karm",
+				"karmaOptions"
+			],
+			[
+				"rebu",
+				"rebuildFiles"
+			],
+			[
+				"jestr",
+				"jester-watch"
+			],
+			[
+				"filt",
+				"filteredWarnings"
+			],
+			[
+				"get",
+				"get_latest_journal_number"
+			],
+			[
+				"newS",
+				"newState"
+			],
+			[
+				"make",
+				"makeReader"
+			],
+			[
+				"arr",
+				"arrLengths"
+			],
+			[
+				"te",
+				"tests"
+			],
+			[
+				"inp",
+				"inputGroups"
+			],
+			[
+				"patc",
+				"patch"
+			],
+			[
+				"data",
+				"dataReader"
+			],
+			[
+				"trans",
+				"translationReader"
+			],
+			[
+				"tr",
+				"translation"
+			],
+			[
+				"trl",
+				"translateStrings"
+			],
+			[
+				"prev",
+				"prevResult"
+			],
+			[
+				"pr",
+				"prevResult"
+			],
+			[
+				"out",
+				"outputString"
+			],
+			[
+				"outp",
+				"outputProperty"
+			],
+			[
+				"tablh",
+				"tableHeader"
+			],
+			[
+				"pip",
+				"pipesTable"
+			],
+			[
+				"Pipe",
+				"PipeNetwork"
+			],
+			[
+				"var",
+				"variation"
+			],
+			[
+				"cancl",
+				"cancelled"
+			],
+			[
+				"ex",
+				"excelUploadForm"
+			],
+			[
+				"vali",
+				"validator"
+			],
+			[
+				"pi",
+				"pipeNetwork"
+			],
+			[
+				"wi",
+				"withPermutations"
+			],
+			[
+				"text",
+				"textWithoutTooltip"
+			],
+			[
+				"impo",
+				"importFailure"
+			],
+			[
+				"impor",
+				"importFailure"
+			],
+			[
+				"deci",
+				"decimals"
+			],
+			[
+				"val",
+				"validator"
+			],
+			[
+				"A",
+				"AllPipes"
+			],
+			[
+				"Sup",
+				"Suppliers"
+			],
+			[
+				"SUp",
+				"Supplier"
+			],
+			[
+				"pipe",
+				"pipeNetwork"
+			],
+			[
+				"validation",
+				"validationData"
+			],
+			[
+				"valida",
+				"validationResults"
+			],
+			[
+				"pa",
+				"patch"
+			],
+			[
+				"apply",
+				"applyPatch"
+			],
+			[
+				"mak",
+				"makeMakeWriter"
+			],
+			[
+				"t",
+				"throwIfpathsAreWritingToTheSameObject"
+			],
+			[
+				"vie",
+				"viewInstance"
+			],
+			[
+				"wind",
+				"windowHeight"
+			],
+			[
+				"init",
+				"initialState"
+			],
+			[
+				"pro",
+				"progressPercentage"
+			],
+			[
+				"sho",
+				"shouldComponentUpdate"
+			],
+			[
+				"ons",
+				"onSaveClickSubject"
+			],
+			[
+				"ero",
+				"errorMessages"
+			],
+			[
+				"error",
+				"errorMessage"
+			],
+			[
+				"sup",
+				"suppliers"
+			],
+			[
+				"prop",
+				"propertyName"
+			],
+			[
+				"writ",
+				"outputWriter"
+			],
+			[
+				"input",
+				"inputArray"
+			],
+			[
+				"is",
+				"isTruthy"
+			],
+			[
+				"firs",
+				"firstPathThatWorks"
+			],
+			[
+				"path",
+				"pathToVal"
+			],
+			[
+				"obj",
+				"objReader"
+			],
+			[
+				"fir",
+				"firstKeyThatWorks"
+			],
+			[
+				"cur",
+				"curState"
+			],
+			[
+				"ou",
+				"outputPath"
+			],
+			[
+				"com",
+				"combine"
+			],
+			[
+				"for",
+				"forEach"
+			],
+			[
+				"in",
+				"inputReaders"
+			],
+			[
+				"inde",
+				"partIndex"
+			],
+			[
+				"makeR",
+				"makeReaderPart"
+			],
+			[
+				"part",
+				"partIndex"
+			],
+			[
+				"par",
+				"partIndex"
+			],
+			[
+				"pat",
+				"pathSegments"
+			],
+			[
+				"liss",
+				"listsToWatch"
+			],
+			[
+				"wil",
+				"wildcardSegmentLocation"
+			],
+			[
+				"index",
+				"indexOf"
+			],
+			[
+				"list",
+				"listsToWatch"
+			],
+			[
+				"lis",
+				"listReader"
+			],
+			[
+				"iA",
+				"iAmpSERV"
+			],
+			[
+				"ne",
+				"needle"
+			],
+			[
+				"wrt",
+				"writePaths"
+			],
+			[
+				"read",
+				"readPath"
+			],
+			[
+				"non",
+				"nonListInputPaths"
+			],
+			[
+				"SY",
+				"SYNC_ARTIFACT_DIR"
+			],
+			[
+				"array",
+				"arrayPatch"
+			],
+			[
+				"toke",
+				"escapeToken"
+			],
+			[
+				"appl",
+				"applyPatch"
+			],
+			[
+				"or",
+				"origLocation"
+			],
+			[
+				"esc",
+				"escapeToken"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"contents": "halve dag\n    - Zaken uitzoeken omdat de formats, sommige kolommen zijn niet duidelijk\n    - Dat de invoer data waarschijnlijk niet klopt in order intake\n    - Forecast input is gewijzigd gaande het project en gaat nog meer gewijzigd worden, obv voorstel van Jeroen.\n    - aangepaste countries tabel omdat er in een aantal bestanden niet op dezelfde manier wordt gerefereerd dan in de rest.\n\n4 uur + waarschijnlijk nog 4 uur. = meerwerk\n\n1 uurtje voor de targets\n\n4 uur voor danny en rapportages\n\n\n\npivot -> niet meegeteld\ndatum niet in het rapport -> niet meegeteld",
+			"settings":
+			{
+				"buffer_size": 566,
+				"line_ending": "Unix",
+				"name": "halve dag"
+			}
+		},
+		{
+			"file": "journal.txt",
+			"settings":
+			{
+				"buffer_size": 2843,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/D/Code/non-OGD/jrnl/git-jrnl",
+			"settings":
+			{
+				"buffer_size": 3571,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/bin/jester-init.js",
+			"settings":
+			{
+				"buffer_size": 855,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/template-files/jester.json",
+			"settings":
+			{
+				"buffer_size": 139,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/template-files/jsdoc.conf",
+			"settings":
+			{
+				"buffer_size": 362,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/template-files/karma.conf.js",
+			"settings":
+			{
+				"buffer_size": 370,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/template-files/webpack.config.js",
+			"settings":
+			{
+				"buffer_size": 420,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "test.js",
+			"settings":
+			{
+				"buffer_size": 4764,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "Packages/User/jester-tester.sublime-build",
+	"command_palette":
+	{
+		"height": 392.0,
+		"selected_items":
+		[
+			[
+				"pack",
+				"Package Control: Install Package"
+			],
+			[
+				"spel",
+				"Google Spell Check"
+			],
+			[
+				"inst",
+				"Package Control: Install Package"
+			],
+			[
+				"packa",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: ",
+				"Package Control: Install Package"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"insta",
+				"Package Control: Install Package"
+			],
+			[
+				"instal",
+				"Package Control: Install Package"
+			],
+			[
+				"pac",
+				"Package Control: Install Package"
+			],
+			[
+				"ins",
+				"Package Control: Install Package"
+			],
+			[
+				"rem",
+				"Package Control: Remove Package"
+			],
+			[
+				"tabs",
+				"View: Toggle Tabs"
+			],
+			[
+				"",
+				"View: Toggle Tabs"
+			],
+			[
+				"Package Control: in	",
+				"Package Control: Install Package"
+			],
+			[
+				"sublim",
+				"SublimeLinter: Show Error List"
+			],
+			[
+				"err",
+				"SublimeLinter: Show Error List"
+			],
+			[
+				"lin",
+				"SublimeLinter: Show Error List"
+			],
+			[
+				"linter",
+				"SublimeLinter: Lint Current File"
+			],
+			[
+				"slin",
+				"SublimeLinter: Lint Current File"
+			],
+			[
+				"linte",
+				"SublimeLinter: Reset"
+			],
+			[
+				"sub",
+				"SublimeLinter: Show Error List"
+			],
+			[
+				"su",
+				"SublimeLinter: Show Error List"
+			],
+			[
+				"subl",
+				"SublimeLinter: Show Error List"
+			]
+		],
+		"width": 520.0
+	},
+	"console":
+	{
+		"height": 164.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": false,
+		"show_minimap": true,
+		"show_open_files": false,
+		"show_tabs": true,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/D/Code/non-OGD/jrnl/README",
+		"/D/Code/non-OGD/jester/node_modules/karma/lib/cli.js",
+		"/D/Code/non-OGD/jester/src/template-files/eslintrc",
+		"/D/Code/non-OGD/jester/src/template-files/webpack_all_configs.js",
+		"/D/Code/non-OGD/jester/src/template-files/webpack.config.js",
+		"/D/Code/non-OGD/jester/src/bin/jester-init.js",
+		"/D/Code/non-OGD/jester/src/bin/jester-watch.js",
+		"/D/Code/non-OGD/jester/src/lib/loadConfig.js",
+		"/D/Code/non-OGD/jester/src/lib/lint.js",
+		"/D/Code/non-OGD/jester/src/bin/jester-batch.js",
+		"/D/Code/non-OGD/jester/test.js",
+		"/D/Code/non-OGD/jester/.gitignore",
+		"/D/Code/OGD/ODN/mini-server.js",
+		"/D/Code/OGD/ODN/index.html",
+		"/D/Code/OGD/ODN/xhrtest.html",
+		"/D/Code/OGD/ODN/node_modules/notmodified/notmodified.js",
+		"/D/Code/non-OGD/jester/src/template-files/karma.conf.js",
+		"/D/Code/non-OGD/jester/src/lib/public-api.js",
+		"/D/Code/non-OGD/jester/package.json",
+		"//ogd.local/data/homedirs/jauco.noordzij/AppData/Roaming/Sublime Text 2/Packages/Default/Preferences.sublime-settings",
+		"//ogd.local/data/homedirs/jauco.noordzij/AppData/Roaming/Sublime Text 2/Packages/User/Preferences.sublime-settings",
+		"/D/Code/non-OGD/jester/src/bin/webpack.config.js",
+		"/D/Code/non-OGD/jester/src/bin/webpack_all_configs.js",
+		"/D/Code/non-OGD/jester/src/lib/rebuildFiles.js",
+		"/D/Code/non-OGD/jester/jester.json",
+		"/D/Code/non-OGD/jester/src/lib/rebuildDocumentation.js",
+		"/D/Code/non-OGD/jester/src/template-files/README",
+		"/D/Code/non-OGD/jester/.eslintrc",
+		"/D/Code/non-OGD/jester-testproject/.eslintrc",
+		"/D/Code/non-OGD/eslint-path-formatter/index.js",
+		"/D/Dropbox/Public/doc/index2.html",
+		"/D/Code/non-OGD/jester/src/lib/karmaServer.js",
+		"/D/Code/non-OGD/node-confuse/index.js",
+		"/D/Code/non-OGD/jester/src/lib/runAllTests.js",
+		"/D/Code/non-OGD/jester-testproject/src/features/amazingFeature/feature.js",
+		"/D/Code/non-OGD/jester/node_modules/eslint/lib/api.js",
+		"/D/Code/non-OGD/jester/UPGRADING.md",
+		"/D/Code/non-OGD/jester/node_modules/eslint-path-formatter/index.js",
+		"/D/Code/non-OGD/eslint/lib/cli-engine.js",
+		"/D/Code/non-OGD/eslint/lib/config.js",
+		"/D/Code/non-OGD/eslint/lib/cli.js",
+		"/D/Code/non-OGD/eslint/lib/api.js",
+		"/D/Code/non-OGD/jester/src/lib/.eslintrc",
+		"/D/Code/non-OGD/eslint/tests/lib/config.js",
+		"/D/Code/non-OGD/eslint/tests/fixtures/fileSpecificConfigs/file.js",
+		"/D/Code/non-OGD/jester/src/testing/withPermutations.test.js",
+		"/D/Code/non-OGD/eslint/tests/fixtures/fileSpecificConfigs/.eslintrc",
+		"/D/Code/non-OGD/eslint/tests/fixtures/fileSpecificConfigs/file.test.js",
+		"/D/Code/non-OGD/eslint/package.json",
+		"/D/Code/non-OGD/jester-testproject/karma.conf.js",
+		"/D/Code/non-OGD/jester/node_modules/karma/bin/karma",
+		"/D/Code/non-OGD/jester/src/lib/globPromise.js",
+		"/D/Code/non-OGD/jester/src/lib/overrideConfig.js",
+		"/D/Code/non-OGD/jester-testproject/jester.json",
+		"/D/Code/non-OGD/node-figc/test/server.js",
+		"/D/Code/non-OGD/node-figc/test/deep.js",
+		"/D/Code/non-OGD/node-confuse/test/w.js",
+		"/D/Code/non-OGD/node-confuse/test/customMergeImplementation.js",
+		"/D/Code/non-OGD/node-confuse/package.json",
+		"/D/Code/non-OGD/node-confuse/test/env.js",
+		"/D/Code/non-OGD/node-figc/package.json",
+		"/D/Code/non-OGD/node-figc/test/customMerge.js",
+		"/D/Code/non-OGD/node-figc/index.js",
+		"/D/Code/non-OGD/node-figc/node_modules/tap/bin/tap.js",
+		"/D/Code/non-OGD/jester-testproject/src/features/amazingFeature/feature.test.js",
+		"/D/Code/non-OGD/jester/src/lib/overrideConfig",
+		"/D/Code/non-OGD/jester-testproject/src/app/error.js",
+		"/D/Code/non-OGD/jester-testproject/build/artifacts/amazingFeature.min.js",
+		"/D/Code/non-OGD/jester-testproject/src/serror.js",
+		"/D/Code/non-OGD/jester.json",
+		"/D/Code/non-OGD/jester/src/lib/rebuildProject.js",
+		"/D/Code/non-OGD/jester/src/lib/createTestFile.js",
+		"/D/Code/non-OGD/jester/npm-shrinkwrap.json",
+		"/D/Code/non-OGD/jester/node_modules/jsdoc/jsdoc.js",
+		"/D/Code/non-OGD/jester/src/lib/handleWebpackResult.js",
+		"/D/Code/non-OGD/jester-testproject/src/lib/fileWithMissingDependecy.js",
+		"/D/Code/non-OGD/jester-testproject/jsdoc.conf",
+		"/D/home/bin/git-stash",
+		"/C/Program Files (x86)/Git/libexec/git-core/git-sh-setup",
+		"/D/home/bin/git-jrnl",
+		"/C/Program Files (x86)/Git/libexec/git-core/git-stash",
+		"/D/home/.gitignore",
+		"/C/Program Files (x86)/Git/etc/profile",
+		"/D/home/bin/ssh",
+		"/D/Code/OGD/appification/Stanley/node_modules/jester-tester/package.json",
+		"/D/Code/OGD/appification/Stanley/node_modules/jester-tester/node_modules/eslint/node_modules/chalk/node_modules/.bin/strip-ansi",
+		"/D/Code/OGD/appification/Stanley/jester-tester/src/lib/handleWebpackResult.js",
+		"/D/Code/OGD/appification/Stanley/src/reactiveModel/extra/validators.js",
+		"/D/Code/OGD/appification/Stanley/node_modules/jester-tester/src/lib/createTestFile.js",
+		"/D/Code/OGD/appification/Stanley/node_modules/jester-tester/src/lib/handleWebpackResult.js",
+		"/D/Code/OGD/appification/Stanley/src/reactiveModel/test/stap3/domain/arrayPropsFormACompleteRange.js",
+		"/D/Code/OGD/appification/Stanley/src/reactiveModel/patchers/combine.js",
+		"/D/Code/OGD/appification/Stanley/src/reactiveModel/patchers/withVariableKey.js",
+		"/D/Code/OGD/appification/Stanley/src/reactiveModel/patchers/hasContent.js",
+		"/D/Code/OGD/appification/Stanley/src/reactiveModel/patchers/filterArrayOnExternalData.js",
+		"/D/Code/OGD/appification/Stanley/src/reactiveModel/patchers/caller.js",
+		"/D/Code/OGD/appification/Stanley/src/reactiveModel/lib/projectThroughPatcher.js",
+		"/D/Code/OGD/appification/Stanley/src/reactiveModel/readWriteObject/makeMakeReader.js",
+		"/D/Code/OGD/appification/Stanley/src/reactiveModel/readWriteObject/makeReader.js",
+		"/D/Code/OGD/appification/Stanley/src/reactiveModel/readWriteObject/makeMakeWriter.js",
+		"/D/Code/OGD/appification/Stanley/src/reactiveModel/patchers/validator.js",
+		"/D/Code/OGD/appification/Stanley/src/reactiveModel/test/stap3/infoPopupLabel.js",
+		"/D/Code/OGD/appification/Stanley/src/reactiveModel/test/stap3/label.js",
+		"/D/Code/OGD/appification/Stanley/src/reactiveModel/test/stap3/app.js",
+		"/D/Code/OGD/Ampelmann-DPR/2_MERGE_ampelmann_databases.sql",
+		"/D/Code/OGD/appification/Stanley/node_modules/jester-tester/src/lib/clearDir.js",
+		"/D/Code/OGD/appification/Stanley/node_modules/jester-tester/src/lib/karmaServer.js",
+		"/D/Code/OGD/appification/Stanley/src/reactiveModel/ReactiveModel.js",
+		"/D/Code/OGD/appification/Stanley/src/reactiveModel/ReactiveModel.test.js",
+		"/D/Code/OGD/appification/Stanley/src/reactiveModel/readWriteObject/makePartAccessor.js",
+		"/D/Code/OGD/appification/Stanley/src/reactiveModel/test/stap3/app.test.js",
+		"/D/Code/OGD/greenvis-networks-generiek/Source/GreenvisNetworksDomein/js/domain/pipeModel.js",
+		"/D/Code/OGD/greenvis-networks-generiek/Source/GreenvisNetworksDomein/js/app/stap3/controllers/ValidateUnique.js",
+		"/D/Code/OGD/greenvis-networks-generiek/Source/GreenvisNetworksDomein/js/app/stap3/view.js",
+		"/D/Code/OGD/greenvis-networks-generiek/Source/GreenvisNetworksDomein/js/app/stap3/controllers/validateTapPowerHConsumerAndConsumerPower.js",
+		"/D/Code/OGD/appification/Stanley/src/reactiveModel/test/stap3/withPermutations.js",
+		"/D/Code/OGD/appification/Stanley/src/reactiveModel/test/stap3/pipesTable.js",
+		"/D/Code/OGD/appification/Stanley/src/reactiveModel/test/stap3/view.test.js",
+		"/D/Code/OGD/appification/Stanley/src/reactiveModel/test/stap3/domain/PipeNetwork.js",
+		"/D/Code/OGD/appification/Stanley/src/reactiveModel/test/stap3/domain/Supplier.js",
+		"/D/Code/OGD/appification/Stanley/src/reactiveModel/test/stap3/domain/Pipe.js",
+		"/D/Code/OGD/appification/Stanley/src/reactiveModel/lib/i$NaN.js",
+		"/D/Code/OGD/appification/Stanley/src/reactiveModel/test/stap3/view.jsx",
+		"/D/Code/OGD/appification/Stanley/src/reactiveModel/test/stap3/view.js",
+		"/D/Code/OGD/appification/Stanley/src/reactiveModel/readWriteObject/splitPath.js",
+		"/D/Code/OGD/appification/Stanley/src/reactiveModel/lib/applyPatch.test.js",
+		"/D/Code/OGD/appification/Stanley/src/reactiveModel/lib/applyPatch.js",
+		"/D/Code/OGD/appification/Stanley/src/reactiveModel/lib/project.js"
+	],
+	"find":
+	{
+		"height": 35.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+			"-node_modules/*, -build/*, -node_modules_old/*, ",
+			"-node_modules/*, -build/*",
+			"-node_modules/*",
+			"-node_modules -node_modules_old",
+			"D:\\Code\\mvc-toolkit\\Stanley\\node_modules\\jester-tester\\src\\",
+			"<open files>",
+			"D:\\Code\\greenvis-networks-generiek\\Source\\js,D:\\Code\\greenvis-networks-generiek\\Source\\GreenvisNetworksDomein\\js\\",
+			"D:\\Code\\greenvis-networks-generiek\\Source\\js",
+			"D:\\Code\\greenvis-networks-generiek\\Source\\",
+			"D:\\Code\\greenvis-networks-generiek\\Source\\GreenvisNetworksDomein\\js, D:\\Code\\greenvis-networks-generiek\\Source\\js",
+			"D:\\Code\\greenvis-networks-generiek\\Source",
+			"D:\\Code\\greenvis-networks-generiek\\Source\\GreenvisNetworksDomein\\js, D:\\Code\\greenvis-networks-generiek\\Source\\js",
+			"D:\\Code\\greenvis-networks-generiek\\Source\\GreenvisNetworksDomein\\js; D:\\Code\\greenvis-networks-generiek\\Source\\js",
+			"D:\\Code\\greenvis-networks-generiek\\Source\\GreenvisNetworksDomein\\js\\; D:\\Code\\greenvis-networks-generiek\\Source\\js",
+			"D:\\Code\\greenvis-networks-generiek\\",
+			"<open files>",
+			"D:\\Code\\jester\\src\\",
+			"D:\\Code\\richard\\src",
+			"D:\\Code\\jester\\src\\",
+			"D:\\Code\\jester\\",
+			"D:\\Code\\jester\\node_modules\\selenium-webdriver\\",
+			"D:\\Code\\jester\\node_modules",
+			"D:\\Code\\jester\\src\\",
+			"D:\\Code\\jester\\src\\,D:\\Code\\jester\\jasminum\\,D:\\Code\\jester\\igor\\",
+			"D:\\Code\\jester\\src\\,D:\\Code\\jester\\jasminum\\",
+			"D:\\Code\\jester\\,D:\\Code\\jasminum parkeri\\",
+			"D:\\Code\\jester\\src,D:\\Code\\jasminum parkeri\\jasminum",
+			"D:\\Code\\jester\\,D:\\Code\\jasminum parkeri,-D:\\Code\\jester\\artifacts\\*,-D:\\Code\\jester\\node_modules\\*",
+			"D:\\Code\\jester\\,D:\\Code\\jasminum parkeri",
+			"D:\\Code\\jester\\,D:\\Code\\jasminum parkeri,-*\\artifacts*",
+			"D:\\Code\\jester\\,D:\\Code\\jasminum parkeri,-D:\\Code\\jester\\artifacts",
+			"D:\\Code\\jester\\,D:\\Code\\jasminum parkeri",
+			"D:\\Code\\jester\\",
+			"D:\\Code\\jasminum parkeri\\",
+			"D:\\Code\\jester\\",
+			"D:\\Code\\jasminum parkeri\\",
+			"D:\\Code\\jester",
+			"D:\\Code\\jasminum parkeri",
+			"D:\\Code\\jester\\src\\",
+			"D:\\Code\\jester\\",
+			"D:\\Code\\jasminum parkeri\\jasminum",
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"JOURNAL_FILE",
+			", //",
+			"//",
+			"FEATURES_PATH",
+			"defaultJSDocConf",
+			"heaeders",
+			"status",
+			"withContent",
+			"cachedResponse",
+			"success && ",
+			"req",
+			"cache_uri",
+			"-- ",
+			"# ",
+			"-- ",
+			"responseData",
+			"//    ",
+			"client",
+			"req.headers",
+			"mtimeValid",
+			"hashValid",
+			"mtimeSend",
+			"hashSend",
+			"res.",
+			"response",
+			"request",
+			"detailed",
+			"❒",
+			"✗",
+			"✓",
+			"❒",
+			"✗",
+			"✓",
+			"\\src\\app\\main.js",
+			"\\",
+			"\"",
+			"❐",
+			"<",
+			"interpretWebpackOptions",
+			"buildType",
+			"webpackConfig",
+			"karmaConfig",
+			" \\n\\",
+			"defaultConfigWith",
+			", ",
+			"    ",
+			"overrideConfig",
+			"deepmerge",
+			"lintFile",
+			"hasLintSucceeded",
+			"true",
+			"\":",
+			"globals",
+			"/*eslint",
+			"rules",
+			"config",
+			"lintGlob",
+			"filename",
+			"rules",
+			"assert.",
+			"getLocalConfig",
+			"mergeConfigs",
+			"localStorage",
+			"debug",
+			"this.cache",
+			"cache",
+			"minimatch",
+			"getConfig",
+			"console.",
+			", function",
+			"type",
+			"repl",
+			"Val",
+			"val",
+			"repl",
+			"interpretRegexpArray",
+			"interpretRegexp",
+			".module",
+			"result",
+			"withDefaultOptions",
+			"resolve",
+			"exprContext",
+			".loaders",
+			"result",
+			"withDefaultOptions",
+			"test",
+			"loader.test",
+			"appendInsteadOfPrend",
+			"priority",
+			"shouldAdd",
+			"matchConfig",
+			"identity",
+			"areTheSame",
+			"left.",
+			"src",
+			"target",
+			"merge",
+			"figc",
+			"readm",
+			"rebuildProject",
+			"karmaPath",
+			"rebuildProject",
+			"overrideConfig",
+			"createTestFile",
+			"rebuildProject",
+			"createTestFile",
+			"rebuildProject",
+			"featureFiles",
+			"filenames",
+			"featureFiles",
+			"bin",
+			"mergeConfig",
+			"eConfig",
+			"'",
+			": ",
+			"KarmaServer",
+			"-5",
+			"log",
+			"phantom",
+			"create_stash",
+			"TMP",
+			"$w_tree",
+			"die ",
+			"die",
+			"untracked",
+			"Untracked",
+			"untracked",
+			"ref_stash"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"localhost:53824",
+			"http://localhost:53824",
+			"http://192.168.2.11:53824/",
+			"../raw-jasmine",
+			"richard/",
+			"richard",
+			"\"+number?\"",
+			"\"+string?\"",
+			"<is string>?",
+			"",
+			"jasminum/jester_runner",
+			"	",
+			"expected",
+			"actual",
+			"new Subscribable",
+			"setEnd",
+			"it",
+			"min.\\t\\t\\1",
+			"\\1\\t\\2\\tTEL\\t\\3\\t\\4\\tmin.\\t\\5",
+			"\\1\\t\\2\\t\\3\\t\\4\\t\\5",
+			",",
+			""
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 1,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"settings":
+					{
+						"buffer_size": 566,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								566,
+								566
+							]
+						],
+						"settings":
+						{
+							"auto_name": "halve dag",
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "journal.txt",
+					"settings":
+					{
+						"buffer_size": 2843,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2680,
+								2680
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Markdown/Markdown.tmLanguage",
+							"word_wrap": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 707.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "/D/Code/non-OGD/jrnl/git-jrnl",
+					"settings":
+					{
+						"buffer_size": 3571,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2292,
+								2292
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/ShellScript/Shell-Unix-Generic.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 648.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "src/bin/jester-init.js",
+					"settings":
+					{
+						"buffer_size": 855,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								197,
+								239
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "src/template-files/jester.json",
+					"settings":
+					{
+						"buffer_size": 139,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								7,
+								24
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JSON.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "src/template-files/jsdoc.conf",
+					"settings":
+					{
+						"buffer_size": 362,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								362,
+								362
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "src/template-files/karma.conf.js",
+					"settings":
+					{
+						"buffer_size": 370,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								193,
+								193
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "src/template-files/webpack.config.js",
+					"settings":
+					{
+						"buffer_size": 420,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								354,
+								354
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "test.js",
+					"settings":
+					{
+						"buffer_size": 4764,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4035,
+								4035
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 583.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 34.0
+	},
+	"input":
+	{
+		"height": 31.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 194.0
+	},
+	"output.find_results":
+	{
+		"height": 124.0
+	},
+	"output.unsaved_changes":
+	{
+		"height": 225.0
+	},
+	"replace":
+	{
+		"height": 62.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+			[
+				"template-files",
+				"jester/src/template-files/karma.conf.js"
+			],
+			[
+				"packa",
+				"jester/package.json"
+			],
+			[
+				"jeste",
+				"jester-testproject/jester.json"
+			],
+			[
+				"validators",
+				"Stanley/src/reactiveModel/extra/validators.js"
+			],
+			[
+				"validator",
+				"Stanley/src/reactiveModel/patchers/validator.js"
+			],
+			[
+				"arraypr",
+				"Stanley/src/reactiveModel/test/stap3/domain/arrayPropsFormACompleteRange.js"
+			],
+			[
+				"makemak",
+				"Stanley/src/reactiveModel/readWriteObject/makeMakeReader.js"
+			],
+			[
+				"maker",
+				"Stanley/src/reactiveModel/readWriteObject/makeReader.js"
+			],
+			[
+				"makewr",
+				"Stanley/src/reactiveModel/readWriteObject/makeMakeWriter.js"
+			],
+			[
+				"makeread",
+				"Stanley/src/reactiveModel/readWriteObject/makeReader.js"
+			],
+			[
+				"project",
+				"Stanley/src/reactiveModel/lib/projectThroughPatcher.js"
+			],
+			[
+				"combine",
+				"Stanley/src/reactiveModel/patchers/combine.js"
+			],
+			[
+				"arra",
+				"Stanley/src/reactiveModel/test/stap3/domain/arrayPropsFormACompleteRange.js"
+			],
+			[
+				"stap3",
+				"js/app/stap3/view.js"
+			],
+			[
+				"arrayprfo",
+				"Stanley/src/reactiveModel/test/stap3/domain/arrayPropsFormACompleteRange.js"
+			],
+			[
+				"splitp",
+				"Stanley/src/reactiveModel/readWriteObject/splitPath.js"
+			],
+			[
+				"stanlapp.js",
+				"Stanley/src/reactiveModel/test/stap3/app.js"
+			],
+			[
+				"app.te",
+				"Stanley/src/reactiveModel/test/stap3/app.test.js"
+			],
+			[
+				"hasco",
+				"Stanley/src/reactiveModel/patchers/hasContent.js"
+			],
+			[
+				"makepart",
+				"Stanley/src/reactiveModel/readWriteObject/makePartAccessor.js"
+			],
+			[
+				"prothr",
+				"Stanley/src/reactiveModel/lib/projectThroughPatcher.js"
+			],
+			[
+				"alert",
+				"js/bootstrap_elements/components/alert.js"
+			],
+			[
+				"validateco",
+				"js/app/stap3/controllers/validateConnectedPipeNumberRequiredIfNotFirst.js"
+			],
+			[
+				"",
+				"/D/Code/mvc-toolkit/Stanley/src/reactiveModel/index.js"
+			],
+			[
+				"view",
+				"js/app/stap3/view.js"
+			],
+			[
+				"createxc",
+				"greenvis-networks-generiek/Source/Web/Scripts/artifacts/concatenated/tools/createXMLHTTPObject.js"
+			],
+			[
+				"createx",
+				"greenvis-networks-generiek/Source/Web/Scripts/artifacts/AMD/tools/createXMLHTTPObject.js"
+			],
+			[
+				"obser",
+				"js/tools/observable.js"
+			],
+			[
+				"vali",
+				"js/forms/validationRules.js"
+			],
+			[
+				"trans",
+				"js/i18n/translate.js"
+			],
+			[
+				"i",
+				"js/i18n/i18n.js"
+			],
+			[
+				"obs",
+				"greenvis-networks-generiek/Source/js/tools/observable.js"
+			],
+			[
+				"mixi",
+				"js/tools/mixin.js"
+			],
+			[
+				"jasmine/test",
+				"greenvis-networks-generiek/js-lib/jasmine/test.js"
+			],
+			[
+				"obj",
+				"js/tools/objLoop.js"
+			],
+			[
+				"obse",
+				"js/tools/observable.js"
+			],
+			[
+				"xmlh",
+				"greenvis-networks-generiek/jester/node_modules/node-inspector/node_modules/socket.io/node_modules/socket.io-client/node_modules/xmlhttprequest/lib/XMLHttpRequest.js"
+			],
+			[
+				"valisupp",
+				"js/app/stap3/controllers/validateSuppliers.js"
+			],
+			[
+				"poweconn",
+				"js/app/stap3/controllers/validatePowerAndConnectedSupplier.js"
+			],
+			[
+				"validatepoweranddt",
+				"js/app/stap3/controllers/validatePowerAndDt.js"
+			],
+			[
+				"connectedpipeexists",
+				"js/app/stap3/controllers/connectedPipeExists.js"
+			],
+			[
+				"validatepi",
+				"greenvis-networks-generiek/Source/Web/Scripts/artifacts/AMD/app/stap3/controllers/validatePipeOrder.js"
+			],
+			[
+				"3app",
+				"js/app/stap3/app.js"
+			],
+			[
+				"domainpipe",
+				"js/domain/pipeModel.js"
+			],
+			[
+				"pipen",
+				"js/domain/PipeNetworkModel.js"
+			],
+			[
+				"clear",
+				"js/app/stap3/controllers/clearModel.js"
+			],
+			[
+				"form",
+				"js/app/stap1/form.js"
+			],
+			[
+				"powerand",
+				"js/app/stap3/controllers/validatePowerAndDt.js"
+			],
+			[
+				"formg",
+				"greenvis-networks-generiek/Source/js/bootstrap_elements/CSS/forms/formGroup.js"
+			],
+			[
+				"valida",
+				"js/forms/validationRules.js"
+			],
+			[
+				"validationvi",
+				"js/forms/viewModels/validationViewModel.js"
+			],
+			[
+				"valid",
+				"js/tools/validatable.js"
+			],
+			[
+				"i18n",
+				"greenvis-networks-generiek/Source/js/i18n/i18n.js"
+			],
+			[
+				"validatab",
+				"greenvis-networks-generiek/Source/js/tools/validatable.js"
+			],
+			[
+				"validat",
+				"greenvis-networks-generiek/Source/Web/Scripts/artifacts/concatenated/tools/validatable.js"
+			],
+			[
+				"pipenetwcontr",
+				"greenvis-networks-generiek/Source/Web/Controllers/Api.v1/PipeNetworksController.cs"
+			],
+			[
+				"customerse",
+				"js/domain/customerSettingsModel.js"
+			],
+			[
+				"connec",
+				"js/app/stap3/controllers/connectedPipeExists.js"
+			],
+			[
+				"stringtoid",
+				"greenvis-networks-generiek/Source/GreenvisNetworksDomein/js/app/stap3/controllers/stringToId.js"
+			],
+			[
+				"pipemode",
+				"greenvis-networks-generiek/Source/GreenvisNetworksDomein/js/domain/pipeModel.js"
+			],
+			[
+				"perpro",
+				"js/forms/Validation/controllers/perPropertyValidator.js"
+			],
+			[
+				"inmem",
+				"greenvis-networks-generiek/Source/DataAccess/Repositories/InMemorySeeder.cs"
+			],
+			[
+				"stringto",
+				"js/app/stap3/controllers/stringToId.js"
+			],
+			[
+				"3view",
+				"js/app/stap3/view.js"
+			],
+			[
+				"strinto",
+				"js/app/stap3/controllers/stringToBool.js"
+			],
+			[
+				"validamo",
+				"js/forms/Validation/models/validationModel.js"
+			],
+			[
+				"validamode",
+				"js/forms/Validation/models/validationModel.js"
+			],
+			[
+				"valru",
+				"js/forms/validationRules.js"
+			],
+			[
+				"observa",
+				"js/tools/observable.js"
+			],
+			[
+				"validation",
+				"js/forms/validationRules.js"
+			],
+			[
+				"clearm",
+				"greenvis-networks-generiek/Source/GreenvisNetworksDomein/js/app/stap3/controllers/clearModel.js"
+			],
+			[
+				"validatio",
+				"js/forms/Validation/models/validationModel.js"
+			],
+			[
+				"observ",
+				"greenvis-networks-generiek/Source/js/tools/observable.js"
+			],
+			[
+				"onefi",
+				"js/app/stap3/controllers/oneFieldForConnectedPipeIds.js"
+			],
+			[
+				"preventeve",
+				"greenvis-networks-generiek/Source/js/forms/controllers/preventEventsWhileUserIsntFinished.js"
+			],
+			[
+				"custsettform",
+				"js/app/admin/customerSettings/form.js"
+			],
+			[
+				"focus",
+				"js/forms/controllers/focusObserver.js"
+			],
+			[
+				"nefie",
+				"js/app/stap3/controllers/oneFieldForConnectedPipeIds.js"
+			],
+			[
+				"strin",
+				"js/app/stap3/controllers/stringToId.js"
+			],
+			[
+				"one",
+				"js/app/stap3/controllers/oneFieldForConnectedPipeIds.js"
+			],
+			[
+				"onefie",
+				"js/app/stap3/controllers/oneFieldForConnectedPipeIds.js"
+			],
+			[
+				"stringtob",
+				"js/app/stap3/controllers/stringToBool.js"
+			],
+			[
+				"addconne",
+				"js/app/stap3/controllers/addConnectedSupplierNumber.js"
+			],
+			[
+				"requ",
+				"js/tools/requestAnimationFrame.js"
+			],
+			[
+				"tools/trigge",
+				"greenvis-networks-generiek/Source/js/tools/triggerEvent.js"
+			],
+			[
+				"app",
+				"js/app/stap3/app.js"
+			],
+			[
+				"drag",
+				"js/app/stap3/controllers/DragOverFeedback.js"
+			],
+			[
+				"limi",
+				"js/tools/LimitedRenderer.js"
+			],
+			[
+				"ob",
+				"js/tools/observable.js"
+			],
+			[
+				"limite",
+				"js/tools/LimitedRenderer.js"
+			],
+			[
+				"dontsave",
+				"js/forms/controllers/dontSaveInvalidData.js"
+			],
+			[
+				"validationv",
+				"js/forms/viewModels/validationViewModel.js"
+			],
+			[
+				"objloo",
+				"js/tools/objLoop.js"
+			],
+			[
+				"save",
+				"greenvis-networks-generiek/Source/js/forms/controllers/saver.js"
+			],
+			[
+				"savea",
+				"js/forms/controllers/saveAndRedirect.js"
+			],
+			[
+				"saveand",
+				"js/app/stap1/saveAndRedirect.js"
+			],
+			[
+				"loadm",
+				"js/forms/loadModel.js"
+			],
+			[
+				"create",
+				"js/forms/viewElements/createModelFieldSelect.js"
+			],
+			[
+				"saveandr",
+				"js/forms/controllers/saveAndRedirect.js"
+			],
+			[
+				"loadmod",
+				"js/forms/loadModel.js"
+			],
+			[
+				"stap4",
+				"js/app/stap4/app.js"
+			],
+			[
+				"projectscontroller",
+				"greenvis-networks-generiek/Source/Web/Controllers/ProjectsController.cs"
+			],
+			[
+				"inmemorys",
+				"greenvis-networks-generiek/Source/DataAccess/Repositories/InMemorySeeder.cs"
+			],
+			[
+				"inme",
+				"greenvis-networks-generiek/Source/DataAccess/Repositories/InMemorySeeder.cs"
+			],
+			[
+				"concatenatedcustsettapp.js",
+				"greenvis-networks-generiek/Source/Web/Scripts/artifacts/concatenated/app/admin/customerSettings/app.js"
+			],
+			[
+				"jester_c",
+				"greenvis-networks-generiek/jester_config.json"
+			],
+			[
+				"jester.js",
+				"greenvis-networks-generiek/jester/jester.js"
+			],
+			[
+				"feedbac",
+				"js/forms/viewModels/feedbackViewModel.js"
+			],
+			[
+				"validationview",
+				"js/forms/viewModels/validationViewModel.js"
+			],
+			[
+				"loadmode",
+				"js/forms/loadModel.js"
+			],
+			[
+				"tools/obser",
+				"js/tools/observable.js"
+			],
+			[
+				"mini",
+				"jester/dist/minified.js"
+			],
+			[
+				"igor/man",
+				"jester/src/igor/main.js"
+			],
+			[
+				"loadr",
+				"jester/src/igor/runTests/loadTestRunners.js"
+			],
+			[
+				"noderunn",
+				"jester/src/tess/runners/Node/NodeRunner.js"
+			],
+			[
+				"reduc",
+				"jester/src/tools/reduce.js"
+			],
+			[
+				"loadcon",
+				"jester/src/igor/loadconfig.js"
+			],
+			[
+				"main",
+				"jester/src/igor/main.js"
+			],
+			[
+				"it.js",
+				"jester/src/richard/specs/It.js"
+			],
+			[
+				"it.",
+				"jester/src/richard/specs/It.js"
+			],
+			[
+				"jester",
+				"jester/jester_config.json"
+			],
+			[
+				"runt",
+				"jester/artifacts/AMD/igor/runTests.js"
+			],
+			[
+				"launchsele",
+				"jester/src/selenium/Local/LaunchSeleniumServer.js"
+			],
+			[
+				"main.j",
+				"jester/main.js"
+			],
+			[
+				"map",
+				"jester/src/tools/map.js"
+			],
+			[
+				"loadte",
+				"jester/src/igor/runTests/loadTestRunners.js"
+			],
+			[
+				"loadco",
+				"jester/src/igor/loadconfig.js"
+			],
+			[
+				"jester_",
+				"jester/jester_config.json"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"selected_items":
+		[
+			[
+				"func",
+				"/D/Code/OGD/functionele-ontwerpen/functionele-ontwerpen.sublime-project"
+			],
+			[
+				"",
+				"/D/Code/OGD/functionele-ontwerpen/functionele-ontwerpen.sublime-project"
+			],
+			[
+				"jes",
+				"/D/Code/non-OGD/jester/jester.sublime-project"
+			],
+			[
+				"fun",
+				"/D/Code/OGD/functionele-ontwerpen/functionele-ontwerpen.sublime-project"
+			],
+			[
+				"app",
+				"/D/Code/OGD/appification/appification.sublime-project"
+			],
+			[
+				"jou",
+				"/D/Code/non-OGD/journal/journal.sublime-project"
+			],
+			[
+				"jo",
+				"/D/Code/non-OGD/journal/journal.sublime-project"
+			]
+		],
+		"width": 380.0
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 214.0,
+	"status_bar_visible": true
+}

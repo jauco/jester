@@ -8,7 +8,8 @@ var loadConfig = require("../lib/loadConfig"),
     KarmaServer = require("../lib/karmaServer"),
     createTestFile = require("../lib/rebuildFiles").createTestFile,
     when = require('when'),
-    watchr = require('watchr');
+    watchr = require('watchr'),
+    deepEqual = require("deep-equal");
 
 var config = loadConfig();
 var server = new KarmaServer(config.karmaOptions);
@@ -62,7 +63,6 @@ function isReallyFileChangeEvent(changeType, fileCurrentStat, filePreviousStat) 
 
 function startWatching() {
     watchr.watch({
-        // paths: [config.srcPath].concat(config.configFiles),
         paths: [config.srcPath],
         listeners: {
             error: function (error) {
@@ -70,21 +70,11 @@ function startWatching() {
             },
             change: function (changeType, filePath, fileCurrentStat, filePreviousStat) {
                 try {
-                    // if (config.isConfigFile(filePath)) {
-                    //     var oldConfig = config;
-                    //     config = loadConfig();
-                    //     if (!deepEqual(oldConfig.karmaOptions, config.karmaOptions)) {
-                    //         server.stop();
-                    //         server = new KarmaServer(config.karmaOptions);
-                    //     }
-                    // }
-                    if (filePath.length > 3 && filePath.substr(-3) === ".js") {
-                        var build = rebuildProject(config);
-                        if (isReallyFileChangeEvent(changeType, fileCurrentStat, filePreviousStat)) {
-                            when.join(build, runTests(filePath)).done(function(){});
-                        } else {
-                            build.done(function(){});
-                        }
+                    if (filePath.length > 3 && filePath.substr(-3) === ".js" && isReallyFileChangeEvent(changeType, fileCurrentStat, filePreviousStat)) {
+                        when.join(
+                            rebuildProject(config),
+                            runTests(filePath)
+                        ).done(function(){});
                     }
                 } catch (error) {
                     console.error('An error happened in the file update watcher', error, error.stack);
