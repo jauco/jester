@@ -19,13 +19,17 @@ function createEntryModules(filenames) {
 module.exports = function createTestFile(filenames, karmaPath, webpackWarningFilters) {
     return webpack({
         entry: createEntryModules(filenames),
+        resolve: {
+            extensions: ["", ".webpack.js", ".web.js", ".js", ".jsx"]
+        },
         output: {
             path: karmaPath,
             filename: "[name].js"
         },
         module: {
             loaders: [
-                {test: /\.json$/, loader: require.resolve("json-loader")}
+                {test: /\.json$/, loader: require.resolve("json-loader")},
+                {test: /\.jsx$/, loader: require.resolve("jsx-loader")+"?insertPragma=React.DOM"}
             ]
         },
         devtool: "#source-map"

@@ -2,7 +2,7 @@
   "name": "jester-tester",
   "description": "Get your project tested and out there with minimal fuss.",
   "repository": "https://github.com/jauco/jester",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "author": "Jauco Noordzij <code@jauco.nl>",
   "bin": {
     "jester-watch": "./src/bin/jester-watch.js",
@@ -29,6 +29,7 @@
     "source-map-support": "~0.2.5",
     "json-loader": "~0.5.0",
     "jsdoc": "3.3.0-alpha8",
-    "when": "~3.1.0"
+    "when": "~3.1.0",
+    "jsx-loader": "~0.12.2"
   }
 }

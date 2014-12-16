@@ -24,6 +24,9 @@ module.exports = function rebuildProject(entryGlob, artifactPath, webpackWarning
         .then(function (featureFiles) {
             return webpack({
                 entry: createEntryModules(featureFiles),
+                resolve: {
+                    extensions: ["", ".webpack.js", ".web.js", ".js", ".jsx"]
+                },
                 output: {
                     path: artifactPath,
                     filename: "[name].min.js",
@@ -32,10 +35,11 @@ module.exports = function rebuildProject(entryGlob, artifactPath, webpackWarning
                 },
                 module: {
                     loaders: [
-                        {test: /\.json$/, loader: require.resolve("json-loader")}
+                        {test: /\.json$/, loader: require.resolve("json-loader")},
+                        {test: /\.jsx$/, loader: require.resolve("jsx-loader")+"?insertPragma=React.DOM"}
                     ]
                 },
-                devtool: "#source-map",
+                devtool: "#source-map"
             });
         })
         .then(function (stats){
