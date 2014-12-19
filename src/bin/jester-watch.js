@@ -8,21 +8,38 @@ var loadConfig = require("../lib/loadConfig"),
     KarmaServer = require("../lib/karmaServer"),
     createTestFile = require("../lib/createTestFile"),
     when = require('when'),
-    watchr = require('watchr');
+    watchr = require('watchr'),
+	isTestFile = require("../lib/isTestFile");
 
 var config = loadConfig("./jester.json");
 var server = new KarmaServer(config.karmaPath, config.karmaOptions);
 
+function stripExtension(path) {
+    if (path.length > 3 && path.substr(-3) === ".js") {
+        return path.substr(0, path.length - 3);
+    } else if (path.length > 4 && path.substr(-4) === ".jsx") {
+        return path.substr(0, path.length - 4);
+    } else {
+        return false;
+    }
+}
+
 function getTestFileNameForPath(path) {
     var result = "";
-    if (path.length > 8 && path.substr(-8) === ".test.js") {
+    if (isTestFile(path)) {
         result = path;
     }
-    else if (path.length > 3 && path.substr(-3) === ".js") {
-        var testfile = path.substr(0, path.length - 3) + ".test.js";
-
-        if (require("fs").existsSync(testfile)) {
-            result = testfile;
+    else {
+        var base = stripExtension(path);
+        if (base) {
+            if (require("fs").existsSync(base + "test.js")) {
+                result = base + "test.js";
+                if (require("fs").existsSync(base + ".test.jsx")) {
+                    console.log("WARNING: both " + base + ".test.jsx and " + base + ".test.js exist. Using the .test.js version");
+                }
+            } else if (require("fs").existsSync(base + ".test.jsx")) {
+                result = base + "test.jsx";
+            }
         }
     }
 
@@ -73,7 +90,7 @@ function startWatching() {
                         config = loadConfig("./jester.json");
                     }
 
-                    if (filePath.length > 3 && filePath.substr(-3) === ".js") {
+                    if ((filePath.length > 3 && filePath.substr(-3) === ".js") || (filePath.length > 4 && filePath.substr(-4) === ".jsx")) {
                         var build = rebuildProject(config.fullEntryGlob, config.artifactPath, config.webpackWarningFilters);
                         if (isReallyFileChangeEvent(changeType, fileCurrentStat, filePreviousStat)) {
                             when.join(build, runTests(filePath)).done(function(){});

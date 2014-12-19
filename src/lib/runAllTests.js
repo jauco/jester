@@ -12,7 +12,7 @@ module.exports = function runAllTests(config) {
 
             return clearDir(config.karmaPath)
                 .then(function() {
-                    return glob(config.srcPath + "/**/*.test.js");
+                    return glob(config.srcPath + "/**/*.test.@(js|jsx)");
                 })
                 .then(function (testInputFiles) {
                     return createTestFile(testInputFiles, config.karmaPath, config.webpackWarningFilters);

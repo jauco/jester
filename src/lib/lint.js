@@ -4,6 +4,7 @@ var eslint = require("eslint").linter,
     p = require("path"),
     readFile = require("fs").readFile,
     rulesLoader = require("eslint/lib/rules"),
+	isTestFile = require("./isTestFile"),
     when = require("when");
 
 rulesLoader.load(p.resolve("./eslint-rules"));
@@ -22,7 +23,7 @@ function lintFile(filename, rules) {
                     "module": true,
                     "console": true
                 };
-                if (filename.substr(-8) === ".test.js") {
+                if (isTestFile(filename)) {
                     globals["describe"] = true;
                     globals["it"] = true;
                     globals["expect"] = true;
