@@ -2,7 +2,7 @@
   "name": "jester-tester",
   "description": "Get your project tested and out there with minimal fuss.",
   "repository": "https://github.com/jauco/jester",
-  "version": "1.4.0",
+  "version": "2.1.0",
   "author": "Jauco Noordzij <code@jauco.nl>",
   "bin": {
     "jester-watch": "./src/bin/jester-watch.js",
@@ -10,7 +10,6 @@
     "jester-init": "./src/bin/jester-init.js",
     "jester-doc": "./src/bin/jester-doc.js"
   },
-  "main": "src/lib/public-api",
   "licence": "MIT",
   "dependencies": {
     "karma-script-launcher": "0.1.0",
@@ -31,6 +30,6 @@
     "json-loader": "~0.5.0",
     "jsdoc": "3.3.0-alpha8",
     "when": "~3.1.0",
-    "figc": "0.0.3"
+    "jsx-loader": "~0.12.2"
   }
 }

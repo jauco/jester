@@ -1,69 +1,25 @@
- - [ ] eslint mee laten werken
- - [ ] webpack gelaunched houden zodat hij sneller is
+Ik wil eigenlijk jester-watch kunnen aanroepen en dat dan alle .test.js files die horen bij .js files die dependencies zijn van de entry points worden geinclude als dependencies van de kickstartero
 
- in test.js een voorbeeldje gezet van de output die me wel wat lijkt.
+ - kickstarter liever niet als echte file
+ - alles als config optie bij opstarten webpack
 
-                                                                 Sat Sep 6 21:34
-================================================================================
-Nu even opschonen. zorgen dat jester-init de juiste configs aanmaakt. eslint rule changes voor verschillende types laat ik nog even achterwege.
+iets met lint info
 
-beetje veel circulaire dependencies nu
-
-                                                                 Sun Sep 7 10:29
-================================================================================
-
-Eslintrc aan het documenteren. Niet echt nuttig
-
- - [ ] gedocumenteerde eslintrc met correcte instellingen en de laatste rules
-
-Beetje git-jrnl gefixed (date printing)
+iets met gegevens van andere browsers tonen
 
 
-oke
-
-[testing while editing]
-jester 
-    -> laadt karma.conf.js
-        -> die laadt by default het karma path uit jester.json
-        -> de default instellingen uit de karmaLauncher
-    -> roept karma aan via API
-    -> moet dan een options object meegeven
-
-zullen we de karma conf zo inrichten dat je de files altijd moet meegeven bij een karma run?
-
-blijkt niet echt te kunnen. Files moet een array zijn en optimist krijg je niet zover dat hij options als een array parsed
-
-dus: overnieuw
-
-karma.conf.js is een config om karma standalone te runnen (dus niet vanuit jester)
-
-Een jester karma run is dus:
-
-jester defaults + karma.conf.js overrides + jester overrides om de juiste file te vinden
+dan wil ik een gui kickstarter die hetzelfde doet voor .gtest.js
 
 
-hmmm, dit probleem hebben we ook met webpack. Dat het systeem is ingericht op 1 keer alle files definieren en er dan niet meer aanzitten
 
-misschien kan ik daar beter mee omgaan. dan fix ik gelijk de todo uit L2
+Ik kan een plugin schrijven die je in de webpack config laadt
+ - voegt een entry toe (jester-tests)
+ - die entry referenced alle .test.js files die bestaan en horen bij de dependencies die in de rest van het compilation proces zitten
+ - die entry doet het kickstart-trucje
 
-                                                                    Sep 07 11:23
-================================================================================
 
-dus: dan moet ik webpack zo opstarten dat hij voor alle .test.js files een losse
-file bouwt die de unittests bevat.
+dan kan ik gewoon webpack runnen zonder dat ik dat via de API hoef te doen en kan ik gewoon in de dev server /jester-tester openen en
+worden de tests gerund.
 
-dan moet ik webpack herstarten zodra iemand een .test.js file toevoegd, want
-webpack vereist benoemde files die hij gaat bouwen
+Dan kan ik een eigen testserver toevoegen die de resultaten van alle connected  browsers bij elkaar toont. en de eslint data.
 
-Ik moet webpack ook opstarten zodat hij voor alle features een losse file bouwt
-op een andere plek
-
-Ik moet karma zo instellen dat hij de unittests gaat uitvoeren zodra er een test
-file wordt gewijzigd. <- Dit werkt niet lekker want karma voert altijd _alle_
-unittests uit. niet alleen de gewijzigde file.
-
- * Jester kan js-feature-endpoints herkennen en tests herkennen.
- * webpack.conf wordt geladen en laadt de entrypoints uit jester
- * Jester restart webpack als hier iets aan wijzigt
-
- * karma wordt door jester gestart

@@ -3,13 +3,13 @@
 
 var loadConfig = require("../lib/loadConfig"),
     rebuildDocumentation = require("../lib/rebuildDocumentation"),
-    rebuildProject = require("../lib/rebuildFiles").rebuildProject,
+    rebuildProject = require("../lib/rebuildProject"),
     runAllTests = require("../lib/runAllTests"),
     when = require("when");
 
-var config = loadConfig();
+var config = loadConfig("./jester.json");
 
-rebuildProject(config, config.webpackWarningFilters)
+rebuildProject(config.fullEntryGlob, config.artifactPath, config.webpackWarningFilters)
     .then(function() {
         if(config.srcPath && config.apiDocPath) {
             return rebuildDocumentation(config.srcPath, config.apiDocPath, config.jsdocConf, config.readme);
