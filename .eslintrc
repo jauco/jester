@@ -1,6 +1,5 @@
 {
-	globals: {
-		module: true,
-		require: false
-	}
+    "env": {
+        "node": true
+    }
 }

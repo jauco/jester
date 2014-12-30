@@ -1,12 +1,15 @@
+"use strict";
+
 var glob = require("../lib/globPromise"),
     webpack = require("../lib/webpackPromise"),
     clearDir = require("./clearDir"),
     handleWebpackResult = require("./handleWebpackResult"),
     p = require("path");
 
+
 function createEntryModules(featureFiles) {
     var entryModules = {};
-    
+
     featureFiles.forEach(function (file) {
         var featurename = p.basename(p.dirname(file));
         entryModules[featurename] = file;
@@ -14,9 +17,9 @@ function createEntryModules(featureFiles) {
     });
 
     return entryModules;
-}   
+}
 
-module.exports = function rebuildProject(entryGlob, artifactPath, webpackWarningFilters) {
+function rebuildProject(entryGlob, artifactPath, webpackWarningFilters) {
     return clearDir(artifactPath)
         .then(function filesCleared() {
             return glob(entryGlob);
@@ -36,7 +39,7 @@ module.exports = function rebuildProject(entryGlob, artifactPath, webpackWarning
                 module: {
                     loaders: [
                         {test: /\.json$/, loader: require.resolve("json-loader")},
-                        {test: /\.jsx$/, loader: require.resolve("jsx-loader")+"?insertPragma=React.DOM"}
+                        {test: /\.jsx$/, loader: require.resolve("jsx-loader") + "?insertPragma=React.DOM"}
                     ]
                 },
                 devtool: "#source-map"
@@ -45,4 +48,6 @@ module.exports = function rebuildProject(entryGlob, artifactPath, webpackWarning
         .then(function (stats){
             return handleWebpackResult(stats, webpackWarningFilters);
         });
-};
+}
+
+module.exports = rebuildProject;

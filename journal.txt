@@ -23,3 +23,27 @@ worden de tests gerund.
 
 Dan kan ik een eigen testserver toevoegen die de resultaten van alle connected  browsers bij elkaar toont. en de eslint data.
 
+
+
+ - https://github.com/webpack/webpack/issues/378
+   - Loaders & Dependency Management · Issue #378 · webpack/webpack
+
+                                                                Mon Dec 22 14:40
+================================================================================
+
+Je kan geen dependency hebben op een module die ook als entrypoint wordt gebruikt.
+
+Dus ik moet voor de testscenario's een andere webpack build doen.
+
+bijvoorbeeld: test: addDependencies?resolve=[path-2]/[name].test.*
+
+arch:
+
+jester-watch
+  - start een webpack dev server op
+  - served een webpagina /status
+  - webpack dev-server bouwt de standaard entry points
+  - jester-watch kijkt naar de files die worden gebouwd.
+  - als je testruns hebt gedefinieerd start jester-watch webpack-dev-servers voor die testruns met als entrypoint een bestandje dat met correcte hot-code rel
+
+  karma is overbodig, want: hot code reloading (launchers zijn aardig, maar not worth it. eventueel te extraheren)
