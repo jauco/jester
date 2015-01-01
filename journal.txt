@@ -47,3 +47,58 @@ jester-watch
   - als je testruns hebt gedefinieerd start jester-watch webpack-dev-servers voor die testruns met als entrypoint een bestandje dat met correcte hot-code rel
 
   karma is overbodig, want: hot code reloading (launchers zijn aardig, maar not worth it. eventueel te extraheren)
+
+
+ - https://www.npmjs.com/package/karma-ievms
+   - karma-ievms
+
+ - https://www.npmjs.com/package/codepainter
+   - codepainter
+
+ - http://usefulscience.org/post/mice-exercising-protected-against-stress-induced-depression
+   - In mice, exercising protected against stress-induced depression
+
+ - http://usefulscience.org/post/sharing-painful-experience-strangers-promoted-greater-group-cooperation
+   - Sharing a painful experience with strangers promoted greater group cooperation
+
+ - http://onlinelibrary.wiley.com/doi/10.1002/ejsp.674/abstract
+   - How are habits formed: Modelling habit formation in the real world - Lally - 2009 - European Journal of Social Psychology - Wiley Online Library
+   - Abstract To investigate the process of habit formation in everyday life, 96 volunteers chose an eating, drinking or activity behaviour to carry out daily in the same context (for example ‘after breakfast’) for 12 weeks. They completed the self-report habit index (SRHI) each day and recorded whether they carried out the behaviour. The majority (82) of participants provided sufficient data for analysis, and increases in automaticity (calculated with a sub-set of SRHI items) were examined over the study period. Nonlinear regressions fitted an asymptotic curve to each individual's automaticity scores over the 84 days. The model fitted for 62 individuals, of whom 39 showed a good fit. Performing the behaviour more consistently was associated with better model fit. The time it took participants to reach 95% of their asymptote of automaticity ranged from 18 to 254 days; indicating considerable variation in how long it takes people to reach their limit of automaticity and highlighting that it can take a very long time. Missing one opportunity to perform the behaviour did not materially affect the habit formation process. With repetition of a behaviour in a consistent context, automaticity increases following an asymptotic curve which can be modelled at the individual level. Copyright © 2009 John Wiley & Sons, Ltd.
+
+ - http://www.tandfonline.com/doi/abs/10.1080/10400410802391314#.VInAA2TF-xG
+   - Self-directed switching between tasks led to more creative insights and reduced the feeling of being stuck.
+
+ - http://perfectionkills.com/refactoring-single-page-app/
+   - Refactoring single page app
+
+ - https://github.com/millermedeiros/esformatter
+   - millermedeiros/esformatter · GitHub
+
+ - http://usefulscience.org/post/staying-late-and-getting-less-sleep-linked-more-repetitive-negative-thoughts
+   - Staying up late and getting less sleep linked to more repetitive negative thoughts
+
+ - http://usefulscience.org/post/caregiver-support-more-important-pain-relief-childbirth-satisfaction
+   - Caregiver support is more important than pain relief for childbirth satisfaction
+
+ - https://github.com/atom/atom/blob/7d49d50b34e8963a1aa63b4d602b0c66651e3e15/CONTRIBUTING.md#git-commit-messages
+   - better commit messages
+
+ - https://github.com/tj/dox
+   - tj/dox · GitHub
+
+ - http://clausreinke.github.io/js-tools/resources.html
+   - Javascript development tools - resources
+
+ - https://codewords.hackerschool.com/issues/one/type-systems-and-logic
+   - Type systems and logic
+
+ - http://jakearchibald.com/2014/offline-cookbook/
+   - The offline cookbook - JakeArchibald.com
+
+ - http://usefulscience.org/post/people-gain-pleasure-rediscovering-past-ordinary-experiences-they-had
+   - People gain pleasure from rediscovering past ordinary experiences that they had
+
+ - http://alexk111.github.io/SVG-Morpheus/
+   - SVG Morpheus: JS Library for Morphing Between SVG Icons
+                                                                Tue Dec 30 23:00
+================================================================================

@@ -13,7 +13,6 @@ function setStatus(s, reallyConnect) {
 }
 
 if (module.hot) {
-    var curChange = 0;
     var io = require("socket.io-client/socket.io.js");
     var connection = io.connect();
 
@@ -21,13 +20,6 @@ if (module.hot) {
         console.log("connect event");
         //show that the connection is up
         setStatus("connected", true);
-    });
-
-    connection.on("change-start", function () {
-        console.log("change-start event");
-        setStatus("pending");
-        //put the browser in pending... state
-        //keep track of async, so use a counter or something
     });
 
     connection.on("change-end", function (results) {
