@@ -11,7 +11,7 @@ var defaultConf = {
     apiDocPath: "./doc/api/",
     jsdocConf: "./jsdoc.conf",
     readme: "./readme.md",
-    entryGlob: FEATURES_PATH + "*/feature.js",
+    entryGlob: FEATURES_PATH + "*/feature.@(js|jsx)",
     karmaPath: "./build/karma/",
     artifactPath: "./build/artifacts",
     karmaOptions: {
