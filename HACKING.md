@@ -23,3 +23,14 @@ You attach a graphical debugger ([node-inspector]) to jester.
 - Place your breakpoints and press the play button to start running jester.
 
 [node-inspector]: https://npmjs.org/package/node-inspector
+
+# How to update dependencies
+
+We use npm shrinkwrap to pin all dependency versions and their dependencies. This makes jester less fragile, but also slower
+to update. To update a package:
+
+ 1. remove the npm-shrinkwrap.json
+ 2. change the version of the package in package.json
+ 3. run `npm update <package>`
+ 4. run `npm shrinkwrap`
+ 5. remove all "resolved" lines (see https://github.com/npm/npm/issues/3581 for an explanation why)
