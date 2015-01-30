@@ -12,7 +12,7 @@
   },
   "licence": "MIT",
   "dependencies": {
-    "eslint": "0.4.2",
+    "eslint": "0.13.0",
     "eslint-path-formatter": "0.1.1",
     "glob": "3.2.8",
     "jsdoc": "3.3.0-alpha8",
