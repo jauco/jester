@@ -30,7 +30,7 @@ function getTestFileNameForPath(path) {
 }
 
 function runTests(path) {
-    return lint.lintFile(path, config.eslintRules)
+    return lint.lintFile(path, config.eslintRulesDir)
         .then(function(lintSucceeded) {
             if(!lintSucceeded) {
                 return false;

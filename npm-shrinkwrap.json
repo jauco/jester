@@ -286,12 +286,13 @@
       }
     },
     "eslint-path-formatter": {
-      "version": "0.1.1",
-      "resolved": "https://registry.npmjs.org/eslint-path-formatter/-/eslint-path-formatter-0.1.1.tgz",
+      "version": "0.2.0",
+      "from": "eslint-path-formatter@git://github.com/jauco/eslint-path-formatter",
+      "resolved": "git://github.com/jauco/eslint-path-formatter#216df915eec8a8510cae878e3da2605ca372a290",
       "dependencies": {
         "source-map": {
-          "version": "0.1.33",
-          "resolved": "https://registry.npmjs.org/source-map/-/source-map-0.1.33.tgz",
+          "version": "0.1.43",
+          "resolved": "https://registry.npmjs.org/source-map/-/source-map-0.1.43.tgz",
           "dependencies": {
             "amdefine": {
               "version": "0.1.0",

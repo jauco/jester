@@ -7,7 +7,7 @@ var lint = require("../lib/lint"),
 module.exports = function runAllTests(config) {
     var sources = config.srcPath + "/**/*.js";
 
-    return lint.lintGlob(sources, config.eslintRules)
+    return lint.lintGlob(sources, config.eslintRulesDir)
         .then(function(hasLintSucceeded) {
 
             return clearDir(config.karmaPath)
