@@ -4,12 +4,12 @@ var glob = require("../lib/globPromise"),
     handleWebpackResult = require("./handleWebpackResult"),
     p = require("path");
 
-function createEntryModules(featureFiles) {
+function createEntryModules(artifactPath, featureFiles) {
     var entryModules = {};
 
     featureFiles.forEach(function (file) {
         var featurename = p.basename(p.dirname(file));
-        entryModules[featurename] = file;
+        entryModules[p.join(artifactPath, featurename)] = file;
         console.log("    * " + featurename + " (" + file + ")." );
     });
 
@@ -23,13 +23,7 @@ module.exports = function rebuildProject(webpackConfig, entryGlob, artifactPath,
         })
         .then(function (featureFiles) {
             var config = Object.create(webpackConfig);
-            config.entry = createEntryModules(featureFiles);
-            if (config.output){
-              config.output = Object.create(config.output);
-            } else {
-              config.output = {};
-            }
-            config.output.path = artifactPath;
+            config.entry = createEntryModules(artifactPath, featureFiles);
             return webpack(config);
         })
         .then(function (stats){
