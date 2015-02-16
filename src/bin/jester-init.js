@@ -1,6 +1,7 @@
 #!/usr/bin/env node
+"use strict";
 
-var fs = require('fs'),
+var fs = require("fs"),
     p = require("path");
 
 var FEATURES_PATH = "features/"
@@ -36,7 +37,22 @@ var defaultJSDocConf = {
             "outputSourceFiles": true
         }
     }
-}
+};
+
+var defaultWebpackConfig = '"use strict";\n\
+module.exports = {\n\
+    output: {\n\
+        filename: "[name].min.js",\n\
+        chunkFilename: "[id].chunk.js",\n\
+        namedChunkFilename: "[name].chunk.js"\n\
+    },\n\
+    module: {\n\
+        loaders: [\n\
+            {test: /\.json$/, loader: "json-loader"},\n\
+        ]\n\
+    },\n\
+    devtool: "#source-map",\n\
+};\n';
 
 var defaultReadme = "# README \n\
   \n\
@@ -66,3 +82,4 @@ function writeFileIfNotExists(path, contents) {
 writeFileIfNotExists("./jester.json", JSON.stringify(defaultConf, null, 4));
 writeFileIfNotExists(defaultConf.jsdocConf, JSON.stringify(defaultJSDocConf, null, 4));
 writeFileIfNotExists(defaultConf.readme, defaultReadme);
+writeFileIfNotExists("./webpack.config.js", defaultWebpackConfig);
