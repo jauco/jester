@@ -29,9 +29,11 @@
     "source-map-support": "~0.2.5",
     "watchr": "2.4.11",
     "webpack": "1.0.0-rc11",
-    "when": "~3.1.0"
+    "when": "~3.1.0",
+    "deepmerge": "~0.2.7"
   },
   "devDependencies": {
     "npm-shrinkwrap": "~5.1.0"
-  }
+  },
+  "main": "src/lib/api.js"
 }

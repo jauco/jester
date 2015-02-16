@@ -40,19 +40,26 @@ var defaultJSDocConf = {
 };
 
 var defaultWebpackConfig = '"use strict";\n\
-module.exports = {\n\
-    output: {\n\
-        filename: "[name].min.js",\n\
-        chunkFilename: "[id].chunk.js",\n\
-        namedChunkFilename: "[name].chunk.js"\n\
-    },\n\
-    module: {\n\
-        loaders: [\n\
-            {test: /\.json$/, loader: "json-loader"},\n\
-        ]\n\
-    },\n\
-    devtool: "#source-map",\n\
-};\n';
+//MINIMAL_REQUIRED_CONFIG contains those few options that are needed for webpack\n\
+//to integrate with the rest of the tools. You can override them by making\n\
+//MINIMAL_REQUIRED_CONFIG the first argument to the deepmerge function so your\n\
+//own settings overwrite the MINIMAL settings. This will probably break things.\n\
+var jester = require("jester-tester");\n\
+module.exports = jester.deepMergeForWebpack({\n\
+  //entry is provided by jester\n\
+  output: {\n\
+    //outputpath is provided by jester\n\
+    filename: "[name].min.js",\n\
+    chunkFilename: "[id].chunk.js",\n\
+    namedChunkFilename: "[name].chunk.js"\n\
+  },\n\
+  module: {\n\
+    loaders: [\n\
+      {test: /\.json$/, loader: "json-loader"},\n\
+    ]\n\
+  }\n\
+}, jester.MINIMAL_REQUIRED_CONFIG);\n\
+//console.log(module.exports); //to see the config that is used.\n';
 
 var defaultReadme = "# README \n\
   \n\
