@@ -8,5 +8,6 @@ module.exports = function loadConfig(configLocation) {
     config.karmaPath = p.resolve(config.karmaPath);
     config.artifactPath = p.resolve(config.artifactPath);
     config.fullEntryGlob = require("path").join(config.srcPath, config.entryGlob);
+    config.webpackOptions = require(p.resolve("webpack.config.js"));
     return config;
 };

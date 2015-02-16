@@ -16,20 +16,16 @@ function createEntryModules(filenames) {
     return entryModules;
 }
 
-module.exports = function createTestFile(filenames, karmaPath, webpackWarningFilters) {
-    return webpack({
-        entry: createEntryModules(filenames),
-        output: {
-            path: karmaPath,
-            filename: "[name].js"
-        },
-        module: {
-            loaders: [
-                {test: /\.json$/, loader: require.resolve("json-loader")}
-            ]
-        },
-        devtool: "#source-map"
-    }).then(function(stats) {
+module.exports = function createTestFile(filenames, webpackConfig, karmaPath, webpackWarningFilters) {
+    var config = Object.create(webpackConfig);
+    config.entry = createEntryModules(filenames);
+    if (config.output){
+        config.output = Object.create(config.output);
+    } else {
+        config.output = {};
+    }
+    config.output.path = karmaPath;
+    return webpack(config).then(function(stats) {
         return handleWebpackResult(stats, webpackWarningFilters);
     });
 };
