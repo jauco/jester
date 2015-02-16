@@ -33,7 +33,8 @@
     "no-console": 0,
     "no-unused-vars": [2, {"vars": "all", "args": "none"}],
     "quotes": 0,
-    "no-use-before-define": [2, "nofunc"]
+    "no-use-before-define": [2, "nofunc"],
     "no-empty": 2, //empty catches are allowed, other empty blocks should be avoided
+    "no-multi-str": 0
   }
 }
