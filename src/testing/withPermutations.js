@@ -1,3 +1,4 @@
+"use strict";
 /*globals console, setTimeout*/
 module.exports = function withPermutations(specFunc, cb) {
     var permutators = [];

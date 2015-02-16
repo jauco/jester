@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 "use strict";
+/*eslint no-process-exit: 0*/
 
 var loadConfig = require("../lib/loadConfig"),
     lint = require("../lib/lint"),
@@ -69,7 +70,7 @@ function startWatching() {
             },
             change: function (changeType, filePath, fileCurrentStat, filePreviousStat) {
                 try {
-                    if (filePath == config.configLocation) {
+                    if (filePath === config.configLocation) {
                         config = loadConfig();
                     }
 

@@ -1,3 +1,4 @@
+"use strict";
 var when = require("when"),
     karma = require("karma");
 

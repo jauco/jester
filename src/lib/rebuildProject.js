@@ -1,3 +1,5 @@
+"use strict";
+
 var glob = require("../lib/globPromise"),
     webpack = require("../lib/webpackPromise"),
     clearDir = require("./clearDir"),

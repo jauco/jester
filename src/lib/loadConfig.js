@@ -1,3 +1,5 @@
+"use strict";
+
 var p = require("path");
 var CONFIG_LOCATION = "./jester.json";
 

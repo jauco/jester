@@ -1,3 +1,5 @@
+"use strict";
+
 var lint = require("../lib/lint"),
     clearDir = require("../lib/clearDir"),
     KarmaServer = require("../lib/karmaServer"),

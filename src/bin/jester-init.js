@@ -4,7 +4,7 @@
 var fs = require("fs"),
     p = require("path");
 
-var FEATURES_PATH = "features/"
+var FEATURES_PATH = "features/";
 
 var defaultConf = {
     eslintRulesDir: "./eslint-rules/",

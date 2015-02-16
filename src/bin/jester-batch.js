@@ -1,11 +1,11 @@
 #!/usr/bin/env node
+/*eslint no-process-exit: 0*/
 "use strict";
 
 var loadConfig = require("../lib/loadConfig"),
     rebuildDocumentation = require("../lib/rebuildDocumentation"),
     rebuildProject = require("../lib/rebuildProject"),
-    runAllTests = require("../lib/runAllTests"),
-    when = require("when");
+    runAllTests = require("../lib/runAllTests");
 
 var config = loadConfig();
 
@@ -14,7 +14,7 @@ rebuildProject(config.webpackOptions, config.fullEntryGlob, config.artifactPath,
         if(config.srcPath && config.apiDocPath) {
             return rebuildDocumentation(config.srcPath, config.apiDocPath, config.jsdocConf, config.readme);
         } else {
-            console.log("please configure srcPath and apiDocPath in order to generate jsdoc documentation")
+            console.log("please configure srcPath and apiDocPath in order to generate jsdoc documentation");
         }
     })
     .then(function() {

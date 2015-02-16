@@ -1,4 +1,5 @@
-var child_process = require("child_process"),
+"use strict";
+var childProcess = require("child_process"),
     p = require("path"),
     fs = require("fs"),
     when = require("when");
@@ -33,7 +34,7 @@ module.exports = function rebuildDocumentation(srcPath, targetPath, confPath, re
             .concat(target)
             .concat(conf);
 
-        var process = child_process.fork(jsdoc, args);
+        var process = childProcess.fork(jsdoc, args);
 
         process.on('close', function (code) {
             if (code === 0) {
@@ -41,7 +42,7 @@ module.exports = function rebuildDocumentation(srcPath, targetPath, confPath, re
                 resolve();
             } else {
                 console.error("jsdoc failed! (exit code " + code + "). '" + jsdoc + "' was called with the following arguments:");
-                console.error(args.map(function (arg, i) { return " " + i + ": " + arg}).join("\n"));
+                console.error(args.map(function (arg, i) { return " " + i + ": " + arg; }).join("\n"));
                 reject();
             }
         });

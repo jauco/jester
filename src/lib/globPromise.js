@@ -1,3 +1,4 @@
+"use strict";
 var glob = require("glob");
 var when = require("when");
 

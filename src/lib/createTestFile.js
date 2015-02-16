@@ -1,3 +1,4 @@
+"use strict";
 var webpack = require("./webpackPromise"),
     handleWebpackResult = require("./handleWebpackResult"),
     p = require("path");
