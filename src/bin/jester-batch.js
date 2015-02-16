@@ -7,7 +7,7 @@ var loadConfig = require("../lib/loadConfig"),
     runAllTests = require("../lib/runAllTests"),
     when = require("when");
 
-var config = loadConfig("./jester.json");
+var config = loadConfig();
 
 rebuildProject(config.webpackOptions, config.fullEntryGlob, config.artifactPath, config.webpackWarningFilters)
     .then(function() {

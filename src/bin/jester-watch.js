@@ -10,7 +10,7 @@ var loadConfig = require("../lib/loadConfig"),
     when = require('when'),
     watchr = require('watchr');
 
-var config = loadConfig("./jester.json");
+var config = loadConfig();
 var server = new KarmaServer(config.karmaPath, config.karmaOptions);
 
 function getTestFileNameForPath(path) {
@@ -69,8 +69,8 @@ function startWatching() {
             },
             change: function (changeType, filePath, fileCurrentStat, filePreviousStat) {
                 try {
-                    if (filePath == "jester.json") {
-                        config = loadConfig("./jester.json");
+                    if (filePath == config.configLocation) {
+                        config = loadConfig();
                     }
 
                     if (filePath.length > 3 && filePath.substr(-3) === ".js") {
