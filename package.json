@@ -12,6 +12,7 @@
   },
   "licence": "MIT",
   "dependencies": {
+    "deepmerge": "~0.2.7",
     "eslint": "0.13.0",
     "eslint-path-formatter": "git@github.com:jauco/eslint-path-formatter.git#v0.2.0",
     "glob": "3.2.8",
@@ -28,9 +29,8 @@
     "mkdirp": "0.3.5",
     "source-map-support": "~0.2.5",
     "watchr": "2.4.11",
-    "webpack": "1.0.0-rc11",
-    "when": "~3.1.0",
-    "deepmerge": "~0.2.7"
+    "webpack": "1.5.3",
+    "when": "~3.1.0"
   },
   "devDependencies": {
     "npm-shrinkwrap": "~5.1.0"
