@@ -1,92 +1,98 @@
 #!/usr/bin/env node
 "use strict";
-var connect = require("connect");
-var webpackDevMiddleware = require("webpack-dev-middleware");
-var webpack = require("webpack");
-var proxy = require("http-proxy");
-var debugServerProxy = proxy.createProxyServer();
+/*eslint no-process-exit: 0*/
 
-var debugServerUrl;
-var scriptPath = "/scripts";
-var portForServer = 8080;
-var portForTests = 8081;
+var loadConfig = require("../lib/loadConfig"),
+    lint = require("../lib/lint"),
+    clearDir = require("../lib/clearDir"),
+    rebuildProject = require("../lib/rebuildProject"),
+    KarmaServer = require("../lib/karmaServer"),
+    createTestFile = require("../lib/createTestFile"),
+    when = require('when'),
+    watchr = require('watchr');
 
-var config;
-function log(s/*, lvl*/) {
-    console.log(s);
+var config = loadConfig();
+var server = new KarmaServer(config.karmaPath, config.karmaOptions);
+
+function getTestFileNameForPath(path) {
+    var result = "";
+    if (path.length > 8 && path.substr(-8) === ".test.js") {
+        result = path;
+    }
+    else if (path.length > 3 && path.substr(-3) === ".js") {
+        var testfile = path.substr(0, path.length - 3) + ".test.js";
+
+        if (require("fs").existsSync(testfile)) {
+            result = testfile;
+        }
+    }
+
+    return result;
 }
-log.NORMAL = 0;
-log.ERROR = 1;
-//try {
-    //console.log(require.resolve("./webpack.config"));
-    config = require(require("path").resolve("./webpack.config"));
-//} catch (e) {
-//    log("No config found. Falling back to default config.", log.ERROR);
-    //config = require("./webpack.config");
-//}
 
-var app = connect();
-var Test = require("./Test");
-var StartEndlistener = require("./StartEndListener");
-
-var testApp = connect();
-var server = require("http").createServer(testApp);
-var io = require("socket.io")(server);
-io.on("connection", function(){
-});
-(function () {
-if (config.jester && config.jester.tests) {
-    for (var path in config.jester.tests) {
-        var test = new Test(path, config.jester.tests[path]);
-        var customConfig = Object.create(config);
-        customConfig.entry = {};
-        customConfig.entry[test.identifier] = ["./" + test.kickstarter];
-        customConfig.output = Object.create(customConfig.output);
-        customConfig.output.publicPath = "/" + test.path + "/";
-        var testCompiler = webpack(customConfig);
-        var testListener = new StartEndlistener(testCompiler);
-        var isRunning = false;
-        testListener.event(function () {
-            console.log("test build: failed", testListener.failed, "running", testListener.running);
-            if (isRunning && !testListener.running) {
-                io.emit("change-end", {success: !testListener.failed});
+function runTests(path) {
+    return lint.lintFile(path, config.eslintRulesDir)
+        .then(function(lintSucceeded) {
+            if(!lintSucceeded) {
+                return false;
             }
-            isRunning = testListener.running;
+
+            return clearDir(config.karmaPath).then(function() {
+                var testFile = getTestFileNameForPath(path);
+                if (!testFile) {
+                    console.log("No tests found for '" + path + "'");
+                    return false;
+                }
+                return createTestFile(testFile, config.webpackOptions, config.karmaPath, config.webpackWarningFilters).then(function () {
+                    return server.run();
+                });
+            });
+        })
+        .then(function(hasSucceeded) {
+            if(hasSucceeded) {
+                console.log("test succeeded for " + path);
+            } else {
+                console.log("test failed for " + path);
+            }
         });
-        var mw2 = webpackDevMiddleware(testCompiler, {
-            publicPath: "/" + test.path + "/",
-            hot: true,
-            quiet: true
-        });
-        testApp.use(function (req) { console.log("testApp", req.path); return mw2.apply(this, arguments); });
-        testApp.use(function (req, res) {
-            res.end(test.testFile());
-        });
-    }
 }
-}());
 
-server.listen(portForTests);
+function isReallyFileChangeEvent(changeType, fileCurrentStat, filePreviousStat) {
+    return changeType === 'create' || (changeType === 'update' && fileCurrentStat.mtime !== filePreviousStat.mtime);
+}
 
-var compiler = webpack(config);
-var listener = new StartEndlistener(compiler);
-listener.event(function (data) {
-    if (data) {
-        data.added.forEach(function (f) { Test.register(f); });
-        data.removed.forEach(function (f) { Test.unRegister(f); });
-    }
-    console.log("Main build: failed", listener.failed, "running", listener.running);
-});
-//override any calls to the scriptpath with the webpackmiddleware
-app.use(webpackDevMiddleware(compiler, {
-    publicPath: scriptPath,
-    quiet: true,
-    hot: false
-}));
-//proxy all other requests
-app.use(function (req, res) {
-    debugServerProxy.web(req, res, debugServerUrl, function(err) {
-        console.log("error while proxying in jester watch", err, req);
+function startWatching() {
+    watchr.watch({
+        paths: [config.srcPath],
+        listeners: {
+            error: function (error) {
+                console.error('An error happened in the file update watcher', error);
+            },
+            change: function (changeType, filePath, fileCurrentStat, filePreviousStat) {
+                try {
+                    if (filePath === config.configLocation) {
+                        config = loadConfig();
+                    }
+
+                    if (filePath.length > 3 && filePath.substr(-3) === ".js") {
+                        var build = rebuildProject(config.webpackOptions, config.fullEntryGlob, config.artifactPath, config.webpackWarningFilters);
+                        if (isReallyFileChangeEvent(changeType, fileCurrentStat, filePreviousStat)) {
+                            when.join(build, runTests(filePath)).done(function(){});
+                        } else {
+                            build.done(function(){});
+                        }
+                    }
+                } catch (error) {
+                    console.error('An error happened in the file update watcher', error, error.stack);
+                }
+            }
+        },
+        persistent: true
     });
+}
+
+server.start().done(function(exitCode) {
+     process.exit();
 });
-app.listen(portForServer);
+
+startWatching();

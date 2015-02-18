@@ -36,7 +36,7 @@ module.exports = function rebuildDocumentation(srcPath, targetPath, confPath, re
 
         var process = childProcess.fork(jsdoc, args);
 
-        process.on("close", function (code) {
+        process.on('close', function (code) {
             if (code === 0) {
                 console.log("jsdoc documentation successfully written to ", targetPath);
                 resolve();

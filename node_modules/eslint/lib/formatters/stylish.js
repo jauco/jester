@@ -8,32 +8,14 @@ var chalk = require("chalk"),
     table = require("text-table");
 
 //------------------------------------------------------------------------------
-// Helper Functions
-//------------------------------------------------------------------------------
-
-function getMessageType(message, rules) {
-    if (message.fatal) {
-        return chalk.red("error");
-    }
-
-    var severity = rules[message.ruleId][0] || rules[message.ruleId];
-
-    if (severity === 2) {
-        return chalk.red("error");
-    }
-
-    return chalk.yellow("warning");
-}
-
-//------------------------------------------------------------------------------
 // Public Interface
 //------------------------------------------------------------------------------
 
-module.exports = function(results, config) {
+module.exports = function(results) {
 
     var output = "\n",
         total = 0,
-        rules = config.rules || {};
+        summaryColor = "yellow";
 
     results.forEach(function(result) {
         var messages = result.messages;
@@ -47,13 +29,22 @@ module.exports = function(results, config) {
 
         output += table(
             messages.map(function(message) {
+                var messageType;
+
+                if (message.fatal || message.severity === 2) {
+                    messageType = chalk.red("error");
+                    summaryColor = "red";
+                } else {
+                    messageType = chalk.yellow("warning");
+                }
+
                 return [
                     "",
                     message.line || 0,
                     message.column || 0,
-                    getMessageType(message, rules),
+                    messageType,
                     message.message.replace(/\.$/, ""),
-                    chalk.gray(message.ruleId)
+                    chalk.gray(message.ruleId || "")
                 ];
             }),
             {
@@ -69,7 +60,9 @@ module.exports = function(results, config) {
         }).join("\n") + "\n\n";
     });
 
-    output += chalk.red.bold("\u2716 " + total + " problem" + (total === 1 ? "" : "s") + "\n");
+    if (total > 0) {
+        output += chalk[summaryColor].bold("\u2716 " + total + " problem" + (total === 1 ? "" : "s") + "\n");
+    }
 
     return total > 0 ? output : "";
 };

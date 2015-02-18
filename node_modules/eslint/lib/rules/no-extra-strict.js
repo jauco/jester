@@ -34,16 +34,22 @@ module.exports = function(context) {
     }
 
     function checkForUnnecessaryUseStrict(node) {
-        var useStrictDirectives, scope;
+        var useStrictDirectives, scope, upper;
         useStrictDirectives = directives(node).filter(isStrict);
 
-        switch(useStrictDirectives.length) {
+        switch (useStrictDirectives.length) {
             case 0:
                 break;
 
             case 1:
                 scope = context.getScope();
-                if (scope.upper && scope.upper.isStrict) {
+                upper = scope.upper;
+
+                if (upper && upper.functionExpressionScope) {
+                    upper = upper.upper;
+                }
+
+                if (upper && upper.isStrict) {
                     context.report(useStrictDirectives[0], "Unnecessary 'use strict'.");
                 }
                 break;
