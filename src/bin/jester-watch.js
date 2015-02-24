@@ -43,7 +43,7 @@ function runTests(path) {
                     console.log("No tests found for '" + path + "'");
                     return false;
                 }
-                return createTestFile(testFile, config.webpackOptions, config.karmaPath, config.webpackWarningFilters).then(function () {
+                return createTestFile(testFile, config.srcPath, config.webpackOptions, config.karmaPath, config.webpackWarningFilters).then(function () {
                     return server.run();
                 });
             });
