@@ -10,7 +10,7 @@ var loadConfig = require("../lib/loadConfig"),
     createTestFile = require("../lib/createTestFile"),
     when = require('when'),
     watchr = require('watchr'),
-    getTestFileNameForPath = require("../lib/testFileHelpers").getTestFileNameForPath;
+    getTestFileNamesForPath = require("../lib/testFileHelpers").getTestFileNamesForPath;
 
 var config = loadConfig();
 var server = new KarmaServer(config.karmaPath, config.karmaOptions);
@@ -22,13 +22,16 @@ function runTests(path) {
                 return false;
             }
 
-            return clearDir(config.karmaPath).then(function() {
-                var testFile = getTestFileNameForPath(path);
-                if (!testFile) {
+            return clearDir(config.karmaPath)
+            .then(function() {
+                return getTestFileNamesForPath(path);
+            })
+            .then(function (testFiles){
+                if (!testFiles.length === 0) {
                     console.log("No tests found for '" + path + "'");
                     return false;
                 }
-                return createTestFile(testFile, config.srcPath, config.webpackOptions, config.karmaPath, config.webpackWarningFilters).then(function () {
+                return createTestFile(testFiles, config.srcPath, config.webpackOptions, config.karmaPath, config.webpackWarningFilters).then(function () {
                     return server.run();
                 });
             });
