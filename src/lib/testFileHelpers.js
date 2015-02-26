@@ -8,32 +8,48 @@ var jsSuffix = ".js";
 var testSuffix = ".test" + jsSuffix;
 
 function stripTestExtensions(filename) {
-    return filename.substr(0, filename.length - testSuffix.length);
+    if (isTestFile(filename)) {
+      return filename.substr(0, filename.length - testSuffix.length);
+    } else {
+      return filename;
+    }
 }
 
+function stripJsExtensions(filename) {
+    if (isJsFile(filename)) {
+      return filename.substr(0, filename.length - jsSuffix.length);
+    } else {
+      return filename;
+    }
+}
+
+function endsWith(str, substr) {
+    return str !== substr && str.substr(-substr.length) === substr;
+}
 
 function isTestFile(filename) {
-    return filename.substr(-testSuffix.length) === ".test.js";
+    return endsWith(filename, testSuffix);
+}
+
+function isJsFile(filename) {
+    return endsWith(filename, jsSuffix);
 }
 
 function getTestFileNameForPath(path) {
-    var result = "";
-    if (path.length > testSuffix.length && path.substr(-testSuffix.length) === ".test.js") {
-        result = path;
-    }
-    else if (path.length > jsSuffix.length && path.substr(-jsSuffix.length) === ".js") {
-        var testfile = path.substr(0, path.length - jsSuffix.length) + ".test.js";
-
+    if (isTestFile(path)) {
+        return path;
+    } else if (isJsFile(path)) {
+        var testfile = stripJsExtensions(path) + testSuffix;
         if (require("fs").existsSync(testfile)) {
-            result = testfile;
+            return testfile;
         }
+    } else {
+      return "";
     }
-
-    return result;
 }
 
 function getTestFiles(path) {
-    return glob(path + "/**/*.test.js");
+    return glob(path + "/**/*" + testSuffix);
 }
 
 module.exports.stripTestExtensions = stripTestExtensions;
