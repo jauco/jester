@@ -3,7 +3,8 @@ var CLIEngine = require("eslint").CLIEngine,
     formatter = require("eslint-path-formatter"),
     glob = require("./globPromise"),
     existsSync = require("fs").existsSync,
-    when = require("when");
+    when = require("when"),
+    isTestFile = require("./testFileHelpers").isTestFile;
 
 
 function lintFile(filename, eslintRulesDir) {
@@ -17,7 +18,7 @@ function lintFile(filename, eslintRulesDir) {
         var opts = {
             rulePaths: rulePaths
         };
-        if (filename.substr(-8) === ".test.js") {
+        if (isTestFile(filename)) {
             opts.envs = ["jasmine"];
         }
         var eslint = new CLIEngine(opts);

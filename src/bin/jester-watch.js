@@ -9,26 +9,11 @@ var loadConfig = require("../lib/loadConfig"),
     KarmaServer = require("../lib/karmaServer"),
     createTestFile = require("../lib/createTestFile"),
     when = require('when'),
-    watchr = require('watchr');
+    watchr = require('watchr'),
+    getTestFileNameForPath = require("../lib/testFileHelpers").getTestFileNameForPath;
 
 var config = loadConfig();
 var server = new KarmaServer(config.karmaPath, config.karmaOptions);
-
-function getTestFileNameForPath(path) {
-    var result = "";
-    if (path.length > 8 && path.substr(-8) === ".test.js") {
-        result = path;
-    }
-    else if (path.length > 3 && path.substr(-3) === ".js") {
-        var testfile = path.substr(0, path.length - 3) + ".test.js";
-
-        if (require("fs").existsSync(testfile)) {
-            result = testfile;
-        }
-    }
-
-    return result;
-}
 
 function runTests(path) {
     return lint.lintFile(path, config.eslintRulesDir)

@@ -4,7 +4,7 @@ var lint = require("../lib/lint"),
     clearDir = require("../lib/clearDir"),
     KarmaServer = require("../lib/karmaServer"),
     createTestFile = require("../lib/createTestFile"),
-    glob = require("../lib/globPromise");
+    getTestFiles = require("../lib/testFileHelpers").getTestFiles;
 
 module.exports = function runAllTests(config) {
     var sources = config.srcPath + "/**/*.js";
@@ -13,8 +13,8 @@ module.exports = function runAllTests(config) {
         .then(function(hasLintSucceeded) {
 
             return clearDir(config.karmaPath)
-                .then(function() {
-                    return glob(config.srcPath + "/**/*.test.js");
+                .then(function () {
+                    return getTestFiles(config.srcPath);
                 })
                 .then(function (testInputFiles) {
                     return createTestFile(testInputFiles, config.srcPath, config.webpackOptions, config.karmaPath, config.webpackWarningFilters);
