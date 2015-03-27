@@ -2,6 +2,8 @@
 "use strict";
 /*eslint no-process-exit: 0*/
 
+require("../lib/addProjectDirToSearchPath");
+
 var loadConfig = require("../lib/loadConfig"),
     lint = require("../lib/lint"),
     clearDir = require("../lib/clearDir"),

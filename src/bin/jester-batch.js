@@ -2,6 +2,8 @@
 /*eslint no-process-exit: 0*/
 "use strict";
 
+require("../lib/addProjectDirToSearchPath");
+
 var loadConfig = require("../lib/loadConfig"),
     rebuildDocumentation = require("../lib/rebuildDocumentation"),
     rebuildProject = require("../lib/rebuildProject"),
