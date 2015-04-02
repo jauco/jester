@@ -11,7 +11,7 @@ var loadConfig = require("../lib/loadConfig"),
 
 var config = loadConfig();
 
-rebuildProject(config.webpackOptions, config.fullEntryGlob, config.artifactPath, config.webpackWarningFilters)
+rebuildProject(config.webpackOptions, config.fullEntryGlob, config.webpackWarningFilters)
     .then(function() {
         if(config.srcPath && config.apiDocPath) {
             return rebuildDocumentation(config.srcPath, config.apiDocPath, config.jsdocConf, config.readme);

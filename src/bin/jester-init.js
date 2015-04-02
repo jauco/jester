@@ -5,6 +5,7 @@ var fs = require("fs"),
     p = require("path");
 
 var FEATURES_PATH = "features/";
+var ARTIFACT_PATH = "./build/artifacts";
 
 var defaultConf = {
     eslintRulesDir: "./eslint-rules/",
@@ -14,7 +15,6 @@ var defaultConf = {
     readme: "./readme.md",
     entryGlob: FEATURES_PATH + "*/feature.js",
     karmaPath: "./build/karma/",
-    artifactPath: "./build/artifacts",
     karmaOptions: {
         proxies: {},
         browsers: ['Chrome', 'Firefox', 'IE', 'PhantomJS'],
@@ -48,7 +48,7 @@ var jester = require("jester-tester");\n\
 module.exports = jester.deepMergeForWebpack({\n\
   //entry is provided by jester\n\
   output: {\n\
-    //outputpath is provided by jester\n\
+    path: ' + json.stringify(ARTIFACT_PATH) + ', \n\
     filename: "[name].min.js",\n\
     chunkFilename: "[id].chunk.js",\n\
     namedChunkFilename: "[name].chunk.js"\n\
@@ -73,7 +73,7 @@ mkdirp(p.resolve(defaultConf.karmaPath));
 mkdirp(p.join(defaultConf.srcPath, FEATURES_PATH));
 mkdirp(p.join(defaultConf.srcPath, 'lib'));
 mkdirp(p.join(defaultConf.srcPath, 'app', 'domain'));
-mkdirp(p.resolve(defaultConf.artifactPath));
+mkdirp(p.resolve(ARTIFACT_PATH));
 
 mkdirp(p.resolve(defaultConf.apiDocPath));
 

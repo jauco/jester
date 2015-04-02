@@ -4,7 +4,7 @@ var webpack = require("./webpackPromise"),
     p = require("path"),
     stripTestExtensions = require("./testFileHelpers").stripTestExtensions;
 
-function createEntryModules(karmaPath, srcPath, filenames) {
+function createEntryModules(srcPath, filenames) {
     var entryModules = {};
     if (typeof filenames === "string") {
         filenames = [filenames];
@@ -12,7 +12,7 @@ function createEntryModules(karmaPath, srcPath, filenames) {
 
     filenames.forEach(function(file) {
         var featurename = require("path").relative(srcPath, stripTestExtensions(file)).replace(/\//g, "_");
-        entryModules[p.join(karmaPath, featurename)] = file;
+        entryModules[featurename] = file;
         console.log("    * " + featurename + " (" + file + ")." );
     });
 
@@ -21,7 +21,9 @@ function createEntryModules(karmaPath, srcPath, filenames) {
 
 module.exports = function createTestFile(filenames, srcPath, webpackConfig, karmaPath, webpackWarningFilters) {
     var config = Object.create(webpackConfig);
-    config.entry = createEntryModules(karmaPath, srcPath, filenames);
+    config.output = Object.create(webpackConfig.output);
+    config.output.path = karmaPath;
+    config.entry = createEntryModules(srcPath, filenames);//fixme output may be null
     config.output = Object.create(config.output || {});
     config.output.filename = "[name].karmatest.js";
     return webpack(config).then(function(stats) {

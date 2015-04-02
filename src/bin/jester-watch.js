@@ -65,7 +65,7 @@ function startWatching() {
                     }
 
                     if (filePath.length > 3 && filePath.substr(-3) === ".js") {
-                        var build = rebuildProject(config.webpackOptions, config.fullEntryGlob, config.artifactPath, config.webpackWarningFilters);
+                        var build = rebuildProject(config.webpackOptions, config.fullEntryGlob, config.webpackWarningFilters);
                         if (isReallyFileChangeEvent(changeType, fileCurrentStat, filePreviousStat)) {
                             when.join(build, runTests(filePath)).done(function(){});
                         } else {
