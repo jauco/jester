@@ -72,7 +72,6 @@ var mkdirp = require('mkdirp');
 mkdirp(p.resolve(defaultConf.karmaPath));
 mkdirp(p.join(defaultConf.srcPath, FEATURES_PATH));
 mkdirp(p.join(defaultConf.srcPath, 'lib'));
-mkdirp(p.join(defaultConf.srcPath, 'app', 'domain'));
 mkdirp(p.resolve(ARTIFACT_PATH));
 
 mkdirp(p.resolve(defaultConf.apiDocPath));
