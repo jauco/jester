@@ -61,6 +61,20 @@ module.exports = jester.deepMergeForWebpack({\n\
 }, jester.MINIMAL_REQUIRED_CONFIG);\n\
 //console.log(module.exports); //to see the config that is used.\n';
 
+var defaulteslintrc = {
+  "env": {
+    "browser": true
+  },
+  "globals": {
+    "require": false,
+    "module": false
+  },
+  "rules": {
+    "strict": [2, "global"],
+    "global-strict": 0
+  }
+};
+
 var defaultReadme = "# README \n\
   \n\
   * Replace this readme with useful info about your app \n\
@@ -86,6 +100,7 @@ function writeFileIfNotExists(path, contents) {
 }
 
 writeFileIfNotExists("./jester.json", JSON.stringify(defaultConf, null, 4));
+writeFileIfNotExists("./.eslintrc", JSON.stringify(defaulteslintrc, null, 4));
 writeFileIfNotExists(defaultConf.jsdocConf, JSON.stringify(defaultJSDocConf, null, 4));
 writeFileIfNotExists(defaultConf.readme, defaultReadme);
 writeFileIfNotExists("./webpack.config.js", defaultWebpackConfig);
