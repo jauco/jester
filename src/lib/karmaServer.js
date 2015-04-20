@@ -15,8 +15,6 @@ function KarmaServer(karmaPath, options) {
         frameworks: ["jasmine"].concat(options.frameworks || []),
         files: [
             "../polyfills/*.js",
-            {pattern: require.resolve("source-map-support/browser-source-map-support"), watched: false, included: true},
-            {pattern: require.resolve("./loadSourcemapsupport"), watched: false, included: true},
             {pattern: '*.js.map', watched: false, included: false, served: true},
             "*.karmatest.js",
             {pattern: '*.js', watched: true, included: false, served: true}
