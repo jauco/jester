@@ -48,7 +48,7 @@ var jester = require("jester-tester");\n\
 module.exports = jester.deepMergeForWebpack({\n\
   //entry is provided by jester\n\
   output: {\n\
-    path: ' + json.stringify(ARTIFACT_PATH) + ', \n\
+    path: ' + JSON.stringify(ARTIFACT_PATH) + ', \n\
     filename: "[name].min.js",\n\
     chunkFilename: "[id].chunk.js",\n\
     namedChunkFilename: "[name].chunk.js"\n\
