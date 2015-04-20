@@ -567,8 +567,8 @@
                   "resolved": "https://registry.npmjs.org/deep-equal/-/deep-equal-0.2.1.tgz"
                 },
                 "i": {
-                  "version": "0.3.2",
-                  "resolved": "https://registry.npmjs.org/i/-/i-0.3.2.tgz"
+                  "version": "0.3.3",
+                  "resolved": "https://registry.npmjs.org/i/-/i-0.3.3.tgz"
                 },
                 "ncp": {
                   "version": "0.4.2",
