@@ -1,5 +1,8 @@
 #!/usr/bin/env node
 "use strict";
+/*eslint no-process-exit: 0*/
+
+require("../lib/addProjectDirToSearchPath");
 
 var loadConfig = require("../lib/loadConfig"),
     lint = require("../lib/lint"),
@@ -8,41 +11,29 @@ var loadConfig = require("../lib/loadConfig"),
     KarmaServer = require("../lib/karmaServer"),
     createTestFile = require("../lib/createTestFile"),
     when = require('when'),
-    watchr = require('watchr');
+    watchr = require('watchr'),
+    getTestFileNamesForPath = require("../lib/testFileHelpers").getTestFileNamesForPath;
 
-var config = loadConfig("./jester.json");
+var config = loadConfig();
 var server = new KarmaServer(config.karmaPath, config.karmaOptions);
 
-function getTestFileNameForPath(path) {
-    var result = "";
-    if (path.length > 8 && path.substr(-8) === ".test.js") {
-        result = path;
-    }
-    else if (path.length > 3 && path.substr(-3) === ".js") {
-        var testfile = path.substr(0, path.length - 3) + ".test.js";
-
-        if (require("fs").existsSync(testfile)) {
-            result = testfile;
-        }
-    }
-
-    return result;
-}
-
 function runTests(path) {
-    return lint.lintFile(path, config.eslintRules)
+    return lint.lintFile(path, config.eslintRulesDir)
         .then(function(lintSucceeded) {
             if(!lintSucceeded) {
                 return false;
             }
 
-            return clearDir(config.karmaPath).then(function() {
-                var testFile = getTestFileNameForPath(path);
-                if (!testFile) {
+            return clearDir(config.karmaPath)
+            .then(function() {
+                return getTestFileNamesForPath(path);
+            })
+            .then(function (testFiles){
+                if (!testFiles.length === 0) {
                     console.log("No tests found for '" + path + "'");
                     return false;
                 }
-                return createTestFile(testFile, config.karmaPath, config.webpackWarningFilters).then(function () {
+                return createTestFile(testFiles, config.srcPath, config.webpackOptions, config.karmaPath, config.webpackWarningFilters).then(function () {
                     return server.run();
                 });
             });
@@ -69,12 +60,12 @@ function startWatching() {
             },
             change: function (changeType, filePath, fileCurrentStat, filePreviousStat) {
                 try {
-                    if (filePath == "jester.json") {
-                        config = loadConfig("./jester.json");
+                    if (filePath === config.configLocation) {
+                        config = loadConfig();
                     }
 
                     if (filePath.length > 3 && filePath.substr(-3) === ".js") {
-                        var build = rebuildProject(config.fullEntryGlob, config.artifactPath, config.webpackWarningFilters);
+                        var build = rebuildProject(config.webpackOptions, config.fullEntryGlob, config.webpackWarningFilters);
                         if (isReallyFileChangeEvent(changeType, fileCurrentStat, filePreviousStat)) {
                             when.join(build, runTests(filePath)).done(function(){});
                         } else {

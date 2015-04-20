@@ -1,3 +1,5 @@
+"use strict";
+
 var glob = require("../lib/globPromise"),
     webpack = require("../lib/webpackPromise"),
     clearDir = require("./clearDir"),
@@ -6,7 +8,7 @@ var glob = require("../lib/globPromise"),
 
 function createEntryModules(featureFiles) {
     var entryModules = {};
-    
+
     featureFiles.forEach(function (file) {
         var featurename = p.basename(p.dirname(file));
         entryModules[featurename] = file;
@@ -14,29 +16,14 @@ function createEntryModules(featureFiles) {
     });
 
     return entryModules;
-}   
+}
 
-module.exports = function rebuildProject(entryGlob, artifactPath, webpackWarningFilters) {
-    return clearDir(artifactPath)
-        .then(function filesCleared() {
-            return glob(entryGlob);
-        })
+module.exports = function rebuildProject(webpackConfig, entryGlob, webpackWarningFilters) {
+    return glob(entryGlob)
         .then(function (featureFiles) {
-            return webpack({
-                entry: createEntryModules(featureFiles),
-                output: {
-                    path: artifactPath,
-                    filename: "[name].min.js",
-                    chunkFilename: "[id].chunk.js",
-                    namedChunkFilename: "[name].chunk.js"
-                },
-                module: {
-                    loaders: [
-                        {test: /\.json$/, loader: require.resolve("json-loader")}
-                    ]
-                },
-                devtool: "#source-map",
-            });
+            var config = Object.create(webpackConfig);
+            config.entry = createEntryModules(featureFiles);
+            return webpack(config);
         })
         .then(function (stats){
             return handleWebpackResult(stats, webpackWarningFilters);

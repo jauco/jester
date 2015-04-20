@@ -1,3 +1,4 @@
+"use strict";
 var when = require("when"),
     karma = require("karma");
 
@@ -13,10 +14,12 @@ function KarmaServer(karmaPath, options) {
         basePath: karmaPath,
         frameworks: ["jasmine"].concat(options.frameworks || []),
         files: [
+            "../polyfills/*.js",
             {pattern: require.resolve("source-map-support/browser-source-map-support"), watched: false, included: true},
             {pattern: require.resolve("./loadSourcemapsupport"), watched: false, included: true},
             {pattern: '*.js.map', watched: false, included: false, served: true},
-            "*.js"
+            "*.karmatest.js",
+            {pattern: '*.js', watched: true, included: false, served: true}
         ],
         proxies: options.proxies || {},
         preprocessors: options.preprocessors || {},
