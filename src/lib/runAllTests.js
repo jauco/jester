@@ -1,21 +1,23 @@
+"use strict";
+
 var lint = require("../lib/lint"),
     clearDir = require("../lib/clearDir"),
     KarmaServer = require("../lib/karmaServer"),
     createTestFile = require("../lib/createTestFile"),
-    glob = require("../lib/globPromise");
+    getTestFiles = require("../lib/testFileHelpers").getTestFiles;
 
 module.exports = function runAllTests(config) {
     var sources = config.srcPath + "/**/*.js";
 
-    return lint.lintGlob(sources, config.eslintRules)
+    return lint.lintGlob(sources, config.eslintRulesDir)
         .then(function(hasLintSucceeded) {
 
             return clearDir(config.karmaPath)
-                .then(function() {
-                    return glob(config.srcPath + "/**/*.test.js");
+                .then(function () {
+                    return getTestFiles(config.srcPath);
                 })
                 .then(function (testInputFiles) {
-                    return createTestFile(testInputFiles, config.karmaPath, config.webpackWarningFilters);
+                    return createTestFile(testInputFiles, config.srcPath, config.webpackOptions, config.karmaPath, config.webpackWarningFilters);
                 })
                 .catch(function(err) {
                     console.error("failed creating test files ", err);

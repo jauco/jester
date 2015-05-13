@@ -6,7 +6,6 @@
     "readme": "./readme.md",
     "entryGlob": "app/features/*/feature.js",
     "karmaPath": "./build/karma/",
-    "artifactPath": "./build/artifacts",
     "karmaOptions": {
         "proxies": {},
         "browsers": [

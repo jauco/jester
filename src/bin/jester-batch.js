@@ -1,20 +1,22 @@
 #!/usr/bin/env node
+/*eslint no-process-exit: 0*/
 "use strict";
+
+require("../lib/addProjectDirToSearchPath");
 
 var loadConfig = require("../lib/loadConfig"),
     rebuildDocumentation = require("../lib/rebuildDocumentation"),
     rebuildProject = require("../lib/rebuildProject"),
-    runAllTests = require("../lib/runAllTests"),
-    when = require("when");
+    runAllTests = require("../lib/runAllTests");
 
-var config = loadConfig("./jester.json");
+var config = loadConfig();
 
-rebuildProject(config.fullEntryGlob, config.artifactPath, config.webpackWarningFilters)
+rebuildProject(config.webpackOptions, config.fullEntryGlob, config.webpackWarningFilters)
     .then(function() {
         if(config.srcPath && config.apiDocPath) {
             return rebuildDocumentation(config.srcPath, config.apiDocPath, config.jsdocConf, config.readme);
         } else {
-            console.log("please configure srcPath and apiDocPath in order to generate jsdoc documentation")
+            console.log("please configure srcPath and apiDocPath in order to generate jsdoc documentation");
         }
     })
     .then(function() {

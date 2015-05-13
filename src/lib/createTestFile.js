@@ -1,14 +1,17 @@
+"use strict";
 var webpack = require("./webpackPromise"),
-    handleWebpackResult = require("./handleWebpackResult");
+    handleWebpackResult = require("./handleWebpackResult"),
+    p = require("path"),
+    stripTestExtensions = require("./testFileHelpers").stripTestExtensions;
 
-function createEntryModules(filenames) {
+function createEntryModules(srcPath, filenames) {
     var entryModules = {};
     if (typeof filenames === "string") {
         filenames = [filenames];
     }
 
     filenames.forEach(function(file) {
-        var featurename = require("path").basename(file.substr(0, file.length - 8));
+        var featurename = require("path").relative(srcPath, stripTestExtensions(file)).replace(/\//g, "_");
         entryModules[featurename] = file;
         console.log("    * " + featurename + " (" + file + ")." );
     });
@@ -16,20 +19,14 @@ function createEntryModules(filenames) {
     return entryModules;
 }
 
-module.exports = function createTestFile(filenames, karmaPath, webpackWarningFilters) {
-    return webpack({
-        entry: createEntryModules(filenames),
-        output: {
-            path: karmaPath,
-            filename: "[name].js"
-        },
-        module: {
-            loaders: [
-                {test: /\.json$/, loader: require.resolve("json-loader")}
-            ]
-        },
-        devtool: "#source-map"
-    }).then(function(stats) {
+module.exports = function createTestFile(filenames, srcPath, webpackConfig, karmaPath, webpackWarningFilters) {
+    var config = Object.create(webpackConfig);
+    config.output = Object.create(webpackConfig.output);
+    config.output.path = karmaPath;
+    config.entry = createEntryModules(srcPath, filenames);//fixme output may be null
+    config.output = Object.create(config.output || {});
+    config.output.filename = "[name].karmatest.js";
+    return webpack(config).then(function(stats) {
         return handleWebpackResult(stats, webpackWarningFilters);
     });
 };

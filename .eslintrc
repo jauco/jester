@@ -1,0 +1,40 @@
+{
+  "env": {
+    "node": true
+  },
+  "rules": {
+    //For IE8:
+    //"no-comma-dangle": 2,
+    "no-comma-dangle": 0,
+    "no-reserved-keys": 0,
+    "no-cond-assign": [2, "except-parens"], //disallow `if (foo = 2)` do allow `if ((foo = 2))` and `if ((foo = bar) === 2)`
+    //regex errors
+    "no-control-regex": 2, //probably a mistake in using the \ character in your regex
+    "no-empty-class": 2,
+    "no-dupe-keys": 2,
+    "no-invalid-regexp": 2,
+    //semi-colon styling
+    "no-extra-semi": 2,
+    "semi": [2, "always"],
+    "no-space-before-semi": 2,
+    //assignment errors
+    "no-func-assign": 2, //don't assign to the implicit variable created by defining a function
+    "no-inner-declarations": [2, "functions"], //don't declare a function inside a block (is an error in strict mode)
+    "no-irregular-whitespace": 2,
+    "no-negated-in-lhs": 2,
+    "no-sparse-arrays": 2,
+    "no-unreachable": 2,
+    "use-isnan": 2,
+    "valid-jsdoc": 2,
+    "valid-typeof": 2,
+    "strict": [2, "global"],
+    "global-strict": 0,//needs to be disabled explicitly until removed in 1.0
+    "consistent-return": 2,
+    "no-console": 0,
+    "no-unused-vars": [2, {"vars": "all", "args": "none"}],
+    "quotes": 0,
+    "no-use-before-define": [2, "nofunc"],
+    "no-empty": 2, //empty catches are allowed, other empty blocks should be avoided
+    "no-multi-str": 0
+  }
+}

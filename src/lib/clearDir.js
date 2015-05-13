@@ -1,3 +1,4 @@
+"use strict";
 var glob = require("../lib/globPromise");
 var when = require("when");
 var node = require("when/node");

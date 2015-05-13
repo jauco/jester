@@ -1,3 +1,4 @@
+"use strict";
 module.exports = function handleWebpackResult(stats, webpackWarningFilters) {
     if (stats) {
         if (filterConfigIsValid(webpackWarningFilters)) {
@@ -7,7 +8,7 @@ module.exports = function handleWebpackResult(stats, webpackWarningFilters) {
     }
     var nonFatalErrors = (stats && stats.errors) || [];
     var warnings = (stats && stats.warnings) || [];
-    
+
     if (nonFatalErrors.length > 0 || warnings.length > 0) {
         console.error("Something went wrong while generating the test file");
 
@@ -42,23 +43,25 @@ module.exports = function handleWebpackResult(stats, webpackWarningFilters) {
 
 };
 
+function filterConfigIsSupported(webpackWarningFilter) {
+    return "name" in webpackWarningFilter
+      && "origin/rawRequest" in webpackWarningFilter
+      && "dependencies/0/request" in webpackWarningFilter
+      && Object.keys(webpackWarningFilter).length === 3 // That is, webpackWarningFilter contains no keys other than these three.
+      && webpackWarningFilter.name === "ModuleNotFoundError";
+}
+
 /**
  * Checks the sanity of the webpackWarningFilters-configuration.
+ * @param {Array} webpackWarningFilters - the filter configuration.
+ * @return {bool} whether it is sane
  */
 function filterConfigIsValid(webpackWarningFilters) {
-    var filterConfigIsValid = true;
+    var result = true;
     if (webpackWarningFilters) {
         if (Array.isArray(webpackWarningFilters)) {
             for (var i = 0; i < webpackWarningFilters.length; i++) {
-                var webpackWarningFilter = webpackWarningFilters[i];
-                if ("name" in webpackWarningFilter
-                    && "origin/rawRequest" in webpackWarningFilter
-                    && "dependencies/0/request" in webpackWarningFilter
-                    && Object.keys(webpackWarningFilter).length === 3 // That is, webpackWarningFilter contains no keys other than these three.
-                    && webpackWarningFilter.name === "ModuleNotFoundError"
-                ) {
-                    // This filter config is supported. Proceed.
-                } else {
+                if (!filterConfigIsSupported(webpackWarningFilters[i])) {
                     // This filter config isn't supported. Abort.
                     console.warn(
                         "config.webpackWarningFilters[" + i + "] must be an object similar to {\n" +
@@ -67,18 +70,18 @@ function filterConfigIsValid(webpackWarningFilters) {
                         "   'dependencies/0/request': 'vertx'\n" +
                         "}."
                     );
-                    filterConfigIsValid = false;
+                    result = false;
                 }
             }
         } else {
             console.warn("config.webpackWarningFilters must be an array.");
-            filterConfigIsValid = false;
+            result = false;
         }
     } else {
         // No filters are configured. That's okay.
-        filterConfigIsValid = true;
+        result = true;
     }
-    return filterConfigIsValid;
+    return result;
 }
 
 function filterWebpackWarnings(unfilteredWarnings, webpackWarningFilters) {
@@ -88,7 +91,7 @@ function filterWebpackWarnings(unfilteredWarnings, webpackWarningFilters) {
     }
 
     // There's at least one filter and all filter configs are supported. Do the actual filtering.
-    var filteredWarnings = unfilteredWarnings.filter(function filterWarning(warning, index, unfilteredWarnings) {
+    var filteredWarnings = unfilteredWarnings.filter(function filterWarning(warning, index) {
         if (warning.name !== "ModuleNotFoundError") {
             // filterWebpackWarnings only supports filtering of ModuleNotFoundError-warnings.
             // This is some other kind of warning. Leave it in the list, so that it IS shown in Jester's output.
