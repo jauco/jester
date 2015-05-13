@@ -2,7 +2,8 @@
 module.exports = function handleWebpackResult(stats, webpackWarningFilters) {
     if (stats) {
         if (filterConfigIsValid(webpackWarningFilters)) {
-            stats.compilation.warnings = filterWebpackWarnings(stats.compilation.warnings, webpackWarningFilters);
+            // stats.compilation.errors = filterWebpackSoftErrors(stats.compilation.errors, webpackWarningFilters.softErrors);
+            stats.compilation.warnings = filterWebpackWarnings(stats.compilation.warnings, webpackWarningFilters.warnings);
         }
         stats = stats.toJson();
     }
@@ -57,6 +58,8 @@ function filterConfigIsSupported(webpackWarningFilter) {
  * @return {bool} whether it is sane
  */
 function filterConfigIsValid(webpackWarningFilters) {
+    return true;
+    // TODO adjust this
     var result = true;
     if (webpackWarningFilters) {
         if (Array.isArray(webpackWarningFilters)) {
@@ -84,8 +87,8 @@ function filterConfigIsValid(webpackWarningFilters) {
     return result;
 }
 
-function filterWebpackWarnings(unfilteredWarnings, webpackWarningFilters) {
-    if (!webpackWarningFilters) {
+function filterWebpackWarnings(unfilteredWarnings, warningFilters) {
+    if (!warningFilters) {
         // No filters are configured. Use the complete, unfiltered list of warnings.
         return unfilteredWarnings;
     }
@@ -98,8 +101,8 @@ function filterWebpackWarnings(unfilteredWarnings, webpackWarningFilters) {
             return true;
         }
 
-        for (var i = 0; i < webpackWarningFilters.length; i++) {
-            var webpackWarningFilter = webpackWarningFilters[i];
+        for (var i = 0; i < warningFilters.length; i++) {
+            var webpackWarningFilter = warningFilters[i];
             if (
                 warning.origin.rawRequest === webpackWarningFilter["origin/rawRequest"]
                 && warning.dependencies.length > 0
