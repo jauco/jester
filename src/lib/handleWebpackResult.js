@@ -97,19 +97,10 @@ function filterWebpackAlerts(unfilteredAlerts, alertFilters) {
 
     // There's at least one filter and all filter configs are supported. Do the actual filtering.
     var filteredAlerts = unfilteredAlerts.filter(function isShown(alert) {
-        if (alert.name !== "ModuleNotFoundError") {
-            // filterWebpackAlerts only supports filtering of ModuleNotFoundError-alerts.
-            // This is some other kind of alert. Leave it in the list, so that it IS shown in Jester's output.
-            return true;
-        }
-
         for (var i = 0; i < alertFilters.length; i++) {
             var webpackAlertFilter = alertFilters[i];
-            if (
-                alert.origin.rawRequest === webpackAlertFilter["origin/rawRequest"]
-                && alert.dependencies.length > 0
-                && alert.dependencies[0].request === webpackAlertFilter["dependencies/0/request"]
-            ) {
+            var matches = matchers[webpackAlertFilter.name];
+            if (matches(alert, webpackAlertFilter)) {
                 // This alert matches one of the filters.
                 // Remove it from the list, so that it is NOT shown in Jester's output.
                 return false;
@@ -123,3 +114,17 @@ function filterWebpackAlerts(unfilteredAlerts, alertFilters) {
 
     return filteredAlerts;
 }
+
+var matchers = {
+    ModuleNotFoundError: function matches(alert, webpackAlertFilter) {
+        return alert.name === "ModuleNotFoundError"
+            && alert.origin.rawRequest === webpackAlertFilter["origin/rawRequest"]
+            && alert.dependencies.length > 0
+            && alert.dependencies[0].request === webpackAlertFilter["dependencies/0/request"];
+    },
+    CriticalDependenciesWarning: function matches(alert, webpackAlertFilter) {
+        return alert.name === "CriticalDependenciesWarning"
+            && alert.origin.rawRequest === webpackAlertFilter["origin/rawRequest"]
+            && alert.origin.blocks[0].expr.type === webpackAlertFilter["origin/blocks/0/expr/type"];
+    },
+};
