@@ -1,9 +1,9 @@
 "use strict";
-module.exports = function handleWebpackResult(stats, webpackWarningFilters) {
+module.exports = function handleWebpackResult(stats, webpackAlertFilters) {
     if (stats) {
-        if (filterConfigIsValid(webpackWarningFilters)) {
-            // stats.compilation.errors = filterWebpackSoftErrors(stats.compilation.errors, webpackWarningFilters.softErrors);
-            stats.compilation.warnings = filterWebpackWarnings(stats.compilation.warnings, webpackWarningFilters.warnings);
+        if (filterConfigIsValid(webpackAlertFilters)) {
+            stats.compilation.errors = filterWebpackAlerts(stats.compilation.errors, webpackAlertFilters);
+            stats.compilation.warnings = filterWebpackAlerts(stats.compilation.warnings, webpackAlertFilters);
         }
         stats = stats.toJson();
     }
@@ -44,30 +44,30 @@ module.exports = function handleWebpackResult(stats, webpackWarningFilters) {
 
 };
 
-function filterConfigIsSupported(webpackWarningFilter) {
-    return "name" in webpackWarningFilter
-      && "origin/rawRequest" in webpackWarningFilter
-      && "dependencies/0/request" in webpackWarningFilter
-      && Object.keys(webpackWarningFilter).length === 3 // That is, webpackWarningFilter contains no keys other than these three.
-      && webpackWarningFilter.name === "ModuleNotFoundError";
+function filterConfigIsSupported(webpackAlertFilter) {
+    return "name" in webpackAlertFilter
+      && "origin/rawRequest" in webpackAlertFilter
+      && "dependencies/0/request" in webpackAlertFilter
+      && Object.keys(webpackAlertFilter).length === 3 // That is, webpackAlertFilter contains no keys other than these three.
+      && webpackAlertFilter.name === "ModuleNotFoundError";
 }
 
 /**
- * Checks the sanity of the webpackWarningFilters-configuration.
- * @param {Array} webpackWarningFilters - the filter configuration.
+ * Checks the sanity of the webpackAlertFilters-configuration.
+ * @param {Array} webpackAlertFilters - the filter configuration.
  * @return {bool} whether it is sane
  */
-function filterConfigIsValid(webpackWarningFilters) {
+function filterConfigIsValid(webpackAlertFilters) {
     return true;
     // TODO adjust this
     var result = true;
-    if (webpackWarningFilters) {
-        if (Array.isArray(webpackWarningFilters)) {
-            for (var i = 0; i < webpackWarningFilters.length; i++) {
-                if (!filterConfigIsSupported(webpackWarningFilters[i])) {
+    if (webpackAlertFilters) {
+        if (Array.isArray(webpackAlertFilters)) {
+            for (var i = 0; i < webpackAlertFilters.length; i++) {
+                if (!filterConfigIsSupported(webpackAlertFilters[i])) {
                     // This filter config isn't supported. Abort.
                     console.warn(
-                        "config.webpackWarningFilters[" + i + "] must be an object similar to {\n" +
+                        "config.webpackAlertFilters[" + i + "] must be an object similar to {\n" +
                         "   'name': 'ModuleNotFoundError',\n" +
                         "   'origin/rawRequest': 'imports?process=>undefined!when',\n" +
                         "   'dependencies/0/request': 'vertx'\n" +
@@ -77,7 +77,7 @@ function filterConfigIsValid(webpackWarningFilters) {
                 }
             }
         } else {
-            console.warn("config.webpackWarningFilters must be an array.");
+            console.warn("config.webpackAlertFilters must be an array.");
             result = false;
         }
     } else {
@@ -87,37 +87,37 @@ function filterConfigIsValid(webpackWarningFilters) {
     return result;
 }
 
-function filterWebpackWarnings(unfilteredWarnings, warningFilters) {
-    if (!warningFilters) {
-        // No filters are configured. Use the complete, unfiltered list of warnings.
-        return unfilteredWarnings;
+function filterWebpackAlerts(unfilteredAlerts, alertFilters) {
+    if (!alertFilters) {
+        // No filters are configured. Use the complete, unfiltered list of alerts.
+        return unfilteredAlerts;
     }
 
     // There's at least one filter and all filter configs are supported. Do the actual filtering.
-    var filteredWarnings = unfilteredWarnings.filter(function filterWarning(warning, index) {
-        if (warning.name !== "ModuleNotFoundError") {
-            // filterWebpackWarnings only supports filtering of ModuleNotFoundError-warnings.
-            // This is some other kind of warning. Leave it in the list, so that it IS shown in Jester's output.
+    var filteredAlerts = unfilteredAlerts.filter(function filterAlert(alert, index) {
+        if (alert.name !== "ModuleNotFoundError") {
+            // filterWebpackAlerts only supports filtering of ModuleNotFoundError-alerts.
+            // This is some other kind of alert. Leave it in the list, so that it IS shown in Jester's output.
             return true;
         }
 
-        for (var i = 0; i < warningFilters.length; i++) {
-            var webpackWarningFilter = warningFilters[i];
+        for (var i = 0; i < alertFilters.length; i++) {
+            var webpackAlertFilter = alertFilters[i];
             if (
-                warning.origin.rawRequest === webpackWarningFilter["origin/rawRequest"]
-                && warning.dependencies.length > 0
-                && warning.dependencies[0].request === webpackWarningFilter["dependencies/0/request"]
+                alert.origin.rawRequest === webpackAlertFilter["origin/rawRequest"]
+                && alert.dependencies.length > 0
+                && alert.dependencies[0].request === webpackAlertFilter["dependencies/0/request"]
             ) {
-                // This warning matches one of the filters.
+                // This alert matches one of the filters.
                 // Remove it from the list, so that it is NOT shown in Jester's output.
                 return false;
             }
         }
 
-        // This warning matches none of the filters.
+        // This alert matches none of the filters.
         // Leave it in the list, so that it IS shown in Jester's output.
         return true;
     });
 
-    return filteredWarnings;
+    return filteredAlerts;
 }
