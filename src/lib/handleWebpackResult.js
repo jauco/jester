@@ -51,11 +51,19 @@ module.exports = function handleWebpackResult(stats, webpackAlertFilters) {
 };
 
 function filterConfigIsSupported(webpackAlertFilter) {
-    return "name" in webpackAlertFilter
-      && "origin/rawRequest" in webpackAlertFilter
-      && "dependencies/0/request" in webpackAlertFilter
-      && Object.keys(webpackAlertFilter).length === 3 // That is, webpackAlertFilter contains no keys other than these three.
-      && webpackAlertFilter.name === "ModuleNotFoundError";
+    if (webpackAlertFilter && webpackAlertFilter.name && webpackAlertFilter.justification) {
+        if (webpackAlertFilter.name === "ModuleNotFoundError") {
+            return "origin/rawRequest" in webpackAlertFilter
+                && "dependencies/0/request" in webpackAlertFilter;
+        } else if (webpackAlertFilter.name === "CriticalDependenciesWarning") {
+            return "origin/rawRequest" in webpackAlertFilter
+                && "origin/blocks/0/expr/type" in webpackAlertFilter;
+        } else {
+            return false;
+        }
+    } else {
+        return false;
+    }
 }
 
 /**
@@ -64,8 +72,6 @@ function filterConfigIsSupported(webpackAlertFilter) {
  * @return {bool} whether it is sane
  */
 function filterConfigIsValid(webpackAlertFilters) {
-    return true;
-    // TODO adjust this
     var result;
     if (Array.isArray(webpackAlertFilters)) {
         result = true;
@@ -73,11 +79,22 @@ function filterConfigIsValid(webpackAlertFilters) {
             if (!filterConfigIsSupported(webpackAlertFilters[i])) {
                 // This filter config isn't supported. Abort.
                 console.warn(
-                    "config.webpackAlertFilters[" + i + "] must be an object similar to {\n" +
-                    "   'name': 'ModuleNotFoundError',\n" +
-                    "   'origin/rawRequest': 'imports?process=>undefined!when',\n" +
-                    "   'dependencies/0/request': 'vertx'\n" +
-                    "}."
+                    'config.webpackAlertFilters[' + i + '] must be an object similar to either\n' +
+                    '{\n' +
+                    '   "severity": "softError" or "warning",\n' +
+                    '   "name": "ModuleNotFoundError",\n' +
+                    '   "justification": "Suppressing this alert is a good idea because ...",\n' +
+                    '   "origin/rawRequest": "imports?process=>undefined!when",\n' +
+                    '   "dependencies/0/request": "vertx"\n' +
+                    '}\n' +
+                    'or\n' +
+                    '{\n' +
+                    '   "severity": "softError" or "warning",\n' +
+                    '   "name": "CriticalDependenciesWarning",\n' +
+                    '   "justification": "Suppressing this alert is a good idea because ...",\n' +
+                    '   "origin/rawRequest": "localforage",\n' +
+                    '   "origin/blocks/0/expr/type": "CallExpression"\n' +
+                    '}\n'
                 );
                 result = false;
             }
