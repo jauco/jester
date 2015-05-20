@@ -1,7 +1,7 @@
 "use strict";
 module.exports = function handleWebpackResult(stats, webpackAlertFilters) {
     if (stats) {
-        if (filterConfigIsValid(webpackAlertFilters)) {
+        if (webpackAlertFilters && filterConfigIsValid(webpackAlertFilters)) {
             var softErrorFilters = webpackAlertFilters.filter(function isSoftErrorFilter(filter) {
                 return filter.severity === "softError";
             });
@@ -66,29 +66,25 @@ function filterConfigIsSupported(webpackAlertFilter) {
 function filterConfigIsValid(webpackAlertFilters) {
     return true;
     // TODO adjust this
-    var result = true;
-    if (webpackAlertFilters) {
-        if (Array.isArray(webpackAlertFilters)) {
-            for (var i = 0; i < webpackAlertFilters.length; i++) {
-                if (!filterConfigIsSupported(webpackAlertFilters[i])) {
-                    // This filter config isn't supported. Abort.
-                    console.warn(
-                        "config.webpackAlertFilters[" + i + "] must be an object similar to {\n" +
-                        "   'name': 'ModuleNotFoundError',\n" +
-                        "   'origin/rawRequest': 'imports?process=>undefined!when',\n" +
-                        "   'dependencies/0/request': 'vertx'\n" +
-                        "}."
-                    );
-                    result = false;
-                }
+    var result;
+    if (Array.isArray(webpackAlertFilters)) {
+        result = true;
+        for (var i = 0; i < webpackAlertFilters.length; i++) {
+            if (!filterConfigIsSupported(webpackAlertFilters[i])) {
+                // This filter config isn't supported. Abort.
+                console.warn(
+                    "config.webpackAlertFilters[" + i + "] must be an object similar to {\n" +
+                    "   'name': 'ModuleNotFoundError',\n" +
+                    "   'origin/rawRequest': 'imports?process=>undefined!when',\n" +
+                    "   'dependencies/0/request': 'vertx'\n" +
+                    "}."
+                );
+                result = false;
             }
-        } else {
-            console.warn("config.webpackAlertFilters must be an array.");
-            result = false;
         }
     } else {
-        // No filters are configured. That's okay.
-        result = true;
+        console.warn("config.webpackAlertFilters must be an array.");
+        result = false;
     }
     return result;
 }
