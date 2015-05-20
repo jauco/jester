@@ -2,8 +2,14 @@
 module.exports = function handleWebpackResult(stats, webpackAlertFilters) {
     if (stats) {
         if (filterConfigIsValid(webpackAlertFilters)) {
-            stats.compilation.errors = filterWebpackAlerts(stats.compilation.errors, webpackAlertFilters);
-            stats.compilation.warnings = filterWebpackAlerts(stats.compilation.warnings, webpackAlertFilters);
+            var softErrorFilters = webpackAlertFilters.filter(function isSoftErrorFilter(filter) {
+                return filter.severity === "softError";
+            });
+            var warningFilters = webpackAlertFilters.filter(function isWarningFilter(filter) {
+                return filter.severity === "warning";
+            });
+            stats.compilation.errors = filterWebpackAlerts(stats.compilation.errors, softErrorFilters);
+            stats.compilation.warnings = filterWebpackAlerts(stats.compilation.warnings, warningFilters);
         }
         stats = stats.toJson();
     }
@@ -94,7 +100,7 @@ function filterWebpackAlerts(unfilteredAlerts, alertFilters) {
     }
 
     // There's at least one filter and all filter configs are supported. Do the actual filtering.
-    var filteredAlerts = unfilteredAlerts.filter(function filterAlert(alert, index) {
+    var filteredAlerts = unfilteredAlerts.filter(function isShown(alert) {
         if (alert.name !== "ModuleNotFoundError") {
             // filterWebpackAlerts only supports filtering of ModuleNotFoundError-alerts.
             // This is some other kind of alert. Leave it in the list, so that it IS shown in Jester's output.
