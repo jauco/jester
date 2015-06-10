@@ -11,7 +11,7 @@ function createEntryModules(srcPath, filenames) {
     }
 
     filenames.forEach(function(file) {
-        var featurename = require("path").relative(srcPath, stripTestExtensions(file)).replace(/\//g, "_");
+        var featurename = require("path").relative(srcPath, stripTestExtensions(file)).replace(new RegExp("\\" + p.sep, "g"), "_");
         entryModules[featurename] = file;
         console.log("    * " + featurename + " (" + file + ")." );
     });
