@@ -1,8 +1,15 @@
 "use strict";
-module.exports = function handleWebpackResult(stats, webpackWarningFilters) {
+module.exports = function handleWebpackResult(stats, webpackAlertFilters) {
     if (stats) {
-        if (filterConfigIsValid(webpackWarningFilters)) {
-            stats.compilation.warnings = filterWebpackWarnings(stats.compilation.warnings, webpackWarningFilters);
+        if (webpackAlertFilters && filterConfigIsValid(webpackAlertFilters)) {
+            var softErrorFilters = webpackAlertFilters.filter(function isSoftErrorFilter(filter) {
+                return filter.severity === "softError";
+            });
+            var warningFilters = webpackAlertFilters.filter(function isWarningFilter(filter) {
+                return filter.severity === "warning";
+            });
+            stats.compilation.errors = filterWebpackAlerts(stats.compilation.errors, softErrorFilters);
+            stats.compilation.warnings = filterWebpackAlerts(stats.compilation.warnings, warningFilters);
         }
         stats = stats.toJson();
     }
@@ -18,7 +25,7 @@ module.exports = function handleWebpackResult(stats, webpackWarningFilters) {
 
         var logErrorsByLine = function (errors) {
             byLine(errors, function (err) {
-                console.log("    ", err, typeof err);
+                console.log("    ", err);
             });
         };
 
@@ -43,78 +50,98 @@ module.exports = function handleWebpackResult(stats, webpackWarningFilters) {
 
 };
 
-function filterConfigIsSupported(webpackWarningFilter) {
-    return "name" in webpackWarningFilter
-      && "origin/rawRequest" in webpackWarningFilter
-      && "dependencies/0/request" in webpackWarningFilter
-      && Object.keys(webpackWarningFilter).length === 3 // That is, webpackWarningFilter contains no keys other than these three.
-      && webpackWarningFilter.name === "ModuleNotFoundError";
+function filterConfigIsSupported(webpackAlertFilter) {
+    if (webpackAlertFilter && webpackAlertFilter.name && webpackAlertFilter.justification) {
+        if (webpackAlertFilter.name === "ModuleNotFoundError") {
+            return "origin/rawRequest" in webpackAlertFilter
+                && "dependencies/0/request" in webpackAlertFilter;
+        } else if (webpackAlertFilter.name === "CriticalDependenciesWarning") {
+            return "origin/rawRequest" in webpackAlertFilter
+                && "origin/blocks/0/expr/type" in webpackAlertFilter;
+        } else {
+            return false;
+        }
+    } else {
+        return false;
+    }
 }
 
 /**
- * Checks the sanity of the webpackWarningFilters-configuration.
- * @param {Array} webpackWarningFilters - the filter configuration.
+ * Checks the sanity of the webpackAlertFilters-configuration.
+ * @param {Array} webpackAlertFilters - the filter configuration.
  * @return {bool} whether it is sane
  */
-function filterConfigIsValid(webpackWarningFilters) {
-    var result = true;
-    if (webpackWarningFilters) {
-        if (Array.isArray(webpackWarningFilters)) {
-            for (var i = 0; i < webpackWarningFilters.length; i++) {
-                if (!filterConfigIsSupported(webpackWarningFilters[i])) {
-                    // This filter config isn't supported. Abort.
-                    console.warn(
-                        "config.webpackWarningFilters[" + i + "] must be an object similar to {\n" +
-                        "   'name': 'ModuleNotFoundError',\n" +
-                        "   'origin/rawRequest': 'imports?process=>undefined!when',\n" +
-                        "   'dependencies/0/request': 'vertx'\n" +
-                        "}."
-                    );
-                    result = false;
-                }
+function filterConfigIsValid(webpackAlertFilters) {
+    var result;
+    if (Array.isArray(webpackAlertFilters)) {
+        result = true;
+        for (var i = 0; i < webpackAlertFilters.length; i++) {
+            if (!filterConfigIsSupported(webpackAlertFilters[i])) {
+                // This filter config isn't supported. Abort.
+                console.warn(
+                    'config.webpackAlertFilters[' + i + '] must be an object similar to either\n' +
+                    '{\n' +
+                    '   "severity": "softError" or "warning",\n' +
+                    '   "name": "ModuleNotFoundError",\n' +
+                    '   "justification": "Suppressing this alert is a good idea because ...",\n' +
+                    '   "origin/rawRequest": "imports?process=>undefined!when",\n' +
+                    '   "dependencies/0/request": "vertx"\n' +
+                    '}\n' +
+                    'or\n' +
+                    '{\n' +
+                    '   "severity": "softError" or "warning",\n' +
+                    '   "name": "CriticalDependenciesWarning",\n' +
+                    '   "justification": "Suppressing this alert is a good idea because ...",\n' +
+                    '   "origin/rawRequest": "localforage",\n' +
+                    '   "origin/blocks/0/expr/type": "CallExpression"\n' +
+                    '}\n'
+                );
+                result = false;
             }
-        } else {
-            console.warn("config.webpackWarningFilters must be an array.");
-            result = false;
         }
     } else {
-        // No filters are configured. That's okay.
-        result = true;
+        console.warn("config.webpackAlertFilters must be an array.");
+        result = false;
     }
     return result;
 }
 
-function filterWebpackWarnings(unfilteredWarnings, webpackWarningFilters) {
-    if (!webpackWarningFilters) {
-        // No filters are configured. Use the complete, unfiltered list of warnings.
-        return unfilteredWarnings;
+function filterWebpackAlerts(unfilteredAlerts, alertFilters) {
+    if (!alertFilters) {
+        // No filters are configured. Use the complete, unfiltered list of alerts.
+        return unfilteredAlerts;
     }
 
     // There's at least one filter and all filter configs are supported. Do the actual filtering.
-    var filteredWarnings = unfilteredWarnings.filter(function filterWarning(warning, index) {
-        if (warning.name !== "ModuleNotFoundError") {
-            // filterWebpackWarnings only supports filtering of ModuleNotFoundError-warnings.
-            // This is some other kind of warning. Leave it in the list, so that it IS shown in Jester's output.
-            return true;
-        }
-
-        for (var i = 0; i < webpackWarningFilters.length; i++) {
-            var webpackWarningFilter = webpackWarningFilters[i];
-            if (
-                warning.origin.rawRequest === webpackWarningFilter["origin/rawRequest"]
-                && warning.dependencies.length > 0
-                && warning.dependencies[0].request === webpackWarningFilter["dependencies/0/request"]
-            ) {
-                // This warning matches one of the filters.
+    var filteredAlerts = unfilteredAlerts.filter(function isShown(alert) {
+        for (var i = 0; i < alertFilters.length; i++) {
+            var webpackAlertFilter = alertFilters[i];
+            var matches = matchers[webpackAlertFilter.name];
+            if (matches(alert, webpackAlertFilter)) {
+                // This alert matches one of the filters.
                 // Remove it from the list, so that it is NOT shown in Jester's output.
                 return false;
             }
         }
 
-        // This warning matches none of the filters.
+        // This alert matches none of the filters.
         // Leave it in the list, so that it IS shown in Jester's output.
         return true;
     });
 
-    return filteredWarnings;
+    return filteredAlerts;
 }
+
+var matchers = {
+    ModuleNotFoundError: function matches(alert, webpackAlertFilter) {
+        return alert.name === "ModuleNotFoundError"
+            && alert.origin.rawRequest === webpackAlertFilter["origin/rawRequest"]
+            && alert.dependencies.length > 0
+            && alert.dependencies[0].request === webpackAlertFilter["dependencies/0/request"];
+    },
+    CriticalDependenciesWarning: function matches(alert, webpackAlertFilter) {
+        return alert.name === "CriticalDependenciesWarning"
+            && alert.origin.rawRequest === webpackAlertFilter["origin/rawRequest"]
+            && alert.origin.blocks[0].expr.type === webpackAlertFilter["origin/blocks/0/expr/type"];
+    },
+};

@@ -19,7 +19,7 @@ function createEntryModules(srcPath, filenames) {
     return entryModules;
 }
 
-module.exports = function createTestFile(filenames, srcPath, webpackConfig, karmaPath, webpackWarningFilters) {
+module.exports = function createTestFile(filenames, srcPath, webpackConfig, karmaPath, webpackAlertFilters) {
     var config = Object.create(webpackConfig);
     config.output = Object.create(webpackConfig.output);
     config.output.path = karmaPath;
@@ -27,6 +27,6 @@ module.exports = function createTestFile(filenames, srcPath, webpackConfig, karm
     config.output = Object.create(config.output || {});
     config.output.filename = "[name].karmatest.js";
     return webpack(config).then(function(stats) {
-        return handleWebpackResult(stats, webpackWarningFilters);
+        return handleWebpackResult(stats, webpackAlertFilters);
     });
 };

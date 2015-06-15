@@ -18,7 +18,7 @@ function createEntryModules(featureFiles) {
     return entryModules;
 }
 
-module.exports = function rebuildProject(webpackConfig, entryGlob, webpackWarningFilters) {
+module.exports = function rebuildProject(webpackConfig, entryGlob, webpackAlertFilters) {
     return glob(entryGlob)
         .then(function (featureFiles) {
             var config = Object.create(webpackConfig);
@@ -26,6 +26,6 @@ module.exports = function rebuildProject(webpackConfig, entryGlob, webpackWarnin
             return webpack(config);
         })
         .then(function (stats){
-            return handleWebpackResult(stats, webpackWarningFilters);
+            return handleWebpackResult(stats, webpackAlertFilters);
         });
 };
