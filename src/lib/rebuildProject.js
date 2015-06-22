@@ -4,8 +4,7 @@ var webpack = require("../lib/webpackPromise"),
     handleWebpackResult = require("./handleWebpackResult");
 
 module.exports = function rebuildProject(webpackConfig, webpackWarningFilters) {
-        var config = Object.create(webpackConfig);
-        return webpack(config)
+    return webpack(webpackConfig)
         .then(function (stats){
             return handleWebpackResult(stats, webpackWarningFilters);
         });
