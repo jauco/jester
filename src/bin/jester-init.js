@@ -46,7 +46,9 @@ var defaultWebpackConfig = '"use strict";\n\
 //own settings overwrite the MINIMAL settings. This will probably break things.\n\
 var jester = require("jester-tester");\n\
 module.exports = jester.deepMergeForWebpack({\n\
-  //entry is provided by jester\n\
+  entry: {\n\
+    "app": "./src/app.js"\n\
+  },\n\
   output: {\n\
     path: ' + JSON.stringify(ARTIFACT_PATH) + ', \n\
     filename: "[name].min.js",\n\
