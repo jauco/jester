@@ -18,7 +18,7 @@ module.exports = function handleWebpackResult(stats, webpackWarningFilters) {
 
         var logErrorsByLine = function (errors) {
             byLine(errors, function (err) {
-                console.log("    ", err, typeof err);
+                console.log("    ", err);
             });
         };
 

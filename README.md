@@ -1,3 +1,12 @@
+**NOTE: you probably want the @next version of jester tester!**
+
+You can install it using `npm install jester-tester@next`. I've been working on it for a while now and it has a bunch of needed improvements such as being able to configure webpack and eslint directly. However I'm currently beta testing it and I have yet to add a migration script. Eslint is doing a lot of breaking changes at the moment while they're ramping up for their 1.0 release so I won't make the @next version the default until after the 1.0 eslint release. I also might replace karma with testem before that.
+
+But me and my team are using the @next version full time, so it probably won't delete your entire file system. I encourage new jester users to start with the @next version. Just be aware that you might have a non-automatic upgrades (usually changing some settings, renaming some properties) for new releases.
+
+If you encounter anything: let me know at https://github.com/jauco/jester/issues !
+
+
 #Jester
 
 >Get your project tested and out there with minimal fuss.
@@ -15,7 +24,7 @@ The goal of Jester is to give you a bootstrap for integrating these tools so you
  1. Install [node.js](http://nodejs.org/download/)
  2. Create a directory for your app `mkdir myApp; cd myApp`
  3. Add a basic machine readable description of your app `npm init`
- 4. Install jester from npm and save it into the development dependencies. Under windows you'll have to run this as administrator (required by jsdoc for creating symlinks): 
+ 4. Install jester from npm and save it into the development dependencies. Under windows you'll have to run this as administrator (required by jsdoc for creating symlinks):
     `npm install --save-dev jester-tester`
 
 ## Creating a project
@@ -127,7 +136,7 @@ describe("Greetings", function() {
 ```
 
 This test asserts that the function hello will return the string `hello tested world`.
-The test will run upon saving it if jester-watch is running, or else when you 
+The test will run upon saving it if jester-watch is running, or else when you
 execute jester-batch.
 
 Jester will now run your tests in the browsers as specified in `jester.js`. Of
@@ -144,7 +153,7 @@ module.exports = hello;
 
 ##Dependency injection
 Jester makes it easy to replace a 'require'd module in the source file with a
-test-stub. 
+test-stub.
 
 Let's say we have a file called src/lib/db.js
 ```javascript
@@ -196,7 +205,7 @@ what happens under the hood. It's not really magical.
 
 ## Generating documentation from source
 
-Documentation will be generated from appropriately annotated sources by jsdoc and includes the syntax highlighted source code. See [usejsdoc](http://usejsdoc.org/) for how to annotate your code, especially relevant is [Document CommonJS Modules](http://usejsdoc.org/howto-commonjs-modules.html). 
+Documentation will be generated from appropriately annotated sources by jsdoc and includes the syntax highlighted source code. See [usejsdoc](http://usejsdoc.org/) for how to annotate your code, especially relevant is [Document CommonJS Modules](http://usejsdoc.org/howto-commonjs-modules.html).
 
 There are many ways to export and document code. The recommended way to export functions is:
 
@@ -204,7 +213,7 @@ There are many ways to export and document code. The recommended way to export f
      * Deep clone an object
      *
      * @param {Object} obj - the object to clone
-     * @returns {Object} a deep clone of the original object 
+     * @returns {Object} a deep clone of the original object
      * @see {@link http://stackoverflow.com/questions/728360/most-elegant-way-to-clone-a-javascript-object}
      */
 	function clone(obj) {
@@ -215,8 +224,8 @@ There are many ways to export and document code. The recommended way to export f
 
 This enables jsdoc to recognize that clone is a (static) function, the clone symbol will show up in stack traces and is fully supported by IE8.
 
-The api documentation will be written to a directory specified by the `apiDocPath` setting in `jester.json`, which defaults to `./doc/api/`. You can set the configuration option `readme` to point to a file that is a markdown formatted readme which will be included in the generated documentation on the homepage. 
+The api documentation will be written to a directory specified by the `apiDocPath` setting in `jester.json`, which defaults to `./doc/api/`. You can set the configuration option `readme` to point to a file that is a markdown formatted readme which will be included in the generated documentation on the homepage.
 
-The api documentation will be generated when you run `jester-batch` or `jester-doc`. The latter is a bit faster because it *only* runs jsdoc. The documentation is *not* automatically updated when running `jester-watch`. 
+The api documentation will be generated when you run `jester-batch` or `jester-doc`. The latter is a bit faster because it *only* runs jsdoc. The documentation is *not* automatically updated when running `jester-watch`.
 
 An additional benefit of annotating your code with jsdoc style comments is that there are a number of tools such as ide's and compilers which can take advantages of the additional information contained in those comments.
