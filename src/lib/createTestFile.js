@@ -20,6 +20,9 @@ function createEntryModules(srcPath, filenames) {
 }
 
 module.exports = function createTestFile(filenames, srcPath, webpackConfig, karmaPath, webpackWarningFilters) {
+    if (Array.isArray(webpackConfig)) {
+        webpackConfig = webpackConfig[0]; //always use the first config as the testfile config
+    }
     var config = Object.create(webpackConfig);
     config.output = Object.create(webpackConfig.output);
     config.output.path = karmaPath;

@@ -1,5 +1,13 @@
 "use strict";
-module.exports = function handleWebpackResult(stats, webpackWarningFilters) {
+function handleOneOrMoreWebpackResults(stats, webpackWarningFilters) {
+    if (Array.isArray(stats.stats)) {
+        stats.stats.forEach(function (stats, i) { handleWebpackResult(stats, webpackWarningFilters, i); });
+    } else {
+        handleWebpackResult(stats, webpackWarningFilters);
+    }
+}
+
+function handleWebpackResult(stats, webpackWarningFilters, configIndex) {
     if (stats) {
         if (filterConfigIsValid(webpackWarningFilters)) {
             stats.compilation.warnings = filterWebpackWarnings(stats.compilation.warnings, webpackWarningFilters);
@@ -9,8 +17,13 @@ module.exports = function handleWebpackResult(stats, webpackWarningFilters) {
     var nonFatalErrors = (stats && stats.errors) || [];
     var warnings = (stats && stats.warnings) || [];
 
+    var postFix = "";
+    if (configIndex !== undefined) {
+        postFix = " (config #" + configIndex + ")";
+    }
+
     if (nonFatalErrors.length > 0 || warnings.length > 0) {
-        console.error("Something went wrong while generating the test file");
+        console.error("Something went wrong while generating the test file" + postFix);
 
         var byLine = function(str, cb) {
             str.split("\n").forEach(cb);
@@ -18,7 +31,7 @@ module.exports = function handleWebpackResult(stats, webpackWarningFilters) {
 
         var logErrorsByLine = function (errors) {
             byLine(errors, function (err) {
-                console.log("    ", err, typeof err);
+                console.log("  ", err);
             });
         };
 
@@ -36,9 +49,9 @@ module.exports = function handleWebpackResult(stats, webpackWarningFilters) {
             warnings.forEach(logErrorsByLine);
         }
 
-        console.error("Building finished, but the result might not work!");
+        console.error("Building finished, but the result might not work!" + postFix);
     } else {
-        console.log("Building succeeded!");
+        console.log("Building succeeded!" + postFix);
     }
 
 };
@@ -118,3 +131,5 @@ function filterWebpackWarnings(unfilteredWarnings, webpackWarningFilters) {
 
     return filteredWarnings;
 }
+
+module.exports = handleOneOrMoreWebpackResults;
